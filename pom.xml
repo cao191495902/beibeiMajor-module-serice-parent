@@ -212,6 +212,7 @@
         <module>beibeiMajor-quartz</module>
         <module>beibeiMajor-generator</module>
         <module>beibeiMajor-common</module>
+        <module>beibeiMajor-datacleaning</module>
     </modules>
     <packaging>pom</packaging>
 
