@@ -213,6 +213,7 @@
         <module>beibeiMajor-generator</module>
         <module>beibeiMajor-common</module>
         <module>beibeiMajor-datacleaning</module>
+        <module>beibeiMajor-web-server</module>
     </modules>
     <packaging>pom</packaging>
 
