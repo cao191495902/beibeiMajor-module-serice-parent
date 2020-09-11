@@ -1,17 +1,17 @@
-package com.beibeiMajor.quartz.task;
+package com.beibeiMajor.task;
 
-import org.springframework.stereotype.Component;
 import com.beibeiMajor.common.utils.StringUtils;
-
-import javax.annotation.Resource;
+import org.springframework.stereotype.Component;
 
 /**
  * 定时任务调度测试
  * 
  * @author ruoyi
  */
-@Component("ryTask")
-public class RyTask {
+@Component("dotaTask")
+public class DotaTask {
+
+
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i)
     {

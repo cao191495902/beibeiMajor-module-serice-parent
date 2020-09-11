@@ -34,7 +34,6 @@
             <groupId>com.beibeiMajor</groupId>
             <artifactId>beibeiMajor-common</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>
