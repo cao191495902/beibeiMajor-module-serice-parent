@@ -13,7 +13,7 @@ public class PlayersBean {
      * 玩家ID
      */
     @JSONField(name = "account_id")
-    private int accountId;
+    private Long accountId;
     /**
      * 自增主键
      */
@@ -27,48 +27,48 @@ public class PlayersBean {
     /**
      * 左上方库存商品的ID
      */
-    @JSONField(name = "item0")
-    private int item_0;
+    @JSONField(name = "item_0")
+    private int item0;
     /**
      * 顶部居中库存商品的ID
      */
-    @JSONField(name = "item1")
-    private int item_1;
+    @JSONField(name = "item_1")
+    private int item1;
     /**
      * 右上方库存商品的ID
      */
-    @JSONField(name = "item2")
-    private int item_2;
+    @JSONField(name = "item_2")
+    private int item2;
     /**
      * 左上方库存商品的ID
      */
-    @JSONField(name = "item3")
-    private int item_3;
+    @JSONField(name = "item_3")
+    private int item3;
     /**
      * 底部居中库存商品的ID
      */
-    @JSONField(name = "item4")
-    private int item_4;
+    @JSONField(name = "item_4")
+    private int item4;
     /**
      * 右下库存物品的ID
      */
-    @JSONField(name = "item5")
-    private int item_5;
+    @JSONField(name = "item_5")
+    private int item5;
     /**
      * 备用库存物品1的ID
      */
-    @JSONField(name = "backpack0")
-    private int backpack_0;
+    @JSONField(name = "backpack_0")
+    private int backpack0;
     /**
      * 备用库存物品2的ID
      */
-    @JSONField(name = "backpack1")
-    private int backpack_1;
+    @JSONField(name = "backpack_1")
+    private int backpack1;
     /**
      * 备用库存物品3的ID
      */
-    @JSONField(name = "backpack2")
-    private int backpack_2;
+    @JSONField(name = "backpack_2")
+    private int backpack2;
 
     @JSONField(name = "item_neutral")
     private int itemNeutral;

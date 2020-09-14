@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.mapper.dao.WebMatchPlayerInfoDao">
+
+    <resultMap type="com.beibeiMajor.mapper.po.WebMatchPlayerPo" id="WebMatchPlayerInfoMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="accountId" column="account_id" jdbcType="INTEGER"/>
+        <result property="matchId" column="match_id" jdbcType="INTEGER"/>
+        <result property="playerSlot" column="player_slot" jdbcType="INTEGER"/>
+        <result property="heroId" column="hero_id" jdbcType="INTEGER"/>
+        <result property="item0" column="item0" jdbcType="INTEGER"/>
+        <result property="item1" column="item1" jdbcType="INTEGER"/>
+        <result property="item2" column="item2" jdbcType="INTEGER"/>
+        <result property="item3" column="item3" jdbcType="INTEGER"/>
+        <result property="item4" column="item4" jdbcType="INTEGER"/>
+        <result property="item5" column="item5" jdbcType="INTEGER"/>
+        <result property="backpack0" column="backpack0" jdbcType="INTEGER"/>
+        <result property="backpack1" column="backpack1" jdbcType="INTEGER"/>
+        <result property="backpack2" column="backpack2" jdbcType="INTEGER"/>
+        <result property="kills" column="kills" jdbcType="INTEGER"/>
+        <result property="deaths" column="deaths" jdbcType="INTEGER"/>
+        <result property="assists" column="assists" jdbcType="INTEGER"/>
+        <result property="lastHits" column="last_hits" jdbcType="INTEGER"/>
+        <result property="denies" column="denies" jdbcType="INTEGER"/>
+        <result property="goldPerMin" column="gold_per_min" jdbcType="INTEGER"/>
+        <result property="xpPerMin" column="xp_per_min" jdbcType="INTEGER"/>
+        <result property="level" column="level" jdbcType="INTEGER"/>
+        <result property="heroDamage" column="hero_damage" jdbcType="INTEGER"/>
+        <result property="towerDamage" column="tower_damage" jdbcType="INTEGER"/>
+        <result property="heroHealing" column="hero_healing" jdbcType="INTEGER"/>
+        <result property="gold" column="gold" jdbcType="INTEGER"/>
+        <result property="goldSpent" column="gold_spent" jdbcType="INTEGER"/>
+        <result property="scaledHeroDamage" column="scaled_hero_damage" jdbcType="INTEGER"/>
+        <result property="scaledTowerDamage" column="scaled_tower_damage" jdbcType="INTEGER"/>
+        <result property="scaledHeroHealing" column="scaled_hero_healing" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WebMatchPlayerInfoMap">
+        select
+          id, account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing
+        from beibei_major.web_match_player_info
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="WebMatchPlayerInfoMap">
+        select
+          id, account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing
+        from beibei_major.web_match_player_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="WebMatchPlayerInfoMap">
+        select
+        id, account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1,
+        backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage,
+        tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing
+        from beibei_major.web_match_player_info
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="accountId != null">
+                and account_id = #{accountId}
+            </if>
+            <if test="matchId != null">
+                and match_id = #{matchId}
+            </if>
+            <if test="playerSlot != null">
+                and player_slot = #{playerSlot}
+            </if>
+            <if test="heroId != null">
+                and hero_id = #{heroId}
+            </if>
+            <if test="item0 != null">
+                and item0 = #{item0}
+            </if>
+            <if test="item1 != null">
+                and item1 = #{item1}
+            </if>
+            <if test="item2 != null">
+                and item2 = #{item2}
+            </if>
+            <if test="item3 != null">
+                and item3 = #{item3}
+            </if>
+            <if test="item4 != null">
+                and item4 = #{item4}
+            </if>
+            <if test="item5 != null">
+                and item5 = #{item5}
+            </if>
+            <if test="backpack0 != null">
+                and backpack0 = #{backpack0}
+            </if>
+            <if test="backpack1 != null">
+                and backpack1 = #{backpack1}
+            </if>
+            <if test="backpack2 != null">
+                and backpack2 = #{backpack2}
+            </if>
+            <if test="kills != null">
+                and kills = #{kills}
+            </if>
+            <if test="deaths != null">
+                and deaths = #{deaths}
+            </if>
+            <if test="assists != null">
+                and assists = #{assists}
+            </if>
+            <if test="lastHits != null">
+                and last_hits = #{lastHits}
+            </if>
+            <if test="denies != null">
+                and denies = #{denies}
+            </if>
+            <if test="goldPerMin != null">
+                and gold_per_min = #{goldPerMin}
+            </if>
+            <if test="xpPerMin != null">
+                and xp_per_min = #{xpPerMin}
+            </if>
+            <if test="level != null">
+                and level = #{level}
+            </if>
+            <if test="heroDamage != null">
+                and hero_damage = #{heroDamage}
+            </if>
+            <if test="towerDamage != null">
+                and tower_damage = #{towerDamage}
+            </if>
+            <if test="heroHealing != null">
+                and hero_healing = #{heroHealing}
+            </if>
+            <if test="gold != null">
+                and gold = #{gold}
+            </if>
+            <if test="goldSpent != null">
+                and gold_spent = #{goldSpent}
+            </if>
+            <if test="scaledHeroDamage != null">
+                and scaled_hero_damage = #{scaledHeroDamage}
+            </if>
+            <if test="scaledTowerDamage != null">
+                and scaled_tower_damage = #{scaledTowerDamage}
+            </if>
+            <if test="scaledHeroHealing != null">
+                and scaled_hero_healing = #{scaledHeroHealing}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into beibei_major.web_match_player_info(account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing)
+        values (#{accountId}, #{matchId}, #{playerSlot}, #{heroId}, #{item0}, #{item1}, #{item2}, #{item3}, #{item4}, #{item5}, #{backpack0}, #{backpack1}, #{backpack2}, #{kills}, #{deaths}, #{assists}, #{lastHits}, #{denies}, #{goldPerMin}, #{xpPerMin}, #{level}, #{heroDamage}, #{towerDamage}, #{heroHealing}, #{gold}, #{goldSpent}, #{scaledHeroDamage}, #{scaledTowerDamage}, #{scaledHeroHealing})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update beibei_major.web_match_player_info
+        <set>
+            <if test="accountId != null">
+                account_id = #{accountId},
+            </if>
+            <if test="matchId != null">
+                match_id = #{matchId},
+            </if>
+            <if test="playerSlot != null">
+                player_slot = #{playerSlot},
+            </if>
+            <if test="heroId != null">
+                hero_id = #{heroId},
+            </if>
+            <if test="item0 != null">
+                item0 = #{item0},
+            </if>
+            <if test="item1 != null">
+                item1 = #{item1},
+            </if>
+            <if test="item2 != null">
+                item2 = #{item2},
+            </if>
+            <if test="item3 != null">
+                item3 = #{item3},
+            </if>
+            <if test="item4 != null">
+                item4 = #{item4},
+            </if>
+            <if test="item5 != null">
+                item5 = #{item5},
+            </if>
+            <if test="backpack0 != null">
+                backpack0 = #{backpack0},
+            </if>
+            <if test="backpack1 != null">
+                backpack1 = #{backpack1},
+            </if>
+            <if test="backpack2 != null">
+                backpack2 = #{backpack2},
+            </if>
+            <if test="kills != null">
+                kills = #{kills},
+            </if>
+            <if test="deaths != null">
+                deaths = #{deaths},
+            </if>
+            <if test="assists != null">
+                assists = #{assists},
+            </if>
+            <if test="lastHits != null">
+                last_hits = #{lastHits},
+            </if>
+            <if test="denies != null">
+                denies = #{denies},
+            </if>
+            <if test="goldPerMin != null">
+                gold_per_min = #{goldPerMin},
+            </if>
+            <if test="xpPerMin != null">
+                xp_per_min = #{xpPerMin},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="heroDamage != null">
+                hero_damage = #{heroDamage},
+            </if>
+            <if test="towerDamage != null">
+                tower_damage = #{towerDamage},
+            </if>
+            <if test="heroHealing != null">
+                hero_healing = #{heroHealing},
+            </if>
+            <if test="gold != null">
+                gold = #{gold},
+            </if>
+            <if test="goldSpent != null">
+                gold_spent = #{goldSpent},
+            </if>
+            <if test="scaledHeroDamage != null">
+                scaled_hero_damage = #{scaledHeroDamage},
+            </if>
+            <if test="scaledTowerDamage != null">
+                scaled_tower_damage = #{scaledTowerDamage},
+            </if>
+            <if test="scaledHeroHealing != null">
+                scaled_hero_healing = #{scaledHeroHealing},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from beibei_major.web_match_player_info where id = #{id}
+    </delete>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into web_match_player_info(account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.accountId}, #{item.matchId}, #{item.playerSlot}, #{item.heroId}, #{item.item0}, #{item.item1}, #{item.item2}, #{item.item3}, #{item.item4}, #{item.item5}, #{item.backpack0}, #{item.backpack1}, #{item.backpack2}, #{item.kills}, #{item.deaths}, #{item.assists}, #{item.lastHits}, #{item.denies}, #{item.goldPerMin}, #{item.xpPerMin}, #{item.level}, #{item.heroDamage}, #{item.towerDamage}, #{item.heroHealing}, #{item.gold}, #{item.goldSpent}, #{item.scaledHeroDamage}, #{item.scaledTowerDamage}, #{item.scaledHeroHealing})
+        </foreach>
+    </insert>
+
+</mapper>

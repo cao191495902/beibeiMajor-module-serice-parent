@@ -13,20 +13,20 @@ public class PicksBansBean {
      * ban or pick
      */
     @JSONField(name = "is_pick")
-    private boolean isPick;
+    private Boolean isPick;
     /**
      * 英雄ID
      */
     @JSONField(name = "hero_id")
-    private int heroId;
-    /**
-     * 夜宴 or 天辉
-     */
-    @JSONField(name = "team")
-    private int team;
+    private Long heroId;
     /**
      * 选择顺序
      */
     @JSONField(name = "order")
     private int order;
+    /**
+     * 夜宴 or 天辉
+     */
+    @JSONField(name = "team")
+    private Boolean team;
 }

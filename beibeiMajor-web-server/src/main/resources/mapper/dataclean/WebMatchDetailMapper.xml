@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.mapper.dao.WebMatchDetailDao">
+
+    <resultMap type="com.beibeiMajor.mapper.po.WebMatchDetailPo" id="WebMatchDetailMap">
+        <result property="matchId" column="match_id" jdbcType="INTEGER"/>
+        <result property="leagueId" column="league_id" jdbcType="INTEGER"/>
+        <result property="radiantWin" column="radiant_win" jdbcType="BOOLEAN"/>
+        <result property="duration" column="duration" jdbcType="INTEGER"/>
+        <result property="preGameDuration" column="pre_game_duration" jdbcType="INTEGER"/>
+        <result property="startTime" column="start_time" jdbcType="INTEGER"/>
+        <result property="towerStatusRadiant" column="tower_status_radiant" jdbcType="INTEGER"/>
+        <result property="towerStatusDire" column="tower_status_dire" jdbcType="INTEGER"/>
+        <result property="barracksStatusRadiant" column="barracks_status_radiant" jdbcType="INTEGER"/>
+        <result property="barracksStatusDire" column="barracks_status_dire" jdbcType="INTEGER"/>
+        <result property="firstBloodTime" column="first_blood_time" jdbcType="INTEGER"/>
+        <result property="humanPlayers" column="human_players" jdbcType="INTEGER"/>
+        <result property="gameMode" column="game_mode" jdbcType="INTEGER"/>
+        <result property="radiantScore" column="radiant_score" jdbcType="INTEGER"/>
+        <result property="direScore" column="dire_score" jdbcType="INTEGER"/>
+        <result property="radiantCaptain" column="radiant_captain" jdbcType="INTEGER"/>
+        <result property="direCaptain" column="dire_captain" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WebMatchDetailMap">
+        select
+          match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain
+        from beibei_major.web_match_detail
+        where match_id = #{matchId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="WebMatchDetailMap">
+        select
+          match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain
+        from beibei_major.web_match_detail
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="WebMatchDetailMap">
+        select
+        match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant,
+        tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode,
+        radiant_score, dire_score, radiant_captain, dire_captain
+        from beibei_major.web_match_detail
+        <where>
+            <if test="matchId != null">
+                and match_id = #{matchId}
+            </if>
+            <if test="leagueId != null">
+                and league_id = #{leagueId}
+            </if>
+            <if test="radiantWin != null">
+                and radiant_win = #{radiantWin}
+            </if>
+            <if test="duration != null">
+                and duration = #{duration}
+            </if>
+            <if test="preGameDuration != null">
+                and pre_game_duration = #{preGameDuration}
+            </if>
+            <if test="startTime != null">
+                and start_time = #{startTime}
+            </if>
+            <if test="towerStatusRadiant != null">
+                and tower_status_radiant = #{towerStatusRadiant}
+            </if>
+            <if test="towerStatusDire != null">
+                and tower_status_dire = #{towerStatusDire}
+            </if>
+            <if test="barracksStatusRadiant != null">
+                and barracks_status_radiant = #{barracksStatusRadiant}
+            </if>
+            <if test="barracksStatusDire != null">
+                and barracks_status_dire = #{barracksStatusDire}
+            </if>
+            <if test="firstBloodTime != null">
+                and first_blood_time = #{firstBloodTime}
+            </if>
+            <if test="humanPlayers != null">
+                and human_players = #{humanPlayers}
+            </if>
+            <if test="gameMode != null">
+                and game_mode = #{gameMode}
+            </if>
+            <if test="radiantScore != null">
+                and radiant_score = #{radiantScore}
+            </if>
+            <if test="direScore != null">
+                and dire_score = #{direScore}
+            </if>
+            <if test="radiantCaptain != null">
+                and radiant_captain = #{radiantCaptain}
+            </if>
+            <if test="direCaptain != null">
+                and dire_captain = #{direCaptain}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="matchId" useGeneratedKeys="true">
+        insert into beibei_major.web_match_detail(league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain)
+        values (#{leagueId}, #{radiantWin}, #{duration}, #{preGameDuration}, #{startTime}, #{towerStatusRadiant}, #{towerStatusDire}, #{barracksStatusRadiant}, #{barracksStatusDire}, #{firstBloodTime}, #{humanPlayers}, #{gameMode}, #{radiantScore}, #{direScore}, #{radiantCaptain}, #{direCaptain})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update beibei_major.web_match_detail
+        <set>
+            <if test="leagueId != null">
+                league_id = #{leagueId},
+            </if>
+            <if test="radiantWin != null">
+                radiant_win = #{radiantWin},
+            </if>
+            <if test="duration != null">
+                duration = #{duration},
+            </if>
+            <if test="preGameDuration != null">
+                pre_game_duration = #{preGameDuration},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="towerStatusRadiant != null">
+                tower_status_radiant = #{towerStatusRadiant},
+            </if>
+            <if test="towerStatusDire != null">
+                tower_status_dire = #{towerStatusDire},
+            </if>
+            <if test="barracksStatusRadiant != null">
+                barracks_status_radiant = #{barracksStatusRadiant},
+            </if>
+            <if test="barracksStatusDire != null">
+                barracks_status_dire = #{barracksStatusDire},
+            </if>
+            <if test="firstBloodTime != null">
+                first_blood_time = #{firstBloodTime},
+            </if>
+            <if test="humanPlayers != null">
+                human_players = #{humanPlayers},
+            </if>
+            <if test="gameMode != null">
+                game_mode = #{gameMode},
+            </if>
+            <if test="radiantScore != null">
+                radiant_score = #{radiantScore},
+            </if>
+            <if test="direScore != null">
+                dire_score = #{direScore},
+            </if>
+            <if test="radiantCaptain != null">
+                radiant_captain = #{radiantCaptain},
+            </if>
+            <if test="direCaptain != null">
+                dire_captain = #{direCaptain},
+            </if>
+        </set>
+        where match_id = #{matchId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from beibei_major.web_match_detail where match_id = #{matchId}
+    </delete>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into web_match_detail
+        (match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.matchId}, #{item.leagueId}, #{item.radiantWin}, #{item.duration}, #{item.preGameDuration}, #{item.startTime}, #{item.towerStatusRadiant}, #{item.towerStatusDire}, #{item.barracksStatusRadiant}, #{item.barracksStatusDire}, #{item.firstBloodTime}, #{item.humanPlayers}, #{item.gameMode}, #{item.radiantScore}, #{item.direScore}, #{item.radiantCaptain}, #{item.direCaptain}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryAllId" resultType="java.lang.Long">
+        select match_id from web_match_detail
+    </select>
+
+</mapper>

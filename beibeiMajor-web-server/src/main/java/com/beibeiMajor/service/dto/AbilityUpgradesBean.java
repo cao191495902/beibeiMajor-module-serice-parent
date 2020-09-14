@@ -11,11 +11,11 @@ public class AbilityUpgradesBean {
     /**
      * 玩家选择技能ID
      */
-    private int ability;
+    private Long ability;
     /**
      * 玩家加点时间
      */
-    private int time;
+    private Long time;
     /**
      * 玩家等级
      */

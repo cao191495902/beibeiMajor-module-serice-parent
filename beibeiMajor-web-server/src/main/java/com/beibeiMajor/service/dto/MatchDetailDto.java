@@ -2,7 +2,6 @@ package com.beibeiMajor.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -21,22 +20,22 @@ public class MatchDetailDto {
      * 比赛长度
      */
     @JSONField(name = "duration")
-    private int duration;
+    private Long duration;
     /**
      * 比赛B/P时间
      */
     @JSONField(name = "pre_game_duration")
-    private int preGameDuration;
+    private Long preGameDuration;
     /**
      * 比赛开始时间
      */
     @JSONField(name = "start_time")
-    private int startTime;
+    private Long startTime;
     /**
      * 比赛ID
      */
     @JSONField(name = "match_id")
-    private long matchId;
+    private Long matchId;
 
     @JSONField(name = "match_seq_num")
     private long matchSeqNum;
@@ -44,22 +43,22 @@ public class MatchDetailDto {
      * 天辉防御塔状态
      */
     @JSONField(name = "tower_status_radiant")
-    private int towerStatusRadiant;
+    private Long towerStatusRadiant;
     /**
      * 夜宴防御塔状态
      */
     @JSONField(name = "tower_status_dire")
-    private int towerStatusDire;
+    private Long towerStatusDire;
     /**
      * 天辉兵营状态
      */
     @JSONField(name = "barracks_status_radiant")
-    private int barracksStatusRadiant;
+    private Long barracksStatusRadiant;
     /**
      * 夜宴兵营状态
      */
     @JSONField(name = "barracks_status_dire")
-    private int barracksStatusDire;
+    private Long barracksStatusDire;
 
     @JSONField(name = "cluster")
     private int cluster;
@@ -67,7 +66,7 @@ public class MatchDetailDto {
      * 第一滴血发生时间
      */
     @JSONField(name = "first_blood_time")
-    private int firstBloodTime;
+    private Long firstBloodTime;
 
     @JSONField(name = "lobby_type")
     private int lobbyType;
@@ -80,7 +79,7 @@ public class MatchDetailDto {
      * 联赛ID
      */
     @JSONField(name = "leagueid")
-    private int leagueId;
+    private Long leagueId;
 
     @JSONField(name = "positive_votes")
     private int positiveVotes;

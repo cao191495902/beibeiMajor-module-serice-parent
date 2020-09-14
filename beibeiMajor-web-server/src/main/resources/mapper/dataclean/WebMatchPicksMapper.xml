@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.mapper.dao.WebMatchPicksDao">
+
+    <resultMap type="com.beibeiMajor.mapper.po.WebMatchPicksPo" id="WebMatchPicksMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="matchId" column="match_id" jdbcType="INTEGER"/>
+        <result property="isPick" column="is_pick" jdbcType="BOOLEAN"/>
+        <result property="heroId" column="hero_id" jdbcType="INTEGER"/>
+        <result property="team" column="team" jdbcType="BOOLEAN"/>
+        <result property="order" column="order" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WebMatchPicksMap">
+        select
+          id, match_id, is_pick, hero_id, team, `order`
+        from beibei_major.web_match_picks
+        where match_id = #{matchId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="WebMatchPicksMap">
+        select
+          id, match_id, is_pick, hero_id, team, `order`
+        from beibei_major.web_match_picks
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="WebMatchPicksMap">
+        select
+        match_id, is_pick, hero_id, team, `order`
+        from beibei_major.web_match_picks
+        <where>
+            <if test="matchId != null">
+                and match_id = #{matchId}
+            </if>
+            <if test="isPick != null">
+                and is_pick = #{isPick}
+            </if>
+            <if test="heroId != null">
+                and hero_id = #{heroId}
+            </if>
+            <if test="team != null">
+                and team = #{team}
+            </if>
+            <if test="order != null">
+                and order = #{order}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="matchId" useGeneratedKeys="true">
+        insert into beibei_major.web_match_picks(is_pick, hero_id, team, `order`)
+        values (#{isPick}, #{heroId}, #{team}, #{order})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update beibei_major.web_match_picks
+        <set>
+            <if test="isPick != null">
+                is_pick = #{isPick},
+            </if>
+            <if test="heroId != null">
+                hero_id = #{heroId},
+            </if>
+            <if test="team != null">
+                team = #{team},
+            </if>
+            <if test="order != null">
+                order = #{order},
+            </if>
+        </set>
+        where match_id = #{matchId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from beibei_major.web_match_picks where match_id = #{matchId}
+    </delete>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into web_match_picks(match_id, is_pick, hero_id, team, `order`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.matchId}, #{item.isPick}, #{item.heroId}, #{item.team}, #{item.order})
+        </foreach>
+    </insert>
+
+</mapper>
