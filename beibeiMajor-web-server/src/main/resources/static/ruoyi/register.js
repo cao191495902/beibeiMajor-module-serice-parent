@@ -17,6 +17,7 @@ function register() {
 	$.modal.loading($("#btnSubmit").data("loading"));
 	var username = $.common.trim($("input[name='username']").val());
     var password = $.common.trim($("input[name='password']").val());
+    var steamId = $.common.trim($("input[name='steamId']").val());
     var validateCode = $("input[name='validateCode']").val();
     $.ajax({
         type: "post",
@@ -24,6 +25,7 @@ function register() {
         data: {
             "loginName": username,
             "password": password,
+            "steamId": steamId,
             "validateCode": validateCode
         },
         success: function(r) {

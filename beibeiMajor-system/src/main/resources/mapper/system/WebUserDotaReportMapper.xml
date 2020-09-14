@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebUserDotaReportMapper">
+    
+    <resultMap type="WebUserDotaReport" id="WebUserDotaReportResult">
+        <result property="userId"    column="user_id"    />
+        <result property="integral"    column="integral"    />
+        <result property="winRate"    column="win_rate"    />
+        <result property="mvpCount"    column="mvp_count"    />
+        <result property="maxWinCount"    column="max_win_count"    />
+        <result property="maxLoseCount"    column="max_lose_count"    />
+        <result property="lastPlayTime"    column="last_play_time"    />
+    </resultMap>
+
+    <sql id="selectWebUserDotaReportVo">
+        select user_id, integral, win_rate, mvp_count, max_win_count, max_lose_count, last_play_time from web_user_dota_report
+    </sql>
+
+    <select id="selectWebUserDotaReportList" parameterType="WebUserDotaReport" resultMap="WebUserDotaReportResult">
+        <include refid="selectWebUserDotaReportVo"/>
+        <where>  
+            <if test="integral != null "> and integral = #{integral}</if>
+            <if test="winRate != null "> and win_rate = #{winRate}</if>
+            <if test="mvpCount != null "> and mvp_count = #{mvpCount}</if>
+            <if test="maxWinCount != null "> and max_win_count = #{maxWinCount}</if>
+            <if test="maxLoseCount != null "> and max_lose_count = #{maxLoseCount}</if>
+            <if test="lastPlayTime != null "> and last_play_time = #{lastPlayTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebUserDotaReportById" parameterType="Long" resultMap="WebUserDotaReportResult">
+        <include refid="selectWebUserDotaReportVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertWebUserDotaReport" parameterType="WebUserDotaReport">
+        insert into web_user_dota_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="integral != null">integral,</if>
+            <if test="winRate != null">win_rate,</if>
+            <if test="mvpCount != null">mvp_count,</if>
+            <if test="maxWinCount != null">max_win_count,</if>
+            <if test="maxLoseCount != null">max_lose_count,</if>
+            <if test="lastPlayTime != null">last_play_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="integral != null">#{integral},</if>
+            <if test="winRate != null">#{winRate},</if>
+            <if test="mvpCount != null">#{mvpCount},</if>
+            <if test="maxWinCount != null">#{maxWinCount},</if>
+            <if test="maxLoseCount != null">#{maxLoseCount},</if>
+            <if test="lastPlayTime != null">#{lastPlayTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebUserDotaReport" parameterType="WebUserDotaReport">
+        update web_user_dota_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="integral != null">integral = #{integral},</if>
+            <if test="winRate != null">win_rate = #{winRate},</if>
+            <if test="mvpCount != null">mvp_count = #{mvpCount},</if>
+            <if test="maxWinCount != null">max_win_count = #{maxWinCount},</if>
+            <if test="maxLoseCount != null">max_lose_count = #{maxLoseCount},</if>
+            <if test="lastPlayTime != null">last_play_time = #{lastPlayTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteWebUserDotaReportById" parameterType="Long">
+        delete from web_user_dota_report where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteWebUserDotaReportByIds" parameterType="String">
+        delete from web_user_dota_report where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+</mapper>

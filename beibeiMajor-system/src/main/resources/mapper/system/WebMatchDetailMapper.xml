@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebMatchDetailMapper">
+    
+    <resultMap type="WebMatchDetail" id="WebMatchDetailResult">
+        <result property="matchId"    column="match_id"    />
+        <result property="leagueId"    column="league_id"    />
+        <result property="radiantWin"    column="radiant_win"    />
+        <result property="duration"    column="duration"    />
+        <result property="preGameDuration"    column="pre_game_duration"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="towerStatusRadiant"    column="tower_status_radiant"    />
+        <result property="towerStatusDire"    column="tower_status_dire"    />
+        <result property="barracksStatusRadiant"    column="barracks_status_radiant"    />
+        <result property="barracksStatusDire"    column="barracks_status_dire"    />
+        <result property="firstBloodTime"    column="first_blood_time"    />
+        <result property="humanPlayers"    column="human_players"    />
+        <result property="gameMode"    column="game_mode"    />
+        <result property="radiantScore"    column="radiant_score"    />
+        <result property="direScore"    column="dire_score"    />
+        <result property="radiantCaptain"    column="radiant_captain"    />
+        <result property="direCaptain"    column="dire_captain"    />
+    </resultMap>
+
+    <sql id="selectWebMatchDetailVo">
+        select match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain from web_match_detail
+    </sql>
+
+    <select id="selectWebMatchDetailList" parameterType="WebMatchDetail" resultMap="WebMatchDetailResult">
+        <include refid="selectWebMatchDetailVo"/>
+        <where>  
+            <if test="leagueId != null "> and league_id = #{leagueId}</if>
+            <if test="radiantWin != null "> and radiant_win = #{radiantWin}</if>
+            <if test="duration != null "> and duration = #{duration}</if>
+            <if test="preGameDuration != null "> and pre_game_duration = #{preGameDuration}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="towerStatusRadiant != null "> and tower_status_radiant = #{towerStatusRadiant}</if>
+            <if test="towerStatusDire != null "> and tower_status_dire = #{towerStatusDire}</if>
+            <if test="barracksStatusRadiant != null "> and barracks_status_radiant = #{barracksStatusRadiant}</if>
+            <if test="barracksStatusDire != null "> and barracks_status_dire = #{barracksStatusDire}</if>
+            <if test="firstBloodTime != null "> and first_blood_time = #{firstBloodTime}</if>
+            <if test="humanPlayers != null "> and human_players = #{humanPlayers}</if>
+            <if test="gameMode != null "> and game_mode = #{gameMode}</if>
+            <if test="radiantScore != null "> and radiant_score = #{radiantScore}</if>
+            <if test="direScore != null "> and dire_score = #{direScore}</if>
+            <if test="radiantCaptain != null "> and radiant_captain = #{radiantCaptain}</if>
+            <if test="direCaptain != null "> and dire_captain = #{direCaptain}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebMatchDetailById" parameterType="Long" resultMap="WebMatchDetailResult">
+        <include refid="selectWebMatchDetailVo"/>
+        where match_id = #{matchId}
+    </select>
+        
+    <insert id="insertWebMatchDetail" parameterType="WebMatchDetail">
+        insert into web_match_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="matchId != null">match_id,</if>
+            <if test="leagueId != null">league_id,</if>
+            <if test="radiantWin != null">radiant_win,</if>
+            <if test="duration != null">duration,</if>
+            <if test="preGameDuration != null">pre_game_duration,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="towerStatusRadiant != null">tower_status_radiant,</if>
+            <if test="towerStatusDire != null">tower_status_dire,</if>
+            <if test="barracksStatusRadiant != null">barracks_status_radiant,</if>
+            <if test="barracksStatusDire != null">barracks_status_dire,</if>
+            <if test="firstBloodTime != null">first_blood_time,</if>
+            <if test="humanPlayers != null">human_players,</if>
+            <if test="gameMode != null">game_mode,</if>
+            <if test="radiantScore != null">radiant_score,</if>
+            <if test="direScore != null">dire_score,</if>
+            <if test="radiantCaptain != null">radiant_captain,</if>
+            <if test="direCaptain != null">dire_captain,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="matchId != null">#{matchId},</if>
+            <if test="leagueId != null">#{leagueId},</if>
+            <if test="radiantWin != null">#{radiantWin},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="preGameDuration != null">#{preGameDuration},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="towerStatusRadiant != null">#{towerStatusRadiant},</if>
+            <if test="towerStatusDire != null">#{towerStatusDire},</if>
+            <if test="barracksStatusRadiant != null">#{barracksStatusRadiant},</if>
+            <if test="barracksStatusDire != null">#{barracksStatusDire},</if>
+            <if test="firstBloodTime != null">#{firstBloodTime},</if>
+            <if test="humanPlayers != null">#{humanPlayers},</if>
+            <if test="gameMode != null">#{gameMode},</if>
+            <if test="radiantScore != null">#{radiantScore},</if>
+            <if test="direScore != null">#{direScore},</if>
+            <if test="radiantCaptain != null">#{radiantCaptain},</if>
+            <if test="direCaptain != null">#{direCaptain},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebMatchDetail" parameterType="WebMatchDetail">
+        update web_match_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="leagueId != null">league_id = #{leagueId},</if>
+            <if test="radiantWin != null">radiant_win = #{radiantWin},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="preGameDuration != null">pre_game_duration = #{preGameDuration},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="towerStatusRadiant != null">tower_status_radiant = #{towerStatusRadiant},</if>
+            <if test="towerStatusDire != null">tower_status_dire = #{towerStatusDire},</if>
+            <if test="barracksStatusRadiant != null">barracks_status_radiant = #{barracksStatusRadiant},</if>
+            <if test="barracksStatusDire != null">barracks_status_dire = #{barracksStatusDire},</if>
+            <if test="firstBloodTime != null">first_blood_time = #{firstBloodTime},</if>
+            <if test="humanPlayers != null">human_players = #{humanPlayers},</if>
+            <if test="gameMode != null">game_mode = #{gameMode},</if>
+            <if test="radiantScore != null">radiant_score = #{radiantScore},</if>
+            <if test="direScore != null">dire_score = #{direScore},</if>
+            <if test="radiantCaptain != null">radiant_captain = #{radiantCaptain},</if>
+            <if test="direCaptain != null">dire_captain = #{direCaptain},</if>
+        </trim>
+        where match_id = #{matchId}
+    </update>
+
+    <delete id="deleteWebMatchDetailById" parameterType="Long">
+        delete from web_match_detail where match_id = #{matchId}
+    </delete>
+
+    <delete id="deleteWebMatchDetailByIds" parameterType="String">
+        delete from web_match_detail where match_id in 
+        <foreach item="matchId" collection="array" open="(" separator="," close=")">
+            #{matchId}
+        </foreach>
+    </delete>
+
+</mapper>

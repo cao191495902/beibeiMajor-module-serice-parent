@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebDotaHeroMapper">
+    
+    <resultMap type="WebDotaHero" id="WebDotaHeroResult">
+        <result property="heroId"    column="hero_id"    />
+        <result property="enName"    column="en_name"    />
+        <result property="zhName"    column="zh_name"    />
+    </resultMap>
+
+    <sql id="selectWebDotaHeroVo">
+        select hero_id, en_name, zh_name from web_dota_hero
+    </sql>
+
+    <select id="selectWebDotaHeroList" parameterType="WebDotaHero" resultMap="WebDotaHeroResult">
+        <include refid="selectWebDotaHeroVo"/>
+        <where>  
+            <if test="enName != null  and enName != ''"> and en_name like concat('%', #{enName}, '%')</if>
+            <if test="zhName != null  and zhName != ''"> and zh_name like concat('%', #{zhName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectWebDotaHeroById" parameterType="Long" resultMap="WebDotaHeroResult">
+        <include refid="selectWebDotaHeroVo"/>
+        where hero_id = #{heroId}
+    </select>
+        
+    <insert id="insertWebDotaHero" parameterType="WebDotaHero">
+        insert into web_dota_hero
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="heroId != null">hero_id,</if>
+            <if test="enName != null and enName != ''">en_name,</if>
+            <if test="zhName != null and zhName != ''">zh_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="heroId != null">#{heroId},</if>
+            <if test="enName != null and enName != ''">#{enName},</if>
+            <if test="zhName != null and zhName != ''">#{zhName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebDotaHero" parameterType="WebDotaHero">
+        update web_dota_hero
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enName != null and enName != ''">en_name = #{enName},</if>
+            <if test="zhName != null and zhName != ''">zh_name = #{zhName},</if>
+        </trim>
+        where hero_id = #{heroId}
+    </update>
+
+    <delete id="deleteWebDotaHeroById" parameterType="Long">
+        delete from web_dota_hero where hero_id = #{heroId}
+    </delete>
+
+    <delete id="deleteWebDotaHeroByIds" parameterType="String">
+        delete from web_dota_hero where hero_id in 
+        <foreach item="heroId" collection="array" open="(" separator="," close=")">
+            #{heroId}
+        </foreach>
+    </delete>
+
+</mapper>

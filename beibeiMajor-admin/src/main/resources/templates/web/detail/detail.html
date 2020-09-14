@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('比赛详情列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>联赛ID：</label>
+                                <input type="text" name="leagueId"/>
+                            </li>
+                            <li>
+                                <label>获胜方：</label>
+                                <input type="text" name="radiantWin"/>
+                            </li>
+                            <li>
+                                <label>比赛长度：</label>
+                                <input type="text" name="duration"/>
+                            </li>
+                            <li>
+                                <label>比赛B/P时间：</label>
+                                <input type="text" name="preGameDuration"/>
+                            </li>
+                            <li>
+                                <label>比赛开始时间：</label>
+                                <input type="text" name="startTime"/>
+                            </li>
+                            <li>
+                                <label>天辉防御塔状态：</label>
+                                <input type="text" name="towerStatusRadiant"/>
+                            </li>
+                            <li>
+                                <label>夜宴防御塔状态：</label>
+                                <input type="text" name="towerStatusDire"/>
+                            </li>
+                            <li>
+                                <label>天辉兵营状态：</label>
+                                <input type="text" name="barracksStatusRadiant"/>
+                            </li>
+                            <li>
+                                <label>夜宴兵营状态：</label>
+                                <input type="text" name="barracksStatusDire"/>
+                            </li>
+                            <li>
+                                <label>第一滴血发生时间：</label>
+                                <input type="text" name="firstBloodTime"/>
+                            </li>
+                            <li>
+                                <label>玩家数量：</label>
+                                <input type="text" name="humanPlayers"/>
+                            </li>
+                            <li>
+                                <label>比赛类型：</label>
+                                <input type="text" name="gameMode"/>
+                            </li>
+                            <li>
+                                <label>天辉得分：</label>
+                                <input type="text" name="radiantScore"/>
+                            </li>
+                            <li>
+                                <label>夜宴得分：</label>
+                                <input type="text" name="direScore"/>
+                            </li>
+                            <li>
+                                <label>天辉队长：</label>
+                                <input type="text" name="radiantCaptain"/>
+                            </li>
+                            <li>
+                                <label>夜宴队长：</label>
+                                <input type="text" name="direCaptain"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="web:detail:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="web:detail:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="web:detail:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="web:detail:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('web:detail:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('web:detail:remove')}]];
+        var prefix = ctx + "web/detail";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "比赛详情",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'matchId',
+                    title: '比赛ID',
+                    visible: false
+                },
+                {
+                    field: 'leagueId',
+                    title: '联赛ID'
+                },
+                {
+                    field: 'radiantWin',
+                    title: '获胜方'
+                },
+                {
+                    field: 'duration',
+                    title: '比赛长度'
+                },
+                {
+                    field: 'preGameDuration',
+                    title: '比赛B/P时间'
+                },
+                {
+                    field: 'startTime',
+                    title: '比赛开始时间'
+                },
+                {
+                    field: 'towerStatusRadiant',
+                    title: '天辉防御塔状态'
+                },
+                {
+                    field: 'towerStatusDire',
+                    title: '夜宴防御塔状态'
+                },
+                {
+                    field: 'barracksStatusRadiant',
+                    title: '天辉兵营状态'
+                },
+                {
+                    field: 'barracksStatusDire',
+                    title: '夜宴兵营状态'
+                },
+                {
+                    field: 'firstBloodTime',
+                    title: '第一滴血发生时间'
+                },
+                {
+                    field: 'humanPlayers',
+                    title: '玩家数量'
+                },
+                {
+                    field: 'gameMode',
+                    title: '比赛类型'
+                },
+                {
+                    field: 'radiantScore',
+                    title: '天辉得分'
+                },
+                {
+                    field: 'direScore',
+                    title: '夜宴得分'
+                },
+                {
+                    field: 'radiantCaptain',
+                    title: '天辉队长'
+                },
+                {
+                    field: 'direCaptain',
+                    title: '夜宴队长'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.matchId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.matchId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebAbilityUpgradesMapper">
+    
+    <resultMap type="WebAbilityUpgrades" id="WebAbilityUpgradesResult">
+        <result property="id"    column="id"    />
+        <result property="matchId"    column="match_id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="abilityId"    column="ability_id"    />
+        <result property="time"    column="time"    />
+        <result property="level"    column="level"    />
+    </resultMap>
+
+    <sql id="selectWebAbilityUpgradesVo">
+        select id, match_id, account_id, ability_id, time, level from web_ability_upgrades
+    </sql>
+
+    <select id="selectWebAbilityUpgradesList" parameterType="WebAbilityUpgrades" resultMap="WebAbilityUpgradesResult">
+        <include refid="selectWebAbilityUpgradesVo"/>
+        <where>  
+            <if test="matchId != null "> and match_id = #{matchId}</if>
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="abilityId != null "> and ability_id = #{abilityId}</if>
+            <if test="time != null "> and time = #{time}</if>
+            <if test="level != null "> and level = #{level}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebAbilityUpgradesById" parameterType="Long" resultMap="WebAbilityUpgradesResult">
+        <include refid="selectWebAbilityUpgradesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWebAbilityUpgrades" parameterType="WebAbilityUpgrades" useGeneratedKeys="true" keyProperty="id">
+        insert into web_ability_upgrades
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="matchId != null">match_id,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="abilityId != null">ability_id,</if>
+            <if test="time != null">time,</if>
+            <if test="level != null">level,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="matchId != null">#{matchId},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="abilityId != null">#{abilityId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="level != null">#{level},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebAbilityUpgrades" parameterType="WebAbilityUpgrades">
+        update web_ability_upgrades
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matchId != null">match_id = #{matchId},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="abilityId != null">ability_id = #{abilityId},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="level != null">level = #{level},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWebAbilityUpgradesById" parameterType="Long">
+        delete from web_ability_upgrades where id = #{id}
+    </delete>
+
+    <delete id="deleteWebAbilityUpgradesByIds" parameterType="String">
+        delete from web_ability_upgrades where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
