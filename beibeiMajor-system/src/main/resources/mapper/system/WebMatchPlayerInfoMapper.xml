@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebMatchPlayerInfoMapper">
+    
+    <resultMap type="WebMatchPlayerInfo" id="WebMatchPlayerInfoResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="matchId"    column="match_id"    />
+        <result property="playerSlot"    column="player_slot"    />
+        <result property="heroId"    column="hero_id"    />
+        <result property="item0"    column="item0"    />
+        <result property="item1"    column="item1"    />
+        <result property="item2"    column="item2"    />
+        <result property="item3"    column="item3"    />
+        <result property="item4"    column="item4"    />
+        <result property="item5"    column="item5"    />
+        <result property="backpack0"    column="backpack0"    />
+        <result property="backpack1"    column="backpack1"    />
+        <result property="backpack2"    column="backpack2"    />
+        <result property="kills"    column="kills"    />
+        <result property="deaths"    column="deaths"    />
+        <result property="assists"    column="assists"    />
+        <result property="lastHits"    column="last_hits"    />
+        <result property="denies"    column="denies"    />
+        <result property="goldPerMin"    column="gold_per_min"    />
+        <result property="xpPerMin"    column="xp_per_min"    />
+        <result property="level"    column="level"    />
+        <result property="heroDamage"    column="hero_damage"    />
+        <result property="towerDamage"    column="tower_damage"    />
+        <result property="heroHealing"    column="hero_healing"    />
+        <result property="gold"    column="gold"    />
+        <result property="goldSpent"    column="gold_spent"    />
+        <result property="scaledHeroDamage"    column="scaled_hero_damage"    />
+        <result property="scaledTowerDamage"    column="scaled_tower_damage"    />
+        <result property="scaledHeroHealing"    column="scaled_hero_healing"    />
+    </resultMap>
+
+    <sql id="selectWebMatchPlayerInfoVo">
+        select id, account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing from web_match_player_info
+    </sql>
+
+    <select id="selectWebMatchPlayerInfoList" parameterType="WebMatchPlayerInfo" resultMap="WebMatchPlayerInfoResult">
+        <include refid="selectWebMatchPlayerInfoVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="matchId != null "> and match_id = #{matchId}</if>
+            <if test="playerSlot != null "> and player_slot = #{playerSlot}</if>
+            <if test="heroId != null "> and hero_id = #{heroId}</if>
+            <if test="item0 != null "> and item0 = #{item0}</if>
+            <if test="item1 != null "> and item1 = #{item1}</if>
+            <if test="item2 != null "> and item2 = #{item2}</if>
+            <if test="item3 != null "> and item3 = #{item3}</if>
+            <if test="item4 != null "> and item4 = #{item4}</if>
+            <if test="item5 != null "> and item5 = #{item5}</if>
+            <if test="backpack0 != null "> and backpack0 = #{backpack0}</if>
+            <if test="backpack1 != null "> and backpack1 = #{backpack1}</if>
+            <if test="backpack2 != null "> and backpack2 = #{backpack2}</if>
+            <if test="kills != null "> and kills = #{kills}</if>
+            <if test="deaths != null "> and deaths = #{deaths}</if>
+            <if test="assists != null "> and assists = #{assists}</if>
+            <if test="lastHits != null "> and last_hits = #{lastHits}</if>
+            <if test="denies != null "> and denies = #{denies}</if>
+            <if test="goldPerMin != null "> and gold_per_min = #{goldPerMin}</if>
+            <if test="xpPerMin != null "> and xp_per_min = #{xpPerMin}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="heroDamage != null "> and hero_damage = #{heroDamage}</if>
+            <if test="towerDamage != null "> and tower_damage = #{towerDamage}</if>
+            <if test="heroHealing != null "> and hero_healing = #{heroHealing}</if>
+            <if test="gold != null "> and gold = #{gold}</if>
+            <if test="goldSpent != null "> and gold_spent = #{goldSpent}</if>
+            <if test="scaledHeroDamage != null "> and scaled_hero_damage = #{scaledHeroDamage}</if>
+            <if test="scaledTowerDamage != null "> and scaled_tower_damage = #{scaledTowerDamage}</if>
+            <if test="scaledHeroHealing != null "> and scaled_hero_healing = #{scaledHeroHealing}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebMatchPlayerInfoById" parameterType="Long" resultMap="WebMatchPlayerInfoResult">
+        <include refid="selectWebMatchPlayerInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWebMatchPlayerInfo" parameterType="WebMatchPlayerInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into web_match_player_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="matchId != null">match_id,</if>
+            <if test="playerSlot != null">player_slot,</if>
+            <if test="heroId != null">hero_id,</if>
+            <if test="item0 != null">item0,</if>
+            <if test="item1 != null">item1,</if>
+            <if test="item2 != null">item2,</if>
+            <if test="item3 != null">item3,</if>
+            <if test="item4 != null">item4,</if>
+            <if test="item5 != null">item5,</if>
+            <if test="backpack0 != null">backpack0,</if>
+            <if test="backpack1 != null">backpack1,</if>
+            <if test="backpack2 != null">backpack2,</if>
+            <if test="kills != null">kills,</if>
+            <if test="deaths != null">deaths,</if>
+            <if test="assists != null">assists,</if>
+            <if test="lastHits != null">last_hits,</if>
+            <if test="denies != null">denies,</if>
+            <if test="goldPerMin != null">gold_per_min,</if>
+            <if test="xpPerMin != null">xp_per_min,</if>
+            <if test="level != null">level,</if>
+            <if test="heroDamage != null">hero_damage,</if>
+            <if test="towerDamage != null">tower_damage,</if>
+            <if test="heroHealing != null">hero_healing,</if>
+            <if test="gold != null">gold,</if>
+            <if test="goldSpent != null">gold_spent,</if>
+            <if test="scaledHeroDamage != null">scaled_hero_damage,</if>
+            <if test="scaledTowerDamage != null">scaled_tower_damage,</if>
+            <if test="scaledHeroHealing != null">scaled_hero_healing,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="matchId != null">#{matchId},</if>
+            <if test="playerSlot != null">#{playerSlot},</if>
+            <if test="heroId != null">#{heroId},</if>
+            <if test="item0 != null">#{item0},</if>
+            <if test="item1 != null">#{item1},</if>
+            <if test="item2 != null">#{item2},</if>
+            <if test="item3 != null">#{item3},</if>
+            <if test="item4 != null">#{item4},</if>
+            <if test="item5 != null">#{item5},</if>
+            <if test="backpack0 != null">#{backpack0},</if>
+            <if test="backpack1 != null">#{backpack1},</if>
+            <if test="backpack2 != null">#{backpack2},</if>
+            <if test="kills != null">#{kills},</if>
+            <if test="deaths != null">#{deaths},</if>
+            <if test="assists != null">#{assists},</if>
+            <if test="lastHits != null">#{lastHits},</if>
+            <if test="denies != null">#{denies},</if>
+            <if test="goldPerMin != null">#{goldPerMin},</if>
+            <if test="xpPerMin != null">#{xpPerMin},</if>
+            <if test="level != null">#{level},</if>
+            <if test="heroDamage != null">#{heroDamage},</if>
+            <if test="towerDamage != null">#{towerDamage},</if>
+            <if test="heroHealing != null">#{heroHealing},</if>
+            <if test="gold != null">#{gold},</if>
+            <if test="goldSpent != null">#{goldSpent},</if>
+            <if test="scaledHeroDamage != null">#{scaledHeroDamage},</if>
+            <if test="scaledTowerDamage != null">#{scaledTowerDamage},</if>
+            <if test="scaledHeroHealing != null">#{scaledHeroHealing},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebMatchPlayerInfo" parameterType="WebMatchPlayerInfo">
+        update web_match_player_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="matchId != null">match_id = #{matchId},</if>
+            <if test="playerSlot != null">player_slot = #{playerSlot},</if>
+            <if test="heroId != null">hero_id = #{heroId},</if>
+            <if test="item0 != null">item0 = #{item0},</if>
+            <if test="item1 != null">item1 = #{item1},</if>
+            <if test="item2 != null">item2 = #{item2},</if>
+            <if test="item3 != null">item3 = #{item3},</if>
+            <if test="item4 != null">item4 = #{item4},</if>
+            <if test="item5 != null">item5 = #{item5},</if>
+            <if test="backpack0 != null">backpack0 = #{backpack0},</if>
+            <if test="backpack1 != null">backpack1 = #{backpack1},</if>
+            <if test="backpack2 != null">backpack2 = #{backpack2},</if>
+            <if test="kills != null">kills = #{kills},</if>
+            <if test="deaths != null">deaths = #{deaths},</if>
+            <if test="assists != null">assists = #{assists},</if>
+            <if test="lastHits != null">last_hits = #{lastHits},</if>
+            <if test="denies != null">denies = #{denies},</if>
+            <if test="goldPerMin != null">gold_per_min = #{goldPerMin},</if>
+            <if test="xpPerMin != null">xp_per_min = #{xpPerMin},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="heroDamage != null">hero_damage = #{heroDamage},</if>
+            <if test="towerDamage != null">tower_damage = #{towerDamage},</if>
+            <if test="heroHealing != null">hero_healing = #{heroHealing},</if>
+            <if test="gold != null">gold = #{gold},</if>
+            <if test="goldSpent != null">gold_spent = #{goldSpent},</if>
+            <if test="scaledHeroDamage != null">scaled_hero_damage = #{scaledHeroDamage},</if>
+            <if test="scaledTowerDamage != null">scaled_tower_damage = #{scaledTowerDamage},</if>
+            <if test="scaledHeroHealing != null">scaled_hero_healing = #{scaledHeroHealing},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWebMatchPlayerInfoById" parameterType="Long">
+        delete from web_match_player_info where id = #{id}
+    </delete>
+
+    <delete id="deleteWebMatchPlayerInfoByIds" parameterType="String">
+        delete from web_match_player_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

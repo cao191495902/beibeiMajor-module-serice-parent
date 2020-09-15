@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改比赛玩家详情')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-info-edit" th:object="${webMatchPlayerInfo}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">用户ID：</label>
+                <div class="col-sm-8">
+                    <input name="accountId" th:field="*{accountId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">比赛ID：</label>
+                <div class="col-sm-8">
+                    <input name="matchId" th:field="*{matchId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">比赛ID：</label>
+                <div class="col-sm-8">
+                    <input name="playerSlot" th:field="*{playerSlot}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">英雄ID：</label>
+                <div class="col-sm-8">
+                    <input name="heroId" th:field="*{heroId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">左上方物品ID：</label>
+                <div class="col-sm-8">
+                    <input name="item0" th:field="*{item0}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">中间上方物品ID：</label>
+                <div class="col-sm-8">
+                    <input name="item1" th:field="*{item1}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">右上方物品ID：</label>
+                <div class="col-sm-8">
+                    <input name="item2" th:field="*{item2}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">左下方物品ID：</label>
+                <div class="col-sm-8">
+                    <input name="item3" th:field="*{item3}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">中间下方物品ID：</label>
+                <div class="col-sm-8">
+                    <input name="item4" th:field="*{item4}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">右下方物品ID：</label>
+                <div class="col-sm-8">
+                    <input name="item5" th:field="*{item5}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备用库存物品1的ID：</label>
+                <div class="col-sm-8">
+                    <input name="backpack0" th:field="*{backpack0}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备用库存物品2的ID：</label>
+                <div class="col-sm-8">
+                    <input name="backpack1" th:field="*{backpack1}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备用库存物品3的ID：</label>
+                <div class="col-sm-8">
+                    <input name="backpack2" th:field="*{backpack2}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的击杀数：</label>
+                <div class="col-sm-8">
+                    <input name="kills" th:field="*{kills}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的死亡数：</label>
+                <div class="col-sm-8">
+                    <input name="deaths" th:field="*{deaths}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的助攻数：</label>
+                <div class="col-sm-8">
+                    <input name="assists" th:field="*{assists}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的正补数：</label>
+                <div class="col-sm-8">
+                    <input name="lastHits" th:field="*{lastHits}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的反补数：</label>
+                <div class="col-sm-8">
+                    <input name="denies" th:field="*{denies}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的GPM：</label>
+                <div class="col-sm-8">
+                    <input name="goldPerMin" th:field="*{goldPerMin}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的XPM：</label>
+                <div class="col-sm-8">
+                    <input name="xpPerMin" th:field="*{xpPerMin}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的等级：</label>
+                <div class="col-sm-8">
+                    <input name="level" th:field="*{level}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的英雄伤害：</label>
+                <div class="col-sm-8">
+                    <input name="heroDamage" th:field="*{heroDamage}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的防御塔伤害：</label>
+                <div class="col-sm-8">
+                    <input name="towerDamage" th:field="*{towerDamage}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的治疗量：</label>
+                <div class="col-sm-8">
+                    <input name="heroHealing" th:field="*{heroHealing}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的总金钱：</label>
+                <div class="col-sm-8">
+                    <input name="gold" th:field="*{gold}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家花费的金钱：</label>
+                <div class="col-sm-8">
+                    <input name="goldSpent" th:field="*{goldSpent}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的英雄伤害占比：</label>
+                <div class="col-sm-8">
+                    <input name="scaledHeroDamage" th:field="*{scaledHeroDamage}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的防御塔伤害占比：</label>
+                <div class="col-sm-8">
+                    <input name="scaledTowerDamage" th:field="*{scaledTowerDamage}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家的英雄治疗占比：</label>
+                <div class="col-sm-8">
+                    <input name="scaledHeroHealing" th:field="*{scaledHeroHealing}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "web/info";
+        $("#form-info-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-info-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

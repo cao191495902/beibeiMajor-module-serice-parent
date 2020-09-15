@@ -78,6 +78,10 @@
             <groupId>com.beibeiMajor</groupId>
             <artifactId>beibeiMajor-generator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
 
     </dependencies>
 

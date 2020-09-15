@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增比赛详情')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-detail-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">联赛ID：</label>
+                <div class="col-sm-8">
+                    <input name="leagueId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">获胜方：</label>
+                <div class="col-sm-8">
+                    <input name="radiantWin" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">比赛长度：</label>
+                <div class="col-sm-8">
+                    <input name="duration" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">比赛B/P时间：</label>
+                <div class="col-sm-8">
+                    <input name="preGameDuration" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">比赛开始时间：</label>
+                <div class="col-sm-8">
+                    <input name="startTime" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">天辉防御塔状态：</label>
+                <div class="col-sm-8">
+                    <input name="towerStatusRadiant" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">夜宴防御塔状态：</label>
+                <div class="col-sm-8">
+                    <input name="towerStatusDire" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">天辉兵营状态：</label>
+                <div class="col-sm-8">
+                    <input name="barracksStatusRadiant" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">夜宴兵营状态：</label>
+                <div class="col-sm-8">
+                    <input name="barracksStatusDire" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">第一滴血发生时间：</label>
+                <div class="col-sm-8">
+                    <input name="firstBloodTime" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">玩家数量：</label>
+                <div class="col-sm-8">
+                    <input name="humanPlayers" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">比赛类型：</label>
+                <div class="col-sm-8">
+                    <input name="gameMode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">天辉得分：</label>
+                <div class="col-sm-8">
+                    <input name="radiantScore" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">夜宴得分：</label>
+                <div class="col-sm-8">
+                    <input name="direScore" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">天辉队长：</label>
+                <div class="col-sm-8">
+                    <input name="radiantCaptain" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">夜宴队长：</label>
+                <div class="col-sm-8">
+                    <input name="direCaptain" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "web/detail"
+        $("#form-detail-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-detail-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

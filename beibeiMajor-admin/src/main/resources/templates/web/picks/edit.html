@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改比赛bp')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-picks-edit" th:object="${webMatchPicks}">
+            <input name="matchId" th:field="*{matchId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">B/P：</label>
+                <div class="col-sm-8">
+                    <input name="isPick" th:field="*{isPick}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">英雄Id：</label>
+                <div class="col-sm-8">
+                    <input name="heroId" th:field="*{heroId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">阵营：</label>
+                <div class="col-sm-8">
+                    <input name="team" th:field="*{team}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">选择顺序：</label>
+                <div class="col-sm-8">
+                    <input name="order" th:field="*{order}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "web/picks";
+        $("#form-picks-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-picks-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

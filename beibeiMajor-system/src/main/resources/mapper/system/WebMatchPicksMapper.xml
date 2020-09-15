@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebMatchPicksMapper">
+    
+    <resultMap type="WebMatchPicks" id="WebMatchPicksResult">
+        <result property="matchId"    column="match_id"    />
+        <result property="isPick"    column="is_pick"    />
+        <result property="heroId"    column="hero_id"    />
+        <result property="team"    column="team"    />
+        <result property="order"    column="order"    />
+    </resultMap>
+
+    <sql id="selectWebMatchPicksVo">
+        select match_id, is_pick, hero_id, team, order from web_match_picks
+    </sql>
+
+    <select id="selectWebMatchPicksList" parameterType="WebMatchPicks" resultMap="WebMatchPicksResult">
+        <include refid="selectWebMatchPicksVo"/>
+        <where>  
+            <if test="isPick != null "> and is_pick = #{isPick}</if>
+            <if test="heroId != null "> and hero_id = #{heroId}</if>
+            <if test="team != null "> and team = #{team}</if>
+            <if test="order != null "> and order = #{order}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebMatchPicksById" parameterType="Long" resultMap="WebMatchPicksResult">
+        <include refid="selectWebMatchPicksVo"/>
+        where match_id = #{matchId}
+    </select>
+        
+    <insert id="insertWebMatchPicks" parameterType="WebMatchPicks">
+        insert into web_match_picks
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="matchId != null">match_id,</if>
+            <if test="isPick != null">is_pick,</if>
+            <if test="heroId != null">hero_id,</if>
+            <if test="team != null">team,</if>
+            <if test="order != null">order,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="matchId != null">#{matchId},</if>
+            <if test="isPick != null">#{isPick},</if>
+            <if test="heroId != null">#{heroId},</if>
+            <if test="team != null">#{team},</if>
+            <if test="order != null">#{order},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebMatchPicks" parameterType="WebMatchPicks">
+        update web_match_picks
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isPick != null">is_pick = #{isPick},</if>
+            <if test="heroId != null">hero_id = #{heroId},</if>
+            <if test="team != null">team = #{team},</if>
+            <if test="order != null">order = #{order},</if>
+        </trim>
+        where match_id = #{matchId}
+    </update>
+
+    <delete id="deleteWebMatchPicksById" parameterType="Long">
+        delete from web_match_picks where match_id = #{matchId}
+    </delete>
+
+    <delete id="deleteWebMatchPicksByIds" parameterType="String">
+        delete from web_match_picks where match_id in 
+        <foreach item="matchId" collection="array" open="(" separator="," close=")">
+            #{matchId}
+        </foreach>
+    </delete>
+
+</mapper>
