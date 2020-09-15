@@ -8,4 +8,5 @@ public interface DotaGameInfoService {
 
     Boolean insertMatchDetailInfo(List<Long> gameIdOfLeagueMatch);
 
+    Boolean insertHeroesInfo();
 }

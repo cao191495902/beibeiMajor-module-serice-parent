@@ -4,7 +4,6 @@ import com.beibeiMajor.service.DotaGameInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -15,18 +14,27 @@ import java.util.List;
  * @author ruoyi
  */
 @Controller
-@RequestMapping("/dashboard")
-public class DashboardInfoController {
+@RequestMapping("/syn")
+public class SynInfoController {
 
     @Resource
     private DotaGameInfoService dotaGameInfoService;
 
     /**
-     * 模态窗口
+     * 增量更新比赛数据
      */
-    @GetMapping("/getGameIdOfLeagueMatch")
-    public void dialog() {
+    @GetMapping("/synGameIdOfLeagueMatch")
+    public Boolean incrementalSynGameIdOfLeagueMatch() {
         List<Long> gameIdOfLeagueMatch = dotaGameInfoService.getGameIdOfLeagueMatch();
-        dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch);
+        return dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch);
     }
+
+    /**
+     * 全量更新英雄数据
+     */
+    @GetMapping("/synHeroesInfo")
+    public Boolean synHeroesInfo() {
+        return dotaGameInfoService.insertHeroesInfo();
+    }
+
 }

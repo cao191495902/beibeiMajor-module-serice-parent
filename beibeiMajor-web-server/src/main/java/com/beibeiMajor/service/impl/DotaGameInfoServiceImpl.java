@@ -3,12 +3,10 @@ package com.beibeiMajor.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.beibeiMajor.mapper.dao.WebMatchDetailDao;
-import com.beibeiMajor.mapper.po.WebAbilityUpgradesPo;
-import com.beibeiMajor.mapper.po.WebMatchDetailPo;
-import com.beibeiMajor.mapper.po.WebMatchPicksPo;
-import com.beibeiMajor.mapper.po.WebMatchPlayerPo;
+import com.beibeiMajor.mapper.po.*;
 import com.beibeiMajor.service.DotaGameInfoService;
 import com.beibeiMajor.service.MatchDetailInfoService;
+import com.beibeiMajor.service.OperationInfoToDBService;
 import com.beibeiMajor.service.dto.*;
 import com.beibeiMajor.thread.GetMatchDetailThread;
 import com.beibeiMajor.util.executor.LocalExecutorMananger;
@@ -22,7 +20,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -53,6 +50,8 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
     private MatchDetailInfoService matchDetailInfoService;
     @Resource
     private WebMatchDetailDao webMatchDetailDao;
+    @Resource
+    private OperationInfoToDBService operationInfoToDBService;
 
     @Override
     public List<Long> getGameIdOfLeagueMatch() {
@@ -96,8 +95,9 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
                         new GetMatchDetailThread(matchDetailInfoService, item)
                 );
                 try {
-                    if (future.get() != null)
-                        list.add(future.get());
+                    MatchDetailDto matchDetailDto = future.get();
+                    if (matchDetailDto != null)
+                        list.add(matchDetailDto);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -108,6 +108,22 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
             return MatchDetailInfoToDB(list);
         }
         return true;
+    }
+
+    @Override
+    public Boolean insertHeroesInfo() {
+        List<HeroBean> heroBeans = matchDetailInfoService.GetHeroesDetailInfo();
+        return HeroesDetailInfoToDB(heroBeans);
+    }
+
+    private Boolean HeroesDetailInfoToDB(List<HeroBean> heroBeans) {
+        List<WebDotaHeroPo> lists = new ArrayList<>();
+        heroBeans.forEach(heroBean -> {
+            WebDotaHeroPo heroPo = new WebDotaHeroPo();
+            BeanUtils.copyProperties(heroBean, heroPo);
+            lists.add(heroPo);
+        });
+        return operationInfoToDBService.HeroesBatchIntoDB(lists) ;
     }
 
     public Boolean MatchDetailInfoToDB(List<MatchDetailDto> list){
@@ -150,7 +166,7 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
                 BeanUtils.copyProperties(item, detailPo);
                 detailList.add(detailPo);
             });
-             return matchDetailInfoService.batchIntoDB(detailList, picksList, playerList, abilityUpgradesList);
+             return operationInfoToDBService.MatchsBatchIntoDB(detailList, picksList, playerList, abilityUpgradesList);
         }
         return true;
     }

@@ -12,7 +12,7 @@ public class LocalExecutorMananger {
 
     private static void init(){
         hashMap = new ConcurrentHashMap<String, LocalExecutor>();
-        hashMap.put(MATCH_MANAGE,new LocalExecutor(MATCH_MANAGE,16,500));
+        hashMap.put(MATCH_MANAGE,new LocalExecutor(MATCH_MANAGE,50,500));
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(new ExecutorMonitor(hashMap),10,60,TimeUnit.SECONDS);
     }
