@@ -333,6 +333,7 @@
         (select nick_name from web_user where account_id = w.user_id) as nick_name
         from web_user_dota_report w
         <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="integral != null "> and integral = #{integral}</if>
             <if test="winRate != null "> and win_rate = #{winRate}</if>
             <if test="mvpCount != null "> and mvp_count = #{mvpCount}</if>

@@ -8,10 +8,10 @@
 <p >积分：<span th:text="${info.integral}"></span></p>
 <p >胜率：<span th:text="${info.winRate}"></span></p>
 <p >MVP次数：<span th:text="${info.mvpCount}"></span></p>
-<p th:if="${info.integral >=3300 }">当前级别：SSR</p>
-<p th:if="${info.integral <3300 &&  user.integral >=2800}">当前级别：SR</p>
-<p th:if="${info.integral <2800 }">当前级别：R</p>
-<p th:if="${info.integral <2500 }">当前级别：N(白给)</p>
+<p th:if="${info.integral >=3300 }"><span style="color: red">当前级别：SSR-特等马</span></p>
+<p th:if="${info.integral <3300 &&  user.integral >=2800}"><span style="color: #8a1f11">当前级别：SR-上等马</span></p>
+<p th:if="${info.integral <2800 }"><span style="color: #00B83F">当前级别：R-中等马</span></p>
+<p th:if="${info.integral <2500 }"><span style="color: grey">当前级别：N-下等马</span></p>
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
