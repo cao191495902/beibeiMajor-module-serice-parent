@@ -81,5 +81,8 @@ public class WebMatchDetailPo implements Serializable {
      * 夜宴队长
      */
     private Integer direCaptain;
-
+    /**
+     * 结算状态
+     */
+    private Boolean settlementStatus;
 }

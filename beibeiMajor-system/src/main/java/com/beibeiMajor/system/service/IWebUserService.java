@@ -88,4 +88,5 @@ public interface IWebUserService
      * @return
      */
     WebUser getUpdateWebUserInfo(WebUser webUser);
+
 }

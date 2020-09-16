@@ -1,6 +1,7 @@
 package com.beibeiMajor.web.controller;
 
 import com.beibeiMajor.web.service.DotaGameInfoService;
+import com.beibeiMajor.web.service.ReportInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,8 @@ public class SynInfoController {
 
     @Resource
     private DotaGameInfoService dotaGameInfoService;
+    @Resource
+    private ReportInfoService reportInfoService;
 
     /**
      * 增量更新比赛数据
@@ -35,6 +38,15 @@ public class SynInfoController {
     @GetMapping("/synHeroesInfo")
     public Boolean synHeroesInfo() {
         return dotaGameInfoService.insertHeroesInfo();
+    }
+
+    /**
+     * 增量更新report数据
+     */
+    @GetMapping("/synReportInfo")
+    public Boolean synReportInfo() {
+        reportInfoService.handlerMatchInfoToReport();
+        return true;
     }
 
 }

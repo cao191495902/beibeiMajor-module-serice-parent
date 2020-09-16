@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (WebMatchDetail)表数据库访问层
@@ -81,5 +82,25 @@ public interface WebMatchDetailDao {
      * @return 比赛ID集合
      */
     List<Long> queryAllId();
+    /**
+     * 查询全部未结算比赛结合，并按照开始时间升序排序
+     *
+     * @return 比赛信息集合
+     */
+    List<WebMatchDetailPo> queryAllUnsettledMatch();
+
+    /**
+     * 改变比赛结算状态
+     *
+     * @return 比赛信息集合
+     */
+    Boolean changeMatchStatus(@Param("matchId") Long matchId);
+
+    /**
+     * 查看所有玩家的最后玩耍时间
+     *
+     * @return Map<玩家ID，最后玩耍时间>
+     */
+    Map<Long, Long> getLastPlayTime();
 
 }

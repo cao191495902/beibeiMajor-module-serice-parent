@@ -20,6 +20,7 @@
         <result property="direScore" column="dire_score" jdbcType="INTEGER"/>
         <result property="radiantCaptain" column="radiant_captain" jdbcType="INTEGER"/>
         <result property="direCaptain" column="dire_captain" jdbcType="INTEGER"/>
+        <result property="settlementStatus" column="settlement_status" jdbcType="BOOLEAN"/>
     </resultMap>
 
     <!--查询单个-->
@@ -169,17 +170,42 @@
 
     <insert id="batchInsert" parameterType="java.util.List">
         insert into web_match_detail
-        (match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain)
+        (match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain, settlement_status)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-            #{item.matchId}, #{item.leagueId}, #{item.radiantWin}, #{item.duration}, #{item.preGameDuration}, #{item.startTime}, #{item.towerStatusRadiant}, #{item.towerStatusDire}, #{item.barracksStatusRadiant}, #{item.barracksStatusDire}, #{item.firstBloodTime}, #{item.humanPlayers}, #{item.gameMode}, #{item.radiantScore}, #{item.direScore}, #{item.radiantCaptain}, #{item.direCaptain}
+            #{item.matchId}, #{item.leagueId}, #{item.radiantWin}, #{item.duration}, #{item.preGameDuration}, #{item.startTime}, #{item.towerStatusRadiant}, #{item.towerStatusDire}, #{item.barracksStatusRadiant}, #{item.barracksStatusDire}, #{item.firstBloodTime}, #{item.humanPlayers}, #{item.gameMode}, #{item.radiantScore}, #{item.direScore}, #{item.radiantCaptain}, #{item.direCaptain}, 0
             )
         </foreach>
     </insert>
 
     <select id="queryAllId" resultType="java.lang.Long">
         select match_id from web_match_detail
+    </select>
+
+    <select id="queryAllUnsettledMatch" resultMap="WebMatchDetailMap">
+        SELECT
+        match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant,
+        tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode,
+        radiant_score, dire_score, radiant_captain, dire_captain
+        FROM web_match_detail WHERE settlement_status = 0 ORDER BY start_time ASC
+    </select>
+
+    <update id="changeMatchStatus">
+        UPDATE web_match_detail SET
+            settlement_status = 1
+        WHERE match_id = #{matchId}
+    </update>
+
+    <select id="getLastPlayTime" resultType="java.util.Map">
+        SELECT
+            b.account_id,
+            Max( a.start_time )
+        FROM
+            web_match_detail a
+            LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+        GROUP BY
+            b.account_id
     </select>
 
 </mapper>

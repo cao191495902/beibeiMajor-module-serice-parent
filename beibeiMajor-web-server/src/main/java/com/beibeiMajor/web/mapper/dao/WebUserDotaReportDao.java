@@ -74,4 +74,6 @@ public interface WebUserDotaReportDao {
     List<UserAverageDataPo> getUserAverageData();
 
     Boolean batchUpdate(List<WebUserDotaReportPo> reportPoList);
+
+    Boolean batchInsert(List<WebUserDotaReportPo> reportPoList);
 }

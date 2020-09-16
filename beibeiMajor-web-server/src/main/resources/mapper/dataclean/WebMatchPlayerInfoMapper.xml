@@ -266,4 +266,26 @@
         </foreach>
     </insert>
 
+    <select id="getWinPlayerByMatchId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+        account_id
+        FROM
+        web_match_player_info
+        WHERE
+        IF
+        ( ( SELECT radiant_win FROM web_match_detail WHERE match_id = #{matchId} ) = 0, <![CDATA[ player_slot > 10 ]]>, <![CDATA[ player_slot < 10 ]]> )
+        AND match_id = #{matchId}
+    </select>
+
+    <select id="getLosePlayerByMatchId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+        account_id
+        FROM
+        web_match_player_info
+        WHERE
+        IF
+        ( ( SELECT radiant_win FROM web_match_detail WHERE match_id = #{matchId} ) = 1, <![CDATA[ player_slot > 10 ]]>, <![CDATA[ player_slot < 10 ]]> )
+        AND match_id = #{matchId}
+    </select>
+
 </mapper>

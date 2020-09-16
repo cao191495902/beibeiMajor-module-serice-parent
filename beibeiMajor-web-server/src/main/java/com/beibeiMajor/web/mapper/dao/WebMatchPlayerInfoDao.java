@@ -72,7 +72,23 @@ public interface WebMatchPlayerInfoDao {
      *
      * @param playerList 实例对象集合
      * @return 影响行数
+     *
      */
     int batchInsert(List<WebMatchPlayerPo> playerList);
 
+    /**
+     * 查询一场比赛的获胜方ID集合
+     *
+     * @param matchId 比赛序号
+     * @return 玩家集合
+     */
+    List<Long> getWinPlayerByMatchId(@Param("matchId") Long matchId);
+
+    /**
+     * 查询一场比赛的获胜方ID集合
+     *
+     * @param matchId 比赛序号
+     * @return 玩家集合
+     */
+    List<Long> getLosePlayerByMatchId(@Param("matchId") Long matchId);
 }

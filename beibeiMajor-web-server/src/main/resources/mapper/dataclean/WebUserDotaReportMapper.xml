@@ -140,11 +140,18 @@
 
     <select id="getUserWinAndLose" resultType="com.beibeiMajor.web.mapper.po.WinAndLosePo">
         SELECT
-        a.account_id,
-        c.nick_name,
-        IFNULL( a.win, 0 ) AS win,
-        IFNULL( b.lose, 0 ) AS lose,
+        a.nick_name AS nickName,
+        b.account_id AS accountId,
+        b.win AS win,
+        b.lose AS lose,
         ROUND( ( win / ( win + lose ) * 100 ), 2 ) AS winRate
+        FROM
+        web_user a
+        LEFT JOIN (
+        SELECT
+        a.account_id AS account_id,
+        IFNULL( a.win, 0 ) AS win,
+        IFNULL( b.lose, 0 ) AS lose
         FROM
         (
         SELECT
@@ -171,14 +178,45 @@
         OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot < 10 ]]> )
         GROUP BY
         a.account_id
-        ) b ON a.account_id = b.account_id LEFT JOIN
-        web_user c on a.account_id = c.account_id
+        ) b ON a.account_id = b.account_id UNION
+        SELECT
+        b.account_id,
+        IFNULL( a.win, 0 ),
+        IFNULL( b.lose, 0 )
+        FROM
+        (
+        SELECT
+        a.account_id,
+        count( a.account_id ) AS win
+        FROM
+        web_match_player_info a
+        LEFT JOIN web_match_detail b ON a.match_id = b.match_id
+        WHERE
+        ( b.radiant_win = 1 AND <![CDATA[ a.player_slot < 10 ]]> )
+        OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot > 10 ]]> )
+        GROUP BY
+        a.account_id
+        ) a
+        RIGHT JOIN (
+        SELECT
+        a.account_id,
+        count( a.account_id ) AS lose
+        FROM
+        web_match_player_info a
+        LEFT JOIN web_match_detail b ON a.match_id = b.match_id
+        WHERE
+        ( b.radiant_win = 1 AND <![CDATA[ a.player_slot > 10 ]]> )
+        OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot < 10 ]]> )
+        GROUP BY
+        a.account_id
+        ) b ON a.account_id = b.account_id
+        ) b ON a.account_id = b.account_id
     </select>
 
     <select id="getUserAverageData" resultType="com.beibeiMajor.web.mapper.po.UserAverageDataPo">
         SELECT
-            a.account_id,
-            b.nick_name,
+            a.account_id AS accountId,
+            b.nick_name AS nickName,
             ROUND( AVG( a.gold_per_min ), 0 ) AS `gpm`,
             ROUND( AVG( a.xp_per_min ), 0 ) AS `xpm`,
             ROUND( AVG( a.kills ), 2 ) AS `kill`,
@@ -192,8 +230,106 @@
 	        a.account_id
     </select>
 
-    <update id="batchUpdate">
-
+    <update id="batchUpdate" parameterType="java.util.List">
+        update web_user_dota_report
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="integral = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.integral != null">
+                        when user_id = #{i.userId} then #{i.integral}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="win_rate = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.winRate != null">
+                        when user_id = #{i.userId} then #{i.winRate}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="mvp_count = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.mvpCount != null">
+                        when user_id = #{i.userId} then #{i.mvpCount}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="kda = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.kda != null">
+                        when user_id = #{i.userId} then #{i.kda}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="max_win_count = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.maxWinCount != null">
+                        when user_id = #{i.userId} then #{i.maxWinCount}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="max_lose_count = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.maxLoseCount != null">
+                        when user_id = #{i.userId} then #{i.maxLoseCount}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="last_play_time = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.lastPlayTime != null">
+                        when user_id = #{i.userId} then #{i.lastPlayTime}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="average_kills = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.averageKills != null">
+                        when user_id = #{i.userId} then #{i.averageKills}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="average_deaths = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.averageDeaths != null">
+                        when user_id = #{i.userId} then #{i.averageDeaths}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="average_assists = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.averageAssists != null">
+                        when user_id = #{i.userId} then #{i.averageAssists}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="gold_per_min = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.goldPerMin != null">
+                        when user_id = #{i.userId} then #{i.goldPerMin}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="xp_per_min = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.xpPerMin != null">
+                        when user_id = #{i.userId} then #{i.xpPerMin}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            user_id = #{i.userId}
+        </foreach>
     </update>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into web_user_dota_report(user_id, integral, win_rate, mvp_count, kda, max_win_count, max_lose_count, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.integral}, #{item.winRate}, #{item.mvpCount}, #{item.kda}, #{item.maxWinCount}, #{item.maxLoseCount}, #{item.lastPlayTime}, #{item.averageKills}, #{item.averageDeaths}, #{item.averageAssists}, #{item.goldPerMin}, #{item.xpPerMin})
+        </foreach>
+    </insert>
 
 </mapper>
