@@ -1,5 +1,6 @@
 package com.beibeiMajor.framework.util;
 
+import com.beibeiMajor.system.domain.WebUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.mgt.RealmSecurityManager;
@@ -92,5 +93,15 @@ public class ShiroUtils
         SecureRandomNumberGenerator secureRandom = new SecureRandomNumberGenerator();
         String hex = secureRandom.nextBytes(3).toHex();
         return hex;
+    }
+
+    public static WebUser getWebUser() {
+        WebUser user = null;
+        Object obj = getSubject().getPrincipal();
+        if (StringUtils.isNotNull(obj)) {
+            user = new WebUser();
+            BeanUtils.copyBeanProp(user, obj);
+        }
+        return user;
     }
 }

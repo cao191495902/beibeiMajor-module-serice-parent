@@ -21,6 +21,8 @@ public class WebUser extends BaseEntity
     /** 用户ID */
     private Long userId;
 
+    private Long integral;
+
     /** 用户绑定的steam_id */
     @Excel(name = "用户绑定的steam_id")
     @JSONField(name = "steamid")
@@ -241,5 +243,13 @@ public class WebUser extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
             .toString();
+    }
+
+    public Long getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Long integral) {
+        this.integral = integral;
     }
 }

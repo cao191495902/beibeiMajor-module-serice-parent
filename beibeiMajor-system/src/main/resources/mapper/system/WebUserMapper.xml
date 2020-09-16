@@ -142,7 +142,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectUserByLoginName" resultMap="WebUserResult">
         <include refid="selectWebUserVo"/>
-        where login_name = #{loginName} or steam_id = #{loginName} or account_id = #{loginName} or phone = #{loginName}
+        where login_name = #{loginName} or steam_id = #{loginName} or account_id = #{loginName}
+        or nick_name = #{loginName}
         limit 1
     </select>
 

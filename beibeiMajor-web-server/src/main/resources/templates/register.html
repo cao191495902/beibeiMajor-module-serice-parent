@@ -27,14 +27,14 @@
                     </div>
                     <div class="m-b"></div>
                     <h4>欢迎使用 <strong>贝贝Major系统</strong></h4>
-                    <strong>已经注册过? <a th:href="@{/login}">直接登录&raquo;</a></strong>
+                    <strong>不想修改? <a th:href="@{/login}">直接登录&raquo;</a></strong>
                 </div>
             </div>
             <div class="col-sm-5">
                 <form id="registerForm" autocomplete="off">
                     <h4 class="no-margins">注册：</h4>
                     <input type="text"     name="username" class="form-control uname"         placeholder="用户名"   maxlength="20" />
-                    <input type="text"     name="steamId" class="form-control uname"          placeholder="steamId"   oninput="value=value.replace(/[^\d]/g,'')" maxlength="50" />
+                    <input type="password" name="password" class="form-control pword"         placeholder="密码"     maxlength="20" />
                     <input type="password" name="password" class="form-control pword"         placeholder="密码"     maxlength="20" />
                     <input type="password" name="confirmPassword" class="form-control pword"  placeholder="确认密码" maxlength="20" />
 

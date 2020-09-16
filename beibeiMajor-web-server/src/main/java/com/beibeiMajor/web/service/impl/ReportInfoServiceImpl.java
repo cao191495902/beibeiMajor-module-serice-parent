@@ -1,6 +1,7 @@
 package com.beibeiMajor.web.service.impl;
 
 import com.beibeiMajor.system.domain.WebUser;
+import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.mapper.dao.WebMatchDetailDao;
 import com.beibeiMajor.web.mapper.dao.WebMatchPlayerInfoDao;
@@ -162,5 +163,10 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         });
         return true;
     }
+    @Override
+    public List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport) {
+        return webUserDotaReportDao.selectWebUserDotaReportList(webUserDotaReport);
+    }
+
 
 }

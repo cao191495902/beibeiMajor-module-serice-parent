@@ -19,6 +19,11 @@ public class WebUserDotaReportPo implements Serializable {
      */
     private Long userId;
     /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
      * 积分
      */
     private Integer integral;
