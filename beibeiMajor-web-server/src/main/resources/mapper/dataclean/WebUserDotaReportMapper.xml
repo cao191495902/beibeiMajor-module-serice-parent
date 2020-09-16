@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.beibeiMajor.mapper.dao.WebUserDotaReportDao">
+<mapper namespace="com.beibeiMajor.web.mapper.dao.WebUserDotaReportDao">
 
-    <resultMap type="com.beibeiMajor.mapper.po.WebUserDotaReportPo" id="WebUserDotaReportMap">
+    <resultMap type="com.beibeiMajor.web.mapper.po.WebUserDotaReportPo" id="WebUserDotaReportMap">
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="integral" column="integral" jdbcType="INTEGER"/>
         <result property="winRate" column="win_rate" jdbcType="NUMERIC"/>
@@ -138,7 +138,7 @@
         delete from beibei_major.web_user_dota_report where user_id = #{userId}
     </delete>
 
-    <select id="getUserWinAndLose" resultType="com.beibeiMajor.mapper.po.WinAndLosePo">
+    <select id="getUserWinAndLose" resultType="com.beibeiMajor.web.mapper.po.WinAndLosePo">
         SELECT
         a.account_id,
         c.nick_name,
@@ -175,7 +175,7 @@
         web_user c on a.account_id = c.account_id
     </select>
 
-    <select id="getUserAverageData" resultType="com.beibeiMajor.mapper.po.UserAverageDataPo">
+    <select id="getUserAverageData" resultType="com.beibeiMajor.web.mapper.po.UserAverageDataPo">
         SELECT
             a.account_id,
             b.nick_name,

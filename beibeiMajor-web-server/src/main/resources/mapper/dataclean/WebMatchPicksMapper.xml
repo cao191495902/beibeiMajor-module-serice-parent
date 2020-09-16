@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.beibeiMajor.mapper.dao.WebMatchPicksDao">
+<mapper namespace="com.beibeiMajor.web.mapper.dao.WebMatchPicksDao">
 
-    <resultMap type="com.beibeiMajor.mapper.po.WebMatchPicksPo" id="WebMatchPicksMap">
+    <resultMap type="com.beibeiMajor.web.mapper.po.WebMatchPicksPo" id="WebMatchPicksMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="matchId" column="match_id" jdbcType="INTEGER"/>
         <result property="isPick" column="is_pick" jdbcType="BOOLEAN"/>

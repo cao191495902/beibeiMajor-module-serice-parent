@@ -1,6 +1,6 @@
 package com.beibeiMajor.web.controller;
 
-import com.beibeiMajor.service.DotaGameInfoService;
+import com.beibeiMajor.web.service.DotaGameInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
