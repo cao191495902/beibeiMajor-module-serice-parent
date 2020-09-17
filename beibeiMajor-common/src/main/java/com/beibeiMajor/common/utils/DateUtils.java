@@ -1,10 +1,13 @@
 package com.beibeiMajor.common.utils;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import java.util.GregorianCalendar;
 
 /**
  * 时间工具类
@@ -151,5 +154,31 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    /**
+     * 获取本周第一天
+     *
+     * @return
+     */
+    public static Date getFirstDayOfWeek(Date date) {
+        Calendar cal = new GregorianCalendar();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());// Monday
+        return cal.getTime();
+    }
+
+    /**
+     * 获取本周最后一天
+     *
+     * @return
+     */
+    public static Date getLastDayOfWeek(Date date) {
+        Calendar cal = new GregorianCalendar();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek() + 6);// Sunday
+        return cal.getTime();
     }
 }

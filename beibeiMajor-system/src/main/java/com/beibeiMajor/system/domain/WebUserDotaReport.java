@@ -56,6 +56,9 @@ public class WebUserDotaReport extends BaseEntity
     @Excel(name = "场均阵亡")
     private Double averageDeaths;
 
+    //积分排名
+    private Integer rank;
+
     /** 场均助攻 */
     @Excel(name = "场均助攻")
     private Double averageAssists;
@@ -196,5 +199,13 @@ public class WebUserDotaReport extends BaseEntity
                 ", goldPerMin=" + goldPerMin +
                 ", xpPerMin=" + xpPerMin +
                 '}';
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 }

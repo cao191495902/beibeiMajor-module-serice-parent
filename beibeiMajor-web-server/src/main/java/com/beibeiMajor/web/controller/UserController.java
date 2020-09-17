@@ -94,6 +94,15 @@ public class UserController extends BaseController{
             mmap.addAttribute("info",list.get(0));
         }
         mmap.addAttribute("user",user);
+
+//        //获取本周最佳选手，本周胜率最高
+//        //获取本周最差选手，本周胜率最低
+//        Date startDate = DateUtils.getFirstDayOfWeek(new Date());
+//        Date endDate = DateUtils.getLastDayOfWeek(new Date());
+//        WebUser maxWinUser = reportInfoService.getWeekMaxWinUser(startDate, endDate);
+//        WebUser minWinUser = reportInfoService.getWeekMinWinUser(startDate, endDate);
+//        mmap.addAttribute("maxWinUser", maxWinUser);
+//        mmap.addAttribute("minWinUser", minWinUser);
         return new ModelAndView("index");
     }
 

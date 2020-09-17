@@ -1,17 +1,49 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('用户积分列表')" />
 </head>
-<p><img th:src="${user.avatar}"></html></p>
-<p >当前登录：<span th:text="${user.nickName}"></span></p>
-<p >积分：<span th:text="${info.integral}"></span></p>
-<p >胜率：<span th:text="${info.winRate}"></span></p>
-<p >MVP次数：<span th:text="${info.mvpCount}"></span></p>
-<p th:if="${info.integral >=3300 }"><span style="color: red">当前级别：SSR-特等马</span></p>
-<p th:if="${info.integral <3300 &&  user.integral >=2800}"><span style="color: #8a1f11">当前级别：SR-上等马</span></p>
-<p th:if="${info.integral <2800 }"><span style="color: #00B83F">当前级别：R-中等马</span></p>
-<p th:if="${info.integral <2500 }"><span style="color: grey">当前级别：N-下等马</span></p>
+<style>
+    ul,li{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+    .box2222{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content:space-between;
+    }
+    .box2222 li{
+        width: calc(50% - 5px);
+        margin: 10px 0 10px 0;
+    }
+</style>
+<div style="text-align: center">
+<p style="margin: 20px 0px 20px 0px" ><img th:src="${user.avatar}"></html></p>
+</div>
+<section>
+    <ul class="box2222">
+        <li>
+            <div>我的昵称：<span th:text="${user.nickName}"></span></div>
+        </li>
+        <li>
+            <div>我的胜率：<span th:text="${info.winRate}"></span></div>
+        </li>
+        <li>
+            <div>我的积分：<span th:text="${info.integral}"></span></div>
+        </li>
+        <li>
+            <div>积分排名：<span th:text="${info.rank}" style="color: red"></span></div>
+        </li>
+    </ul>
+</section>
+<p th:if="${info.rank <=3} "><span style="color: red">当前级别：冠绝</span></p>
+<p th:if="${info.rank >3 && info.rank <=10} "><span style="color:#00B83F">当前级别：超凡</span></p>
+<p th:if="${info.rank >10 && info.rank <=18} "><span style="color: #0d8ddb">当前级别：传奇</span></p>
+<p th:if="${info.rank > 18} "><span style="color: grey">当前级别：中军</span></p>
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
