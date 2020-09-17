@@ -5,10 +5,7 @@ import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.mapper.dao.WebMatchDetailDao;
 import com.beibeiMajor.web.mapper.dao.WebMatchPlayerInfoDao;
 import com.beibeiMajor.web.mapper.dao.WebUserDotaReportDao;
-import com.beibeiMajor.web.mapper.po.UserAverageDataPo;
-import com.beibeiMajor.web.mapper.po.WebMatchDetailPo;
-import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
-import com.beibeiMajor.web.mapper.po.WinAndLosePo;
+import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.OperationInfoToDBService;
 import com.beibeiMajor.web.service.ReportInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -66,15 +63,21 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                 }
             }));
             //STEP 4 最后玩耍时间,当前连胜,当前连败
-            Map<Long,Long> lastPlayTimeMap = webMatchDetailDao.getLastPlayTime();
-            for (Map.Entry<Long, Long> m : lastPlayTimeMap.entrySet()) {
-                nowReportPoList.forEach(reportPo -> {
-                    if (m.getKey().longValue() == reportPo.getUserId().longValue()){
-                        reportPo.setLastPlayTime(new Date(m.getValue()));
+            List<Map<Long,Long>> lastPlayTimeList = webMatchDetailDao.getLastPlayTime();
+            lastPlayTimeList.forEach(mapBean -> nowReportPoList.stream().filter(reportPo -> mapBean.get("accountId").longValue() == reportPo.getUserId().longValue()).forEach(reportPo -> {
+                Date date = new Date();
+                date.setTime(mapBean.get("playTime")*1000);
+                reportPo.setLastPlayTime(date);
+            }));
+            List<WinsOrLoseCountPo> countList = webMatchPlayerInfoDao.getWinsOrLoseCount();
+            nowReportPoList.forEach(reportPo -> {
+                countList.forEach(winsOrLoseCountPo -> {
+                    if (reportPo.getUserId().longValue() == winsOrLoseCountPo.getAccountId()){
+                        reportPo.setIsWin(winsOrLoseCountPo.getIsWin());
+                        reportPo.setCurMaxCount(winsOrLoseCountPo.getCount());
                     }
                 });
-            }
-
+            });
             //TODO STEP 5 MVP
             //全量更新表
             webUserDotaReportDao.batchUpdate(nowReportPoList);

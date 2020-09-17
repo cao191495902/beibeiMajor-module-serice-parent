@@ -1,6 +1,7 @@
 package com.beibeiMajor.web.mapper.dao;
 
 import com.beibeiMajor.web.mapper.po.WebMatchPlayerPo;
+import com.beibeiMajor.web.mapper.po.WinsOrLoseCountPo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -91,4 +92,6 @@ public interface WebMatchPlayerInfoDao {
      * @return 玩家集合
      */
     List<Long> getLosePlayerByMatchId(@Param("matchId") Long matchId);
+
+    List<WinsOrLoseCountPo> getWinsOrLoseCount();
 }

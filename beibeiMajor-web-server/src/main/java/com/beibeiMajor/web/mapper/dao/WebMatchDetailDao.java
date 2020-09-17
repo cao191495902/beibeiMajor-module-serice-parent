@@ -101,6 +101,6 @@ public interface WebMatchDetailDao {
      *
      * @return Map<玩家ID，最后玩耍时间>
      */
-    Map<Long, Long> getLastPlayTime();
+    List<Map<Long, Long>> getLastPlayTime();
 
 }

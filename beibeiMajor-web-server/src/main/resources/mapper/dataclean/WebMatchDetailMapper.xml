@@ -199,8 +199,8 @@
 
     <select id="getLastPlayTime" resultType="java.util.Map">
         SELECT
-            b.account_id,
-            Max( a.start_time )
+            b.account_id AS accountId,
+            Max( a.start_time ) AS playTime
         FROM
             web_match_detail a
             LEFT JOIN web_match_player_info b ON a.match_id = b.match_id

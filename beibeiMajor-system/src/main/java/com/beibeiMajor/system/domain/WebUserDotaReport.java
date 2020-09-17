@@ -1,11 +1,12 @@
 package com.beibeiMajor.system.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.beibeiMajor.common.annotation.Excel;
 import com.beibeiMajor.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 用户积分对象 web_user_dota_report
@@ -33,12 +34,12 @@ public class WebUserDotaReport extends BaseEntity
     private Long mvpCount;
 
     /** 最高连胜次数 */
-    @Excel(name = "最高连胜次数")
-    private Long maxWinCount;
+    @Excel(name = "当前连胜/连败次数")
+    private Integer curMaxCount;
 
     /** 最高连败次数 */
-    @Excel(name = "最高连败次数")
-    private Long maxLoseCount;
+    @Excel(name = "连胜/连败")
+    private Boolean isWin;
 
     /** 最后比赛时间 */
     @Excel(name = "最后比赛时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -80,25 +81,24 @@ public class WebUserDotaReport extends BaseEntity
     {
         return mvpCount;
     }
-    public void setMaxWinCount(Long maxWinCount) 
-    {
-        this.maxWinCount = maxWinCount;
+
+    public Integer getCurMaxCount() {
+        return curMaxCount;
     }
 
-    public Long getMaxWinCount() 
-    {
-        return maxWinCount;
-    }
-    public void setMaxLoseCount(Long maxLoseCount) 
-    {
-        this.maxLoseCount = maxLoseCount;
+    public void setCurMaxCount(Integer curMaxCount) {
+        this.curMaxCount = curMaxCount;
     }
 
-    public Long getMaxLoseCount() 
-    {
-        return maxLoseCount;
+    public Boolean getWin() {
+        return isWin;
     }
-    public void setLastPlayTime(Date lastPlayTime) 
+
+    public void setWin(Boolean win) {
+        isWin = win;
+    }
+
+    public void setLastPlayTime(Date lastPlayTime)
     {
         this.lastPlayTime = lastPlayTime;
     }
@@ -115,8 +115,8 @@ public class WebUserDotaReport extends BaseEntity
             .append("integral", getIntegral())
             .append("winRate", getWinRate())
             .append("mvpCount", getMvpCount())
-            .append("maxWinCount", getMaxWinCount())
-            .append("maxLoseCount", getMaxLoseCount())
+            .append("curMaxCount", getCurMaxCount())
+            .append("isWin", getWin())
             .append("lastPlayTime", getLastPlayTime())
             .toString();
     }

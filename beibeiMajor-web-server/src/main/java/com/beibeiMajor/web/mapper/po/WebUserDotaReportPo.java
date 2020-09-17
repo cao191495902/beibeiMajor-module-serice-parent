@@ -35,13 +35,13 @@ public class WebUserDotaReportPo implements Serializable {
      */
     private Double kda;
     /**
-     * 最高连胜次数
+     * 当前连胜/连败次数
      */
-    private Integer maxWinCount;
+    private Integer curMaxCount;
     /**
-     * 最高连败次数
+     * 是否是连胜
      */
-    private Integer maxLoseCount;
+    private Boolean isWin;
     /**
      * 最后比赛时间
      */
