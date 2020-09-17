@@ -4,14 +4,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beibeiMajor.system.mapper.WebUserDotaReportMapper">
     
-    <resultMap type="WebUserDotaReport" id="WebUserDotaReportResult">
+    <resultMap type="com.beibeiMajor.system.domain.WebUserDotaReport" id="WebUserDotaReportResult">
         <result property="userId"    column="user_id"    />
         <result property="integral"    column="integral"    />
         <result property="winRate"    column="win_rate"    />
         <result property="mvpCount"    column="mvp_count"    />
         <result property="kda"    column="kda"    />
-        <result property="maxWinCount"    column="max_win_count"    />
-        <result property="maxLoseCount"    column="max_lose_count"    />
+        <result property="curMaxCount"    column="cur_max_count"    />
+        <result property="isWin"    column="iswin"    />
         <result property="lastPlayTime"    column="last_play_time"    />
         <result property="averageKills"    column="average_kills"    />
         <result property="averageDeaths"    column="average_deaths"    />
@@ -21,18 +21,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWebUserDotaReportVo">
-        select user_id, integral, win_rate, mvp_count, kda, max_win_count, max_lose_count, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min from web_user_dota_report
+        select user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min from web_user_dota_report
     </sql>
 
-    <select id="selectWebUserDotaReportList" parameterType="WebUserDotaReport" resultMap="WebUserDotaReportResult">
+    <select id="selectWebUserDotaReportList" parameterType="com.beibeiMajor.system.domain.WebUserDotaReport" resultMap="WebUserDotaReportResult">
         <include refid="selectWebUserDotaReportVo"/>
         <where>  
             <if test="integral != null "> and integral = #{integral}</if>
             <if test="winRate != null "> and win_rate = #{winRate}</if>
             <if test="mvpCount != null "> and mvp_count = #{mvpCount}</if>
             <if test="kda != null "> and kda = #{kda}</if>
-            <if test="maxWinCount != null "> and max_win_count = #{maxWinCount}</if>
-            <if test="maxLoseCount != null "> and max_lose_count = #{maxLoseCount}</if>
+            <if test="curMaxCount != null "> and cur_max_count = #{curMaxCount}</if>
+            <if test="isWin != null "> and iswin = #{isWin}</if>
             <if test="lastPlayTime != null "> and last_play_time = #{lastPlayTime}</if>
             <if test="averageKills != null "> and average_kills = #{averageKills}</if>
             <if test="averageDeaths != null "> and average_deaths = #{averageDeaths}</if>
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where user_id = #{userId}
     </select>
         
-    <insert id="insertWebUserDotaReport" parameterType="WebUserDotaReport">
+    <insert id="insertWebUserDotaReport" parameterType="com.beibeiMajor.system.domain.WebUserDotaReport">
         insert into web_user_dota_report
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
@@ -55,8 +55,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="winRate != null">win_rate,</if>
             <if test="mvpCount != null">mvp_count,</if>
             <if test="kda != null">kda,</if>
-            <if test="maxWinCount != null">max_win_count,</if>
-            <if test="maxLoseCount != null">max_lose_count,</if>
+            <if test="curMaxCount != null">cur_max_count,</if>
+            <if test="isWin != null">iswin,</if>
             <if test="lastPlayTime != null">last_play_time,</if>
             <if test="averageKills != null">average_kills,</if>
             <if test="averageDeaths != null">average_deaths,</if>
@@ -70,8 +70,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="winRate != null">#{winRate},</if>
             <if test="mvpCount != null">#{mvpCount},</if>
             <if test="kda != null">#{kda},</if>
-            <if test="maxWinCount != null">#{maxWinCount},</if>
-            <if test="maxLoseCount != null">#{maxLoseCount},</if>
+            <if test="curMaxCount != null">#{curMaxCount},</if>
+            <if test="isWin != null">#{isWin},</if>
             <if test="lastPlayTime != null">#{lastPlayTime},</if>
             <if test="averageKills != null">#{averageKills},</if>
             <if test="averageDeaths != null">#{averageDeaths},</if>
@@ -81,15 +81,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateWebUserDotaReport" parameterType="WebUserDotaReport">
+    <update id="updateWebUserDotaReport" parameterType="com.beibeiMajor.system.domain.WebUserDotaReport">
         update web_user_dota_report
         <trim prefix="SET" suffixOverrides=",">
             <if test="integral != null">integral = #{integral},</if>
             <if test="winRate != null">win_rate = #{winRate},</if>
             <if test="mvpCount != null">mvp_count = #{mvpCount},</if>
             <if test="kda != null">kda = #{kda},</if>
-            <if test="maxWinCount != null">max_win_count = #{maxWinCount},</if>
-            <if test="maxLoseCount != null">max_lose_count = #{maxLoseCount},</if>
+            <if test="curMaxCount != null">cur_max_count = #{curMaxCount},</if>
+            <if test="isWin != null">iswin = #{isWin},</if>
             <if test="lastPlayTime != null">last_play_time = #{lastPlayTime},</if>
             <if test="averageKills != null">average_kills = #{averageKills},</if>
             <if test="averageDeaths != null">average_deaths = #{averageDeaths},</if>

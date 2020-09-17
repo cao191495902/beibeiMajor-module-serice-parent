@@ -2,8 +2,6 @@ package com.beibeiMajor.system.domain;
 
 import com.beibeiMajor.common.annotation.Excel;
 import com.beibeiMajor.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -33,17 +31,41 @@ public class WebUserDotaReport extends BaseEntity
     @Excel(name = "mvp次数")
     private Long mvpCount;
 
-    /** 最高连胜次数 */
+    /** 场均KDA */
+    @Excel(name = "场均KDA")
+    private Double kda;
+
+    /** 当前连胜/连败次数 */
     @Excel(name = "当前连胜/连败次数")
     private Integer curMaxCount;
 
-    /** 最高连败次数 */
+    /** 连胜/连败 */
     @Excel(name = "连胜/连败")
     private Boolean isWin;
 
     /** 最后比赛时间 */
     @Excel(name = "最后比赛时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date lastPlayTime;
+
+    /** 场均击杀 */
+    @Excel(name = "场均击杀")
+    private Double averageKills;
+
+    /** 场均阵亡 */
+    @Excel(name = "场均阵亡")
+    private Double averageDeaths;
+
+    /** 场均助攻 */
+    @Excel(name = "场均助攻")
+    private Double averageAssists;
+
+    /** GPM */
+    @Excel(name = "GPM")
+    private Integer goldPerMin;
+
+    /** XPM */
+    @Excel(name = "XPM")
+    private Integer xpPerMin;
 
     public void setUserId(Long userId) 
     {
@@ -108,16 +130,70 @@ public class WebUserDotaReport extends BaseEntity
         return lastPlayTime;
     }
 
+    public Double getKda() {
+        return kda;
+    }
+
+    public void setKda(Double kda) {
+        this.kda = kda;
+    }
+
+    public Double getAverageKills() {
+        return averageKills;
+    }
+
+    public void setAverageKills(Double averageKills) {
+        this.averageKills = averageKills;
+    }
+
+    public Double getAverageDeaths() {
+        return averageDeaths;
+    }
+
+    public void setAverageDeaths(Double averageDeaths) {
+        this.averageDeaths = averageDeaths;
+    }
+
+    public Double getAverageAssists() {
+        return averageAssists;
+    }
+
+    public void setAverageAssists(Double averageAssists) {
+        this.averageAssists = averageAssists;
+    }
+
+    public Integer getGoldPerMin() {
+        return goldPerMin;
+    }
+
+    public void setGoldPerMin(Integer goldPerMin) {
+        this.goldPerMin = goldPerMin;
+    }
+
+    public Integer getXpPerMin() {
+        return xpPerMin;
+    }
+
+    public void setXpPerMin(Integer xpPerMin) {
+        this.xpPerMin = xpPerMin;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("userId", getUserId())
-            .append("integral", getIntegral())
-            .append("winRate", getWinRate())
-            .append("mvpCount", getMvpCount())
-            .append("curMaxCount", getCurMaxCount())
-            .append("isWin", getWin())
-            .append("lastPlayTime", getLastPlayTime())
-            .toString();
+        return "WebUserDotaReport{" +
+                "userId=" + userId +
+                ", integral=" + integral +
+                ", winRate=" + winRate +
+                ", mvpCount=" + mvpCount +
+                ", kda=" + kda +
+                ", curMaxCount=" + curMaxCount +
+                ", isWin=" + isWin +
+                ", lastPlayTime=" + lastPlayTime +
+                ", averageKills=" + averageKills +
+                ", averageDeaths=" + averageDeaths +
+                ", averageAssists=" + averageAssists +
+                ", goldPerMin=" + goldPerMin +
+                ", xpPerMin=" + xpPerMin +
+                '}';
     }
 }
