@@ -18,10 +18,10 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 9091
+  port: 7011
   servlet:
     # 应用的访问路径
-    context-path: /
+    context-path: /web
   tomcat:
     # tomcat的URI编码
     uri-encoding: UTF-8

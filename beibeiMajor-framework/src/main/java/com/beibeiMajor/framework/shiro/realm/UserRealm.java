@@ -82,36 +82,33 @@ public class UserRealm extends AuthorizingRealm
             password = new String(upToken.getPassword());
         }
 
-        if (StringUtils.isEmpty(host)) {
-            SysUser user = null;
-            try {
+        Object user = null;
+        try {
+            if (StringUtils.isEmpty(host)) {
                 user = loginService.login(username, password);
-            } catch (CaptchaException e) {
-                throw new AuthenticationException(e.getMessage(), e);
-            } catch (UserNotExistsException e) {
-                throw new UnknownAccountException(e.getMessage(), e);
-            } catch (UserPasswordNotMatchException e) {
-                throw new IncorrectCredentialsException(e.getMessage(), e);
-            } catch (UserPasswordRetryLimitExceedException e) {
-                throw new ExcessiveAttemptsException(e.getMessage(), e);
-            } catch (UserBlockedException e) {
-                throw new LockedAccountException(e.getMessage(), e);
-            } catch (RoleBlockedException e) {
-                throw new LockedAccountException(e.getMessage(), e);
-            } catch (Exception e) {
-                log.info("对用户[" + username + "]进行登录验证..验证未通过{}", e.getMessage());
-                throw new AuthenticationException(e.getMessage(), e);
+            } else if ("web".equals(host)) {
+                user = loginService.loginWeb(username, password);
             }
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, password, getName());
-            return info;
-        } else if ("web".equals(host)) {
-            SysUser user = null;
-
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, password, getName());
-            return info;
+        } catch (CaptchaException e) {
+            throw new AuthenticationException(e.getMessage(), e);
+        } catch (UserNotExistsException e) {
+            throw new UnknownAccountException(e.getMessage(), e);
+        } catch (UserPasswordNotMatchException e) {
+            throw new IncorrectCredentialsException(e.getMessage(), e);
+        } catch (UserPasswordRetryLimitExceedException e) {
+            throw new ExcessiveAttemptsException(e.getMessage(), e);
+        } catch (UserBlockedException e) {
+            throw new LockedAccountException(e.getMessage(), e);
+        } catch (RoleBlockedException e) {
+            throw new LockedAccountException(e.getMessage(), e);
+        } catch (Exception e) {
+            log.info("对用户[" + username + "]进行登录验证..验证未通过{}", e.getMessage());
+            throw new AuthenticationException(e.getMessage(), e);
         }
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, password, getName());
+        return info;
 
-        return null;
+
     }
 
     /**

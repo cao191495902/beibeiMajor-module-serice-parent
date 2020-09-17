@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.mapper.dao;
 
+import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.UserAverageDataPo;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
 import com.beibeiMajor.web.mapper.po.WinAndLosePo;
@@ -76,4 +77,6 @@ public interface WebUserDotaReportDao {
     Boolean batchUpdate(List<WebUserDotaReportPo> reportPoList);
 
     Boolean batchInsert(List<WebUserDotaReportPo> reportPoList);
+
+    List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
 }
