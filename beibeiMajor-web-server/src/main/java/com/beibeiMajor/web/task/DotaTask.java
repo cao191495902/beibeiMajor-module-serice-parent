@@ -2,6 +2,7 @@ package com.beibeiMajor.web.task;
 
 import com.beibeiMajor.common.utils.StringUtils;
 import com.beibeiMajor.web.service.DotaGameInfoService;
+import com.beibeiMajor.web.service.ReportInfoService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -17,6 +18,8 @@ public class DotaTask {
 
     @Resource
     private DotaGameInfoService dotaGameInfoService;
+    @Resource
+    private ReportInfoService reportInfoService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i)
     {
@@ -27,6 +30,11 @@ public class DotaTask {
         //每日定时更新比赛信息
         List<Long> gameIdOfLeagueMatch = dotaGameInfoService.getGameIdOfLeagueMatch();
         dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch);
+    }
+
+    public void handlerGameInfoToShow(){
+        //每日定时更新比赛信息后计算后展示数据
+        reportInfoService.handlerMatchInfoToReport();
     }
 
     public void ryNoParams()

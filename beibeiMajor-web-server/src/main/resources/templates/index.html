@@ -61,12 +61,26 @@
                     title: '场均KDA'
                 },
                 {
-                    field: 'maxWinCount',
-                    title: '最高连胜次数'
+                    field: 'curMaxCount',
+                    title: '当前连胜/连败数'
                 },
                 {
-                    field: 'maxLoseCount',
-                    title: '最高连败次数'
+                    field: 'isWin',
+                    title: '连胜/连败',
+                    formatter: function(value, row, index) {
+                        if(value != 1){
+                            return "连胜";
+                        }else{
+                            return "连败";
+                        }
+                    },
+                    cellStyle: function(value, row, index) {
+                        if(value != 1){
+                            return {css:{"color":"green"}}
+                        }else{
+                            return {css:{"color":"red"}}
+                        }
+                    }
                 },
                 {
                     field: 'lastPlayTime',

@@ -6,9 +6,10 @@ import com.beibeiMajor.common.core.domain.BaseEntity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+
 /**
  * 用户积分对象 web_user_dota_report
- * 
+ *
  * @author ruoyi
  * @date 2020-09-14
  */
@@ -67,39 +68,39 @@ public class WebUserDotaReport extends BaseEntity
     @Excel(name = "XPM")
     private Integer xpPerMin;
 
-    public void setUserId(Long userId) 
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }
 
-    public Long getUserId() 
+    public Long getUserId()
     {
         return userId;
     }
-    public void setIntegral(Long integral) 
+    public void setIntegral(Long integral)
     {
         this.integral = integral;
     }
 
-    public Long getIntegral() 
+    public Long getIntegral()
     {
         return integral;
     }
-    public void setWinRate(BigDecimal winRate) 
+    public void setWinRate(BigDecimal winRate)
     {
         this.winRate = winRate;
     }
 
-    public BigDecimal getWinRate() 
+    public BigDecimal getWinRate()
     {
         return winRate;
     }
-    public void setMvpCount(Long mvpCount) 
+    public void setMvpCount(Long mvpCount)
     {
         this.mvpCount = mvpCount;
     }
 
-    public Long getMvpCount() 
+    public Long getMvpCount()
     {
         return mvpCount;
     }
@@ -125,7 +126,7 @@ public class WebUserDotaReport extends BaseEntity
         this.lastPlayTime = lastPlayTime;
     }
 
-    public Date getLastPlayTime() 
+    public Date getLastPlayTime()
     {
         return lastPlayTime;
     }

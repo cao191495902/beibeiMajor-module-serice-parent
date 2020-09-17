@@ -28,7 +28,7 @@
     </select>
 
     <sql id="selectWebUserDotaReportVo">
-        select user_id, integral, win_rate, mvp_count, kda, max_win_count, max_lose_count, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min from web_user_dota_report
+        select user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min from web_user_dota_report
     </sql>
 
     <!--查询指定行数据-->
@@ -328,8 +328,8 @@
             user_id = #{i.userId}
         </foreach>
     </update>
-    <select id="selectWebUserDotaReportList" parameterType="WebUserDotaReport" resultMap="WebUserDotaReportMap">
-        select user_id, integral, win_rate, mvp_count, kda, max_win_count, max_lose_count, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min ,
+    <select id="selectWebUserDotaReportList" parameterType="com.beibeiMajor.system.domain.WebUserDotaReport" resultMap="WebUserDotaReportMap">
+        select user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min ,
         (select nick_name from web_user where account_id = w.user_id) as nick_name
         from web_user_dota_report w
         <where>
@@ -338,8 +338,8 @@
             <if test="winRate != null "> and win_rate = #{winRate}</if>
             <if test="mvpCount != null "> and mvp_count = #{mvpCount}</if>
             <if test="kda != null "> and kda = #{kda}</if>
-            <if test="maxWinCount != null "> and max_win_count = #{maxWinCount}</if>
-            <if test="maxLoseCount != null "> and max_lose_count = #{maxLoseCount}</if>
+            <if test="curMaxCount != null "> and cur_max_count = #{curMaxCount}</if>
+            <if test="isWin != null "> and iswin = #{isWin}</if>
             <if test="lastPlayTime != null "> and last_play_time = #{lastPlayTime}</if>
             <if test="averageKills != null "> and average_kills = #{averageKills}</if>
             <if test="averageDeaths != null "> and average_deaths = #{averageDeaths}</if>
