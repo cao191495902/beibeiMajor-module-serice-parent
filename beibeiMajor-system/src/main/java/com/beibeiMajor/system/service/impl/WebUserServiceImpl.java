@@ -170,4 +170,16 @@ public class WebUserServiceImpl implements IWebUserService
         }
         return null;
     }
+
+    @Override
+    public void selectInsertWebUser() {
+        //先批量igore插入
+        webUserMapper.insertByMatchDetails();
+        //更新steam信息，每晚上更新一次 防止修改dota2名称，这里面没更新到
+        List<WebUser> list = webUserMapper.getAllWebUser();
+        for (WebUser user : list) {
+            user = getUpdateWebUserInfo(user);
+            webUserMapper.updateWebUser(user);
+        }
+    }
 }

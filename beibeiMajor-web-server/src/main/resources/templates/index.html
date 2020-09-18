@@ -7,7 +7,7 @@
     ul,li{
         list-style: none;
         margin: 0;
-        padding: 0;
+        padding: 5px;
         width: 100%;
     }
     .box2222{
@@ -18,14 +18,32 @@
     }
     .box2222 li{
         width: calc(50% - 5px);
-        margin: 10px 0 10px 0;
+        margin: -10px 0 5px 0;
+    }
+    .liContent {
+        display: flex;
+        align-items: center; /*定义body的元素垂直居中*/
+        /*justify-content: center; !*定义body的里的元素水平居中*!*/
+    }
+    .levelContent span{
+        font-size: 40px;
     }
 </style>
 <div style="text-align: center">
-<p style="margin: 20px 0px 20px 0px" ><img th:src="${user.avatar}"></html></p>
 </div>
 <section>
     <ul class="box2222">
+        <li>
+            <div><img  th:src="${user.avatar}"></html></div>
+        </li>
+        <li class="liContent">
+            <div class=" levelContent">
+                <p th:if="${info.rank <=5} "><span style="color: red;">特等马</span></p>
+                <p th:if="${info.rank >5 && info.rank <=10} "><span style="color:#00B83F;">上等马</span></p>
+                <p th:if="${info.rank >10 && info.rank <=15} "><span style="color: #0d8ddb;">中等马</span></p>
+                <p th:if="${info.rank > 5} "><span style="color: grey;">下等马</span></p>
+            </div>
+        </li>
         <li>
             <div>我的昵称：<span th:text="${user.nickName}"></span></div>
         </li>
@@ -40,10 +58,7 @@
         </li>
     </ul>
 </section>
-<p th:if="${info.rank <=3} "><span style="color: red">当前级别：冠绝</span></p>
-<p th:if="${info.rank >3 && info.rank <=10} "><span style="color:#00B83F">当前级别：超凡</span></p>
-<p th:if="${info.rank >10 && info.rank <=18} "><span style="color: #0d8ddb">当前级别：传奇</span></p>
-<p th:if="${info.rank > 18} "><span style="color: grey">当前级别：中军</span></p>
+
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
@@ -64,6 +79,8 @@
             showPageGo: false,               		// 是否显示跳转页
             showRefresh: false,                   // 是否显示刷新按钮
             showColumns: false,
+            sortName: "winRate",
+            sortOrder: "desc",
             pagination:false,
             showToggle:false,
             createUrl: prefix + "/add",
@@ -93,6 +110,26 @@
                     title: '场均KDA'
                 },
                 {
+                    field: 'averageKills',
+                    title: '场均击杀'
+                },
+                {
+                    field: 'averageDeaths',
+                    title: '场均阵亡'
+                },
+                {
+                    field: 'averageAssists',
+                    title: '场均助攻'
+                },
+                {
+                    field: 'goldPerMin',
+                    title: 'GPM'
+                },
+                {
+                    field: 'xpPerMin',
+                    title: 'XPM'
+                },
+                {
                     field: 'curMaxCount',
                     title: '当前连胜/连败数'
                 },
@@ -117,27 +154,8 @@
                 {
                     field: 'lastPlayTime',
                     title: '最后比赛时间'
-                },
-                {
-                    field: 'averageKills',
-                    title: '场均击杀'
-                },
-                {
-                    field: 'averageDeaths',
-                    title: '场均阵亡'
-                },
-                {
-                    field: 'averageAssists',
-                    title: '场均助攻'
-                },
-                {
-                    field: 'goldPerMin',
-                    title: 'GPM'
-                },
-                {
-                    field: 'xpPerMin',
-                    title: 'XPM'
-                }]
+                }
+            ]
         };
         $.table.init(options);
     });

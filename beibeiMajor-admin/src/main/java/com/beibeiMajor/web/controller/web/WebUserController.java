@@ -114,16 +114,16 @@ public class WebUserController extends BaseController
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(WebUser webUser) {
-        if (StringUtils.isNotEmpty(webUser.getPassword())) {
+
+        //更新用户信息
+        webUser = webUserService.getUpdateWebUserInfo(webUser);
+        //更新密码
+        if (StringUtils.isNotEmpty(webUser.getPassword()) && webUser.getPassword().length() < 20) {
             webUser.setSalt(ShiroUtils.randomSalt());
             webUser.setPassword(passwordService.encryptPassword(webUser.getLoginName(), webUser.getPassword(), webUser.getSalt()));
             webUser.setCreateBy(ShiroUtils.getLoginName());
 
         }
-        //更新用户信息
-        webUser = webUserService.getUpdateWebUserInfo(webUser);
-
-
         return toAjax(webUserService.updateWebUser(webUser));
     }
 

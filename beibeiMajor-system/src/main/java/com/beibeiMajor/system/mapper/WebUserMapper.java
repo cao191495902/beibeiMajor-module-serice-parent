@@ -1,7 +1,9 @@
 package com.beibeiMajor.system.mapper;
 
+import com.beibeiMajor.system.domain.WebUser;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
-import com.beibeiMajor.system.domain.WebUser;import org.apache.ibatis.annotations.Param;
 
 /**
  * 用户信息Mapper接口
@@ -62,4 +64,8 @@ public interface WebUserMapper
     int checkLoginNameUnique(@Param("loginName")String loginName);
 
     WebUser selectUserByLoginName(String username);
+
+    void insertByMatchDetails();
+
+    List<WebUser> getAllWebUser();
 }

@@ -116,6 +116,11 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
         return HeroesDetailInfoToDB(heroBeans);
     }
 
+    @Override
+    public void updateUserInfo() {
+
+    }
+
     private Boolean HeroesDetailInfoToDB(List<HeroBean> heroBeans) {
         List<WebDotaHeroPo> lists = new ArrayList<>();
         heroBeans.forEach(heroBean -> {

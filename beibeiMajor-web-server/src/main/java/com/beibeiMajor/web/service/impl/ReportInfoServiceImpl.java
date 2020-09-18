@@ -36,6 +36,8 @@ public class ReportInfoServiceImpl implements ReportInfoService {
 
     @Override
     public List<WebUserDotaReportPo> handlerMatchInfoToReport() {
+
+
         //STEP 0 更新用户报表
         List<WebUserDotaReportPo> reportPoList = updateDotaReportInfo();
         List<WinAndLosePo> list = webUserDotaReportDao.getUserWinAndLose();

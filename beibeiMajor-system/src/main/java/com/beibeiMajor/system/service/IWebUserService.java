@@ -89,4 +89,8 @@ public interface IWebUserService
      */
     WebUser getUpdateWebUserInfo(WebUser webUser);
 
+    /**
+     * 更新所有用户信息
+     */
+    void selectInsertWebUser();
 }
