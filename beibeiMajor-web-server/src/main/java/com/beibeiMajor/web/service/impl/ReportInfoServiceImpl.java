@@ -46,13 +46,13 @@ public class ReportInfoServiceImpl implements ReportInfoService {
             handlerIntegralOfUsers();
             //STEP 2 计算用户胜率
             List<WebUserDotaReportPo> nowReportPoList = webUserDotaReportDao.queryAll(new WebUserDotaReportPo());
-            list.forEach(item->{
-                nowReportPoList.forEach(reportPo -> {
-                    if (reportPo.getUserId().longValue() == item.getAccountId().longValue()){
-                        reportPo.setWinRate(item.getWinRate());
-                    }
-                });
-            });
+            list.forEach(item-> nowReportPoList.forEach(reportPo -> {
+                if (reportPo.getUserId().longValue() == item.getAccountId().longValue()){
+                    reportPo.setWinRate(item.getWinRate());
+                    Integer totalNum = item.getWin() + item.getLose();
+                    reportPo.setTotalMatchesNum(totalNum);
+                }
+            }));
             //STEP 3 场均KDA,场均击杀,场均阵亡,场均助攻,场均GPM,场均XPM
             List<UserAverageDataPo> avgDataList = webUserDotaReportDao.getUserAverageData();
             avgDataList.forEach(item -> nowReportPoList.forEach(reportPo -> {
@@ -171,6 +171,33 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     @Override
     public List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport) {
         return webUserDotaReportDao.selectWebUserDotaReportList(webUserDotaReport);
+    }
+
+    @Override
+    public Map<String, List<Map<String, Double>>> statisticsTopInfoList() {
+        Map<String, List<Map<String, Double>>> map = new HashMap<>(7);
+        //最高积分 TOP3
+        List<Map<String,Double>> highestPointsTopList = webUserDotaReportDao.getHighestPointsTop(3);
+        map.put("highestPoints",highestPointsTopList);
+        //最高胜率 TOP3
+        List<Map<String,Double>> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(3);
+        map.put("highestWinningPercentage",highestWinPerTopList);
+        //最高KDA TOP3
+        List<Map<String,Double>> highestKDATopList = webUserDotaReportDao.getHighestKDATop(3);
+        map.put("highestKDA",highestKDATopList);
+        //最长连胜 TOP3
+        List<Map<String,Double>> longestWinningStreakTopList = webUserDotaReportDao.getLongestWinningStreakTop(3);
+        map.put("longestWinningStreak",longestWinningStreakTopList);
+        //最高场均击杀 TOP3
+        List<Map<String,Double>> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(3);
+        map.put("highestKillsPerGame",highestKillsPerGameTopList);
+        //最少场均死亡 TOP3
+        List<Map<String,Double>> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(3);
+        map.put("leastDeathPerGame",leastDeathPerGameTopList);
+        //最高场均助攻 TOP3
+        List<Map<String,Double>> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(3);
+        map.put("highestAssistsPerGame",highestAssistsPerGameTopList);
+        return map;
     }
 
 }

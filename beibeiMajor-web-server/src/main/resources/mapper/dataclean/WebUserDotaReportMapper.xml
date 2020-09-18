@@ -18,6 +18,7 @@
         <result property="goldPerMin" column="gold_per_min" jdbcType="INTEGER"/>
         <result property="xpPerMin" column="xp_per_min" jdbcType="INTEGER"/>
         <result property="rank" column="rank" jdbcType="INTEGER"/>
+        <result property="totalMatchesNum" column="total_matches_num" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
@@ -323,6 +324,13 @@
                     </if>
                 </foreach>
             </trim>
+            <trim prefix="total_matches_num = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.totalMatchesNum != null">
+                        when user_id = #{i.userId} then #{i.totalMatchesNum}
+                    </if>
+                </foreach>
+            </trim>
         </trim>
         where
         <foreach collection="list" separator="or" item="i" index="index" >
@@ -359,5 +367,110 @@
             (#{item.userId}, #{item.integral}, #{item.winRate}, #{item.mvpCount}, #{item.kda}, #{item.curMaxCount}, #{item.isWin}, #{item.lastPlayTime}, #{item.averageKills}, #{item.averageDeaths}, #{item.averageAssists}, #{item.goldPerMin}, #{item.xpPerMin})
         </foreach>
     </insert>
+
+    <select id="getHighestPointsTop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.integral
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+	        a.total_matches_num > 10
+        ORDER BY
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
+
+    <select id="getHighestWinPerTop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.win_rate
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+	        a.total_matches_num > 10
+        ORDER BY
+            a.win_rate DESC,
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
+
+    <select id="getHighestKDATop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.kda
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+	        a.total_matches_num > 10
+        ORDER BY
+            a.kda DESC,
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
+
+    <select id="getLongestWinningStreakTop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.cur_max_count
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+            a.total_matches_num > 10
+            AND a.iswin = 0
+        ORDER BY
+            a.cur_max_count DESC,
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
+
+    <select id="getHighestKillsPerGameTop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.average_kills
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+            a.total_matches_num > 10
+        ORDER BY
+            a.average_kills DESC,
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
+
+    <select id="getLeastDeathPerGameTop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.average_deaths
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+            a.total_matches_num > 10
+        ORDER BY
+            a.average_deaths ASC,
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
+
+    <select id="getHighestAssistsPerGameTop" resultType="java.util.Map">
+        SELECT
+            b.nick_name,
+            a.average_assists
+        FROM
+            web_user_dota_report a
+            LEFT JOIN web_user b ON a.user_id = b.account_id
+        WHERE
+            a.total_matches_num > 10
+        ORDER BY
+            a.average_assists DESC,
+            a.integral DESC
+            LIMIT #{topLimit}
+    </select>
 
 </mapper>

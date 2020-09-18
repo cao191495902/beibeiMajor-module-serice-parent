@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主页和用户登录相关处理
@@ -111,7 +112,6 @@ public class UserController extends BaseController{
      * @param webUserDotaReport
      * @return
      */
-
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(WebUserDotaReport webUserDotaReport)
@@ -119,6 +119,18 @@ public class UserController extends BaseController{
         startPage();
         List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport);
         return getDataTable(list);
+    }
+
+    /**
+     * 获取top信息表
+     * @return
+     */
+    @PostMapping("/topList")
+    @ResponseBody
+    public Map<String, List<Map<String, Double>>> topList()
+    {
+        startPage();
+        return reportInfoService.statisticsTopInfoList();
     }
 }
 

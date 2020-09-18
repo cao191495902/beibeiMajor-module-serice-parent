@@ -73,5 +73,9 @@ public class WebUserDotaReportPo implements Serializable {
     private Integer xpPerMin;
 
     private Integer rank;
+    /**
+     * 总比赛数
+     */
+    private Integer totalMatchesNum;
 
 }
