@@ -6,6 +6,7 @@ import com.beibeiMajor.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -83,7 +84,27 @@ public class WebUser extends BaseEntity
     @Excel(name = "最后登陆时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginDate;
 
-    public void setUserId(Long userId) 
+    private Integer doubleIntegralTimes;
+
+    private BigDecimal money;
+
+    public Integer getDoubleIntegralTimes() {
+        return doubleIntegralTimes;
+    }
+
+    public void setDoubleIntegralTimes(Integer doubleIntegralTimes) {
+        this.doubleIntegralTimes = doubleIntegralTimes;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
+
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }

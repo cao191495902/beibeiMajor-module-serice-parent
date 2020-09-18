@@ -7,8 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="WebUser" id="WebUserResult">
         <result property="userId"    column="user_id"    />
         <result property="steamId"    column="steam_id"    />
-        <result property="loginName"    column="login_name"    />
         <result property="accountId"    column="account_id"    />
+        <result property="loginName"    column="login_name"    />
         <result property="nickName"    column="nick_name"    />
         <result property="email"    column="email"    />
         <result property="phone"    column="phone"    />
@@ -25,18 +25,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="money"    column="money"    />
+        <result property="doubleIntegralTimes"    column="double_integral_times"    />
     </resultMap>
 
     <sql id="selectWebUserVo">
-        select user_id, steam_id, login_name, account_id, nick_name, email, phone, sex, avatar, password, salt, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark from web_user
+        select user_id, steam_id, account_id, login_name, nick_name, email, phone, sex, avatar, password, salt, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark, money, double_integral_times from web_user
     </sql>
 
     <select id="selectWebUserList" parameterType="WebUser" resultMap="WebUserResult">
         <include refid="selectWebUserVo"/>
         <where>  
-            <if test="steamId != null and steamId != ''"> and steam_id = #{steamId}</if>
-            <if test="loginName != null  and loginName != ''"> and login_name like concat('%', #{loginName}, '%')</if>
+            <if test="steamId != null "> and steam_id = #{steamId}</if>
             <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="loginName != null  and loginName != ''"> and login_name like concat('%', #{loginName}, '%')</if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="email != null  and email != ''"> and email = #{email}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
@@ -47,6 +49,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and login_date = #{loginDate}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="doubleIntegralTimes != null "> and double_integral_times = #{doubleIntegralTimes}</if>
         </where>
     </select>
     
@@ -58,9 +62,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertWebUser" parameterType="WebUser" useGeneratedKeys="true" keyProperty="userId">
         insert into web_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="steamId != null and steamId != ''">steam_id,</if>
-            <if test="loginName != null and loginName != ''">login_name,</if>
+            <if test="steamId != null">steam_id,</if>
             <if test="accountId != null">account_id,</if>
+            <if test="loginName != null and loginName != ''">login_name,</if>
             <if test="nickName != null">nick_name,</if>
             <if test="email != null">email,</if>
             <if test="phone != null">phone,</if>
@@ -77,11 +81,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="money != null">money,</if>
+            <if test="doubleIntegralTimes != null">double_integral_times,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="steamId != null and steamId != ''">#{steamId},</if>
-            <if test="loginName != null and loginName != ''">#{loginName},</if>
+            <if test="steamId != null">#{steamId},</if>
             <if test="accountId != null">#{accountId},</if>
+            <if test="loginName != null and loginName != ''">#{loginName},</if>
             <if test="nickName != null">#{nickName},</if>
             <if test="email != null">#{email},</if>
             <if test="phone != null">#{phone},</if>
@@ -98,15 +104,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="money != null">#{money},</if>
+            <if test="doubleIntegralTimes != null">#{doubleIntegralTimes},</if>
          </trim>
     </insert>
 
     <update id="updateWebUser" parameterType="WebUser">
         update web_user
         <trim prefix="SET" suffixOverrides=",">
-            <if test="steamId != null and steamId != ''">steam_id = #{steamId},</if>
-            <if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
+            <if test="steamId != null">steam_id = #{steamId},</if>
             <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="email != null">email = #{email},</if>
             <if test="phone != null">phone = #{phone},</if>
@@ -123,6 +131,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="doubleIntegralTimes != null">double_integral_times = #{doubleIntegralTimes},</if>
         </trim>
         where user_id = #{userId}
     </update>
@@ -137,24 +147,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{userId}
         </foreach>
     </delete>
-    <select id="checkLoginNameUnique" resultType="int">
-        select count(1) from web_user where login_name = #{loginName}
-    </select>
-    <select id="selectUserByLoginName" resultMap="WebUserResult">
-        <include refid="selectWebUserVo"/>
-        where login_name = #{loginName} or steam_id = #{loginName} or account_id = #{loginName}
-        or nick_name = #{loginName}
-        limit 1
-    </select>
-    <insert id="insertByMatchDetails">
-        INSERT IGNORE INTO `web_user`(account_id,steam_id,login_name,PASSWORD,salt,STATUS,create_time)
-        SELECT account_id,76561197960265728 +account_id,account_id,MD5(CONCAT(account_id,'123456','woaikandui')),
-        'woaikandui',1,NOW()
-        FROM web_match_player_info
-        GROUP BY account_id
-    </insert>
-    <select id="getAllWebUser" resultMap="WebUserResult">
-        <include refid="selectWebUserVo"/>
-    </select>
 
 </mapper>

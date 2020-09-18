@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beibeiMajor.system.mapper.WebDoubleIntegralRecordMapper">
+    
+    <resultMap type="WebDoubleIntegralRecord" id="WebDoubleIntegralRecordResult">
+        <result property="id"    column="id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="changeTimes"    column="change_times"    />
+        <result property="money"    column="money"    />
+        <result property="remark"    column="remark"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="createdBy"    column="created_by"    />
+    </resultMap>
+
+    <sql id="selectWebDoubleIntegralRecordVo">
+        select id, account_id, change_times, money, remark, created_time, created_by from web_double_integral_record
+    </sql>
+
+    <select id="selectWebDoubleIntegralRecordList" parameterType="WebDoubleIntegralRecord" resultMap="WebDoubleIntegralRecordResult">
+        <include refid="selectWebDoubleIntegralRecordVo"/>
+        <where>  
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="changeTimes != null "> and change_times = #{changeTimes}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="createdTime != null "> and created_time = #{createdTime}</if>
+            <if test="createdBy != null  and createdBy != ''"> and created_by = #{createdBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebDoubleIntegralRecordById" parameterType="Long" resultMap="WebDoubleIntegralRecordResult">
+        <include refid="selectWebDoubleIntegralRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWebDoubleIntegralRecord" parameterType="WebDoubleIntegralRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into web_double_integral_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">account_id,</if>
+            <if test="changeTimes != null">change_times,</if>
+            <if test="money != null">money,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createdTime != null">created_time,</if>
+            <if test="createdBy != null">created_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId != null">#{accountId},</if>
+            <if test="changeTimes != null">#{changeTimes},</if>
+            <if test="money != null">#{money},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebDoubleIntegralRecord" parameterType="WebDoubleIntegralRecord">
+        update web_double_integral_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="changeTimes != null">change_times = #{changeTimes},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createdTime != null">created_time = #{createdTime},</if>
+            <if test="createdBy != null">created_by = #{createdBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWebDoubleIntegralRecordById" parameterType="Long">
+        delete from web_double_integral_record where id = #{id}
+    </delete>
+
+    <delete id="deleteWebDoubleIntegralRecordByIds" parameterType="String">
+        delete from web_double_integral_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
