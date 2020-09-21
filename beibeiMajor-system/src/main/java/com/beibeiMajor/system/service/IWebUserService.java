@@ -93,4 +93,6 @@ public interface IWebUserService
      * 更新所有用户信息
      */
     void selectInsertWebUser();
+
+    void updateToDefaultDoubleTimes();
 }

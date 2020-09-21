@@ -56,15 +56,31 @@
         <li>
             <div>积分排名：<span th:text="${info.rank}" style="color: red"></span></div>
         </li>
+        <li>
+            <div>当前双倍次数：<span th:text="${user.doubleIntegralTimes}" style="color: red"></span></div>
+        </li>
+        <li>
+            <div th:if="${record != null}">
+                <div>今日双倍状态：<span style="font-size: 20px;color: red">已双倍</span></div>
+            </div>
+            <div th:if="${record == null}">
+                <a class="btn btn-primary btn-rounded btn-sm" onclick="setDouble()"><i
+                        class="fa "></i>&nbsp;我要双倍</a>
+            </div>
+        </li>
     </ul>
 </section>
 
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
+        <!--<div class="col-sm-12 select-table table-striped">-->
+            <!--<table id="bootstrap-table2"></table>-->
+        <!--</div>-->
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
         </div>
+
     </div>
 </div>
 <th:block th:include="include :: footer" />
@@ -159,6 +175,24 @@
         };
         $.table.init(options);
     });
+
+    function setDouble() {
+        $.post(ctx+"/updateDoubleTimes", '', function(result) {
+            if (result.code == web_status.SUCCESS) {
+                $.modal.alertSuccess("双倍成功");
+                setTimeout(function(){
+                    $.modal.closeLoading();
+                    $.modal.reload();
+                }, 1000);
+            } else {
+                $.modal.alertError(result.msg);
+                setTimeout(function(){
+                    $.modal.closeLoading();
+                }, 1000);
+            }
+        });
+
+    }
 </script>
 </body>
 </html>

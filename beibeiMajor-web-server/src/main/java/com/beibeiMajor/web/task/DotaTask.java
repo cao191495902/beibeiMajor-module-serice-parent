@@ -57,6 +57,14 @@ public class DotaTask {
         log.info("Schedule handlerGameInfoToShow end");
     }
 
+    @Scheduled(cron = "0 0 4 * * SUN") // 每周日凌晨4点重置双倍次数
+    public void updateToDefaultDoubleTimes(){
+        log.info("Schedule updateToDefaultDoubleTimes start");
+        //每日定时更新比赛信息后计算后展示数据
+        webUserService.updateToDefaultDoubleTimes();
+        log.info("Schedule updateToDefaultDoubleTimes end");
+    }
+
     public void ryNoParams()
     {
         System.out.println("执行无参方法");

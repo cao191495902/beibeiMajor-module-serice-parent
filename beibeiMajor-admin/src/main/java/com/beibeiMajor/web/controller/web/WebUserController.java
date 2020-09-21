@@ -5,11 +5,14 @@ import com.beibeiMajor.common.core.controller.BaseController;
 import com.beibeiMajor.common.core.domain.AjaxResult;
 import com.beibeiMajor.common.core.page.TableDataInfo;
 import com.beibeiMajor.common.enums.BusinessType;
+import com.beibeiMajor.common.utils.MathUtil;
 import com.beibeiMajor.common.utils.StringUtils;
 import com.beibeiMajor.common.utils.poi.ExcelUtil;
 import com.beibeiMajor.framework.shiro.service.SysPasswordService;
 import com.beibeiMajor.framework.util.ShiroUtils;
+import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
+import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -35,6 +39,8 @@ public class WebUserController extends BaseController
     private IWebUserService webUserService;
     @Autowired
     private SysPasswordService passwordService;
+    @Autowired
+    private IWebDoubleIntegralRecordService webDoubleIntegralRecordService;
 
     @RequiresPermissions("web:user:view")
     @GetMapping()
@@ -124,7 +130,22 @@ public class WebUserController extends BaseController
             webUser.setCreateBy(ShiroUtils.getLoginName());
 
         }
-        return toAjax(webUserService.updateWebUser(webUser));
+        if (webUser.getDoubleIntegralTimes() != null) {
+            WebUser oldWebUser = webUserService.selectWebUserById(webUser.getUserId());
+            webUser.setMoney(MathUtil.addOpt(oldWebUser.getMoney(), (webUser.getDoubleIntegralTimes() -
+                    oldWebUser.getDoubleIntegralTimes()) * 10));
+
+            WebDoubleIntegralRecord record = new WebDoubleIntegralRecord();
+            record.setAccountId(webUser.getAccountId());
+            record.setChangeTimes(new Long(webUser.getDoubleIntegralTimes() - oldWebUser.getDoubleIntegralTimes()));
+            record.setMoney(new BigDecimal((webUser.getDoubleIntegralTimes() - oldWebUser.getDoubleIntegralTimes())*10));
+            record.setCreatedBy(ShiroUtils.getLoginName());
+            record.setCreatedTime(System.currentTimeMillis()/1000);
+            webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(record);
+        }
+        int r = webUserService.updateWebUser(webUser);
+
+        return toAjax(r);
     }
 
 

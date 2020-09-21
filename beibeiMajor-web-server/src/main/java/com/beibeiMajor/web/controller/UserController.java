@@ -3,11 +3,15 @@ package com.beibeiMajor.web.controller;
 import com.beibeiMajor.common.core.controller.BaseController;
 import com.beibeiMajor.common.core.domain.AjaxResult;
 import com.beibeiMajor.common.core.page.TableDataInfo;
+import com.beibeiMajor.common.utils.DateUtils;
 import com.beibeiMajor.common.utils.ServletUtils;
 import com.beibeiMajor.common.utils.StringUtils;
 import com.beibeiMajor.framework.util.ShiroUtils;
+import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
+import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
+import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.service.ReportInfoService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
@@ -24,6 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +43,10 @@ public class UserController extends BaseController{
 
     @Autowired
     ReportInfoService reportInfoService;
+    @Autowired
+    IWebUserService webUserService;
+    @Autowired
+    IWebDoubleIntegralRecordService iWebDoubleIntegralRecordService;
 
     /**
      * 登录接口
@@ -96,14 +106,11 @@ public class UserController extends BaseController{
         }
         mmap.addAttribute("user",user);
 
-//        //获取本周最佳选手，本周胜率最高
-//        //获取本周最差选手，本周胜率最低
-//        Date startDate = DateUtils.getFirstDayOfWeek(new Date());
-//        Date endDate = DateUtils.getLastDayOfWeek(new Date());
-//        WebUser maxWinUser = reportInfoService.getWeekMaxWinUser(startDate, endDate);
-//        WebUser minWinUser = reportInfoService.getWeekMinWinUser(startDate, endDate);
-//        mmap.addAttribute("maxWinUser", maxWinUser);
-//        mmap.addAttribute("minWinUser", minWinUser);
+        Date startTime = DateUtils.getStartTimeOfDay(new Date());
+        Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime,1));
+        //查询当天是否报过名
+        WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime()/1000);
+        mmap.addAttribute("record", record);
         return new ModelAndView("index");
     }
 
@@ -131,6 +138,44 @@ public class UserController extends BaseController{
     {
         startPage();
         return reportInfoService.statisticsTopInfoList();
+    }
+
+    /**
+     * 报名
+     *
+     * @return
+     */
+    @PostMapping("/updateDoubleTimes")
+    @ResponseBody
+    public Object updateDoubleTimes(WebUserDotaReport webUserDotaReport) {
+        // 取身份信息
+        WebUser user = ShiroUtils.getWebUser();
+        //没有身份信息，跳转登录
+        if (user == null) {
+            return AjaxResult.error("用户不存在");
+        }
+        Date startTime = DateUtils.getStartTimeOfDay(new Date());
+        Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime,1));
+        //查询当天是否报过名
+        WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime()/1000);
+        //查询报名次数是否够
+        WebUser webUser = webUserService.selectWebUserById(user.getUserId());
+        if (webUser.getDoubleIntegralTimes() <= 0) {
+            return AjaxResult.error("双倍次数不够");
+        }
+        //更新记录
+        WebDoubleIntegralRecord newRecord = new WebDoubleIntegralRecord();
+        newRecord.setAccountId(webUser.getAccountId());
+        newRecord.setChangeTimes(-1L);
+        newRecord.setMoney(new BigDecimal(0));
+        newRecord.setCreatedBy(user.getNickName());
+        newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
+        iWebDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);
+        //减去用户次数
+        webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() - 1);
+        webUserService.updateWebUser(webUser);
+        ShiroUtils.setSysUser(webUser);
+        return AjaxResult.success();
     }
 }
 

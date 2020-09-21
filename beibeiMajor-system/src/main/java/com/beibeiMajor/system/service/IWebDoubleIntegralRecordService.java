@@ -59,4 +59,6 @@ public interface IWebDoubleIntegralRecordService
      * @return 结果
      */
     public int deleteWebDoubleIntegralRecordById(Long id);
+
+    WebDoubleIntegralRecord selectByTodayAndAccountId(Long accountId, long start, long end);
 }

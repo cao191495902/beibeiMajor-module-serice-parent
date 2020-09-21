@@ -1,14 +1,5 @@
 package com.beibeiMajor.web.controller.system;
 
-import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import com.beibeiMajor.common.config.Global;
 import com.beibeiMajor.common.core.controller.BaseController;
 import com.beibeiMajor.common.utils.CookieUtils;
@@ -19,6 +10,15 @@ import com.beibeiMajor.system.domain.SysMenu;
 import com.beibeiMajor.system.domain.SysUser;
 import com.beibeiMajor.system.service.ISysConfigService;
 import com.beibeiMajor.system.service.ISysMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 首页 业务处理
@@ -40,6 +40,9 @@ public class SysIndexController extends BaseController
     {
         // 取身份信息
         SysUser user = ShiroUtils.getSysUser();
+        if(user == null){
+            return "login";
+        }
         // 根据用户id取出菜单
         List<SysMenu> menus = menuService.selectMenusByUser(user);
         mmap.put("menus", menus);

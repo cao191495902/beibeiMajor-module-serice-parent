@@ -91,4 +91,9 @@ public class WebDoubleIntegralRecordServiceImpl implements IWebDoubleIntegralRec
     {
         return webDoubleIntegralRecordMapper.deleteWebDoubleIntegralRecordById(id);
     }
+
+    @Override
+    public WebDoubleIntegralRecord selectByTodayAndAccountId(Long accountId, long start, long end) {
+        return webDoubleIntegralRecordMapper.selectByTodayAndAccountId(accountId,start,end);
+    }
 }
