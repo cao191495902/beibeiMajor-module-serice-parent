@@ -368,10 +368,10 @@
         </foreach>
     </insert>
 
-    <select id="getHighestPointsTop" resultType="java.util.Map">
+    <select id="getHighestPointsTop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.integral
+            concat(b.nick_name, '(',a.integral,')')
+
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -382,10 +382,9 @@
             LIMIT #{topLimit}
     </select>
 
-    <select id="getHighestWinPerTop" resultType="java.util.Map">
+    <select id="getHighestWinPerTop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.win_rate
+        concat(b.nick_name, '(',a.win_rate,')')
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -397,10 +396,9 @@
             LIMIT #{topLimit}
     </select>
 
-    <select id="getHighestKDATop" resultType="java.util.Map">
+    <select id="getHighestKDATop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.kda
+          concat(b.nick_name, '(',a.kda,')')
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -412,10 +410,9 @@
             LIMIT #{topLimit}
     </select>
 
-    <select id="getLongestWinningStreakTop" resultType="java.util.Map">
+    <select id="getLongestWinningStreakTop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.cur_max_count
+              concat(b.nick_name, '(',a.cur_max_count,')')
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -428,10 +425,9 @@
             LIMIT #{topLimit}
     </select>
 
-    <select id="getHighestKillsPerGameTop" resultType="java.util.Map">
+    <select id="getHighestKillsPerGameTop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.average_kills
+         concat(b.nick_name, '(',a.average_kills,')')
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -443,10 +439,9 @@
             LIMIT #{topLimit}
     </select>
 
-    <select id="getLeastDeathPerGameTop" resultType="java.util.Map">
+    <select id="getLeastDeathPerGameTop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.average_deaths
+        concat(b.nick_name, '(',a.average_deaths,')')
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -458,10 +453,9 @@
             LIMIT #{topLimit}
     </select>
 
-    <select id="getHighestAssistsPerGameTop" resultType="java.util.Map">
+    <select id="getHighestAssistsPerGameTop" resultType="java.lang.String">
         SELECT
-            b.nick_name,
-            a.average_assists
+          concat(b.nick_name, '(',a.average_assists,')')
         FROM
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
@@ -471,6 +465,18 @@
             a.average_assists DESC,
             a.integral DESC
             LIMIT #{topLimit}
+    </select>
+    <select id="getYesTodayTopUser" resultType="com.beibeiMajor.system.domain.WebUser">
+        SELECT wp.`account_id` as "accountId",
+        w.`nick_name` as "nickName",
+        (SUM(kills)*1000-SUM(deaths)*500+SUM(assists)*2000+SUM(scaled_hero_damage)+SUM(scaled_hero_healing))/COUNT(id) AS integral
+        FROM `web_match_detail` AS wb
+        LEFT JOIN `web_match_player_info` wp ON wp.`match_id` = wb.`match_id`
+        LEFT JOIN `web_user` w ON w.`account_id` = wp.`account_id`
+         WHERE wb.start_time >=#{date}
+         and #{endDate}> wb.start_time
+         GROUP BY wp.`account_id`
+         ORDER BY integral DESC
     </select>
 
 </mapper>

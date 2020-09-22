@@ -13,6 +13,7 @@ import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.service.ReportInfoService;
+import com.beibeiMajor.web.service.dto.TopBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -31,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 主页和用户登录相关处理
@@ -98,6 +98,8 @@ public class UserController extends BaseController{
         if (user == null) {
             return new ModelAndView("login");
         }
+        user = webUserService.selectWebUserById(user.getUserId());
+
         WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
         webUserDotaReport.setUserId(user.getAccountId());
         List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport);
@@ -130,15 +132,32 @@ public class UserController extends BaseController{
 
     /**
      * 获取top信息表
+     *
      * @return
      */
     @PostMapping("/topList")
     @ResponseBody
-    public Map<String, List<Map<String, Double>>> topList()
-    {
-        startPage();
-        return reportInfoService.statisticsTopInfoList();
+    public TableDataInfo topList() {
+//        startPage();
+        List<TopBean> result = reportInfoService.statisticsTopInfoList();
+
+        return getDataTable(result);
     }
+//
+//    /**
+//     * 获取昨日表现
+//     *
+//     * @return
+//     */
+//    @PostMapping("/yesTodayList")
+//    @ResponseBody
+//    public TableDataInfo yesTodayList() {
+////        startPage();
+//        Date startTime = DateUtils.getStartTimeOfDay(new Date());
+//        List<WebUser> list = reportInfoService.getYesTodayTopUser(DateUtils.addDays(startTime, -1).getTime() / 1000, startTime.getTime() / 1000);
+//
+//        return getDataTable(list);
+//    }
 
     /**
      * 报名

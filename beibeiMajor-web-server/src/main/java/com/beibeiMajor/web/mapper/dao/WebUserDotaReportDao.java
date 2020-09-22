@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.mapper.dao;
 
+import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.UserAverageDataPo;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
@@ -9,7 +10,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户积分表(WebUserDotaReport)表数据库访问层
@@ -81,17 +81,19 @@ public interface WebUserDotaReportDao {
 
     List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
 
-    List<Map<String,Double>> getHighestPointsTop(@Param("topLimit") int i);
+    List<String> getHighestPointsTop(@Param("topLimit") int i);
 
-    List<Map<String, Double>> getHighestWinPerTop(@Param("topLimit") int i);
+    List<String> getHighestWinPerTop(@Param("topLimit") int i);
 
-    List<Map<String, Double>> getHighestKDATop(@Param("topLimit") int i);
+    List<String> getHighestKDATop(@Param("topLimit") int i);
 
-    List<Map<String, Double>> getLongestWinningStreakTop(@Param("topLimit") int i);
+    List<String> getLongestWinningStreakTop(@Param("topLimit") int i);
 
-    List<Map<String, Double>> getHighestKillsPerGameTop(@Param("topLimit") int i);
+    List<String> getHighestKillsPerGameTop(@Param("topLimit") int i);
 
-    List<Map<String, Double>> getLeastDeathPerGameTop(@Param("topLimit") int i);
+    List<String> getLeastDeathPerGameTop(@Param("topLimit") int i);
 
-    List<Map<String, Double>> getHighestAssistsPerGameTop(@Param("topLimit") int i);
+    List<String> getHighestAssistsPerGameTop(@Param("topLimit") int i);
+
+    List<WebUser> getYesTodayTopUser(@Param("startDate")Long startDate, @Param("endDate")Long endDate);
 }

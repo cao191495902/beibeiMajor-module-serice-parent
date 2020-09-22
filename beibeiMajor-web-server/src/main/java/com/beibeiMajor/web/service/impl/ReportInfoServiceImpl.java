@@ -12,6 +12,7 @@ import com.beibeiMajor.web.mapper.dao.WebUserDotaReportDao;
 import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.OperationInfoToDBService;
 import com.beibeiMajor.web.service.ReportInfoService;
+import com.beibeiMajor.web.service.dto.TopBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -228,30 +229,77 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     }
 
     @Override
-    public Map<String, List<Map<String, Double>>> statisticsTopInfoList() {
-        Map<String, List<Map<String, Double>>> map = new HashMap<>(7);
+    public List<TopBean> statisticsTopInfoList() {
+        List<TopBean> result = new ArrayList<>(3);
+        TopBean top1 = new TopBean();
+        TopBean top2 = new TopBean();
+        TopBean top3 = new TopBean();
+
         //最高积分 TOP3
-        List<Map<String,Double>> highestPointsTopList = webUserDotaReportDao.getHighestPointsTop(3);
-        map.put("highestPoints",highestPointsTopList);
+        List<String> highestPointsTopList = webUserDotaReportDao.getHighestPointsTop(3);
+        if (highestPointsTopList != null && highestPointsTopList.size() >= 1)
+            top1.setIntegral(highestPointsTopList.get(0));
+        if (highestPointsTopList != null && highestPointsTopList.size() >= 2)
+            top2.setIntegral(highestPointsTopList.get(1));
+        if (highestPointsTopList != null && highestPointsTopList.size() >= 3)
+            top3.setIntegral(highestPointsTopList.get(2));
         //最高胜率 TOP3
-        List<Map<String,Double>> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(3);
-        map.put("highestWinningPercentage",highestWinPerTopList);
+        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(3);
+        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 1)
+            top1.setWinRate(highestWinPerTopList.get(0));
+        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 2)
+            top2.setWinRate(highestWinPerTopList.get(1));
+        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 3)
+            top3.setWinRate(highestWinPerTopList.get(2));
         //最高KDA TOP3
-        List<Map<String,Double>> highestKDATopList = webUserDotaReportDao.getHighestKDATop(3);
-        map.put("highestKDA",highestKDATopList);
+        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(3);
+        if (highestKDATopList != null && highestKDATopList.size() >= 1)
+            top1.setKad(highestKDATopList.get(0));
+        if (highestKDATopList != null && highestKDATopList.size() >= 2)
+            top2.setKad(highestKDATopList.get(1));
+        if (highestKDATopList != null && highestKDATopList.size() >= 3)
+            top3.setKad(highestKDATopList.get(2));
         //最长连胜 TOP3
-        List<Map<String,Double>> longestWinningStreakTopList = webUserDotaReportDao.getLongestWinningStreakTop(3);
-        map.put("longestWinningStreak",longestWinningStreakTopList);
+        List<String> longestWinningStreakTopList = webUserDotaReportDao.getLongestWinningStreakTop(3);
+        if (longestWinningStreakTopList != null && longestWinningStreakTopList.size() >= 1)
+            top1.setWinningStreak(longestWinningStreakTopList.get(0));
+        if (longestWinningStreakTopList != null && longestWinningStreakTopList.size() >= 2)
+            top2.setWinningStreak(longestWinningStreakTopList.get(1));
+        if (longestWinningStreakTopList != null && longestWinningStreakTopList.size() >= 3)
+            top3.setWinningStreak(longestWinningStreakTopList.get(2));
         //最高场均击杀 TOP3
-        List<Map<String,Double>> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(3);
-        map.put("highestKillsPerGame",highestKillsPerGameTopList);
+        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(3);
+        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 1)
+            top1.setKillsPerGame(highestKillsPerGameTopList.get(0));
+        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 2)
+            top2.setKillsPerGame(highestKillsPerGameTopList.get(1));
+        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 3)
+            top3.setKillsPerGame(highestKillsPerGameTopList.get(2));
         //最少场均死亡 TOP3
-        List<Map<String,Double>> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(3);
-        map.put("leastDeathPerGame",leastDeathPerGameTopList);
+        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(3);
+        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 1)
+            top1.setDeathPerGame(leastDeathPerGameTopList.get(0));
+        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 2)
+            top2.setDeathPerGame(leastDeathPerGameTopList.get(1));
+        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 3)
+            top3.setDeathPerGame(leastDeathPerGameTopList.get(2));
         //最高场均助攻 TOP3
-        List<Map<String,Double>> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(3);
-        map.put("highestAssistsPerGame",highestAssistsPerGameTopList);
-        return map;
+        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(3);
+        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 1)
+            top1.setAssistsPerGame(highestAssistsPerGameTopList.get(0));
+        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 2)
+            top2.setAssistsPerGame(highestAssistsPerGameTopList.get(1));
+        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 3)
+            top3.setAssistsPerGame(highestAssistsPerGameTopList.get(2));
+        result.add(top1);
+        result.add(top2);
+        result.add(top3);
+        return result;
+    }
+
+    @Override
+    public List<WebUser> getYesTodayTopUser(Long startDate,Long endDate) {
+        return webUserDotaReportDao.getYesTodayTopUser(startDate,endDate);
     }
 
 }

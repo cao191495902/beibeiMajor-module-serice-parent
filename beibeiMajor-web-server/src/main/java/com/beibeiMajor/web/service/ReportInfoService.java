@@ -1,10 +1,11 @@
 package com.beibeiMajor.web.service;
 
+import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
+import com.beibeiMajor.web.service.dto.TopBean;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lenovo
@@ -15,6 +16,7 @@ public interface ReportInfoService {
 
     List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
 
-    Map<String, List<Map<String, Double>>> statisticsTopInfoList();
+    List<TopBean> statisticsTopInfoList();
 
+    List<WebUser> getYesTodayTopUser(Long startDate,Long endDate);
 }

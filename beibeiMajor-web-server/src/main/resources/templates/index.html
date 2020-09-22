@@ -41,7 +41,7 @@
                 <p th:if="${info.rank <=5} "><span style="color: red;">特等马</span></p>
                 <p th:if="${info.rank >5 && info.rank <=10} "><span style="color:#00B83F;">上等马</span></p>
                 <p th:if="${info.rank >10 && info.rank <=15} "><span style="color: #0d8ddb;">中等马</span></p>
-                <p th:if="${info.rank > 5} "><span style="color: grey;">下等马</span></p>
+                <p th:if="${info.rank > 15} "><span style="color: grey;">下等马</span></p>
             </div>
         </li>
         <li>
@@ -68,27 +68,41 @@
                         class="fa "></i>&nbsp;我要双倍</a>
             </div>
         </li>
+        <!--<li>-->
+            <!--<div>昨日之星：<span th:text="${topUser.nickName}" style="color: red;font: 25px"></span></div>-->
+            <!--<div>综合分数：<span th:text="${topUser.integral}" style="color: red;font: 25px"></span></div>-->
+        <!--</li>-->
     </ul>
 </section>
 
 <body class="gray-bg">
+<div class="container-div" style="height: 17%">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped" >
+            <table id="bootstrap-table1"></table>
+        </div>
+
+    </div>
+</div>
 <div class="container-div">
     <div class="row">
         <!--<div class="col-sm-12 select-table table-striped">-->
             <!--<table id="bootstrap-table2"></table>-->
         <!--</div>-->
         <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table"></table>
+            <table id="bootstrap-table2"></table>
         </div>
 
     </div>
 </div>
+
 <th:block th:include="include :: footer" />
 <script th:inline="javascript">
     var prefix = ctx;
 
     $(function() {
         var options = {
+            id:"bootstrap-table2",
             url: prefix + "/list",
             pageSize:20,
             showSearch: false,                     // 是否显示检索信息
@@ -170,6 +184,58 @@
                 {
                     field: 'lastPlayTime',
                     title: '最后比赛时间'
+                }
+            ]
+        };
+        $.table.init(options);
+    });
+
+    $(function() {
+        var options = {
+            id:"bootstrap-table1",
+            url: prefix + "/topList",
+            pageSize:3,
+            showSearch: false,                     // 是否显示检索信息
+            showPageGo: false,               		// 是否显示跳转页
+            showRefresh: false,                   // 是否显示刷新按钮
+            showColumns: false,
+            sortName: "winRate",
+            sortOrder: "desc",
+            pagination:false,
+            showToggle:false,
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "TOP榜单",
+            columns: [
+                {
+                    field: 'integral',
+                    title: '积分榜',
+                },
+                {
+                    field: 'winRate',
+                    title: '胜率榜'
+                },
+                {
+                    field: 'kad',
+                    title: 'KAD榜'
+                },
+                {
+                    field: 'winningStreak',
+                    title: '连胜榜'
+                },
+                {
+                    field: 'killsPerGame',
+                    title: '击杀榜'
+                },
+                {
+                    field: 'deathPerGame',
+                    title: '死亡最少榜'
+                },
+                {
+                    field: 'assistsPerGame',
+                    title: '助攻榜'
                 }
             ]
         };
