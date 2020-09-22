@@ -1,6 +1,7 @@
 package com.beibeiMajor.system.mapper;
 
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;

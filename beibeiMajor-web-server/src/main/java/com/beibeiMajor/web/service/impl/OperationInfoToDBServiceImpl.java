@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.service.impl;
 
+import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.web.mapper.dao.*;
 import com.beibeiMajor.web.mapper.po.*;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +82,16 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean batchUpdateDoubleAccount(Map<Long, String> accMap, List<Long> updateList) {
         try{
-            webMatchDetailDao.batchUpdateDoubleAccount(accMap);
+            List<DoubleAccountPo> list = new ArrayList<>();
+            for(Map.Entry<Long, String> entry : accMap.entrySet()){
+                Long mapKey = entry.getKey();
+                String mapValue = entry.getValue();
+                DoubleAccountPo doubleAccountPo = new DoubleAccountPo();
+                doubleAccountPo.setMatchId(mapKey);
+                doubleAccountPo.setAccountIds(mapValue);
+                list.add(doubleAccountPo);
+            }
+            webMatchDetailDao.batchUpdateDoubleAccount(list);
             webDoubleIntegralRecordService.batchUpdateDoubleAccount(updateList);
         }catch (Exception e){
             log.error("batch update double account failed",e.getMessage());

@@ -449,9 +449,9 @@
             web_match_detail a
             LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
         WHERE
-            b.account_id = #{accountId}
+            b.account_id = #{accountId} AND a.start_time > #{createdTime}
         ORDER BY
-            ABS( a.start_time - #{createdTime} ) ASC
+            ABS( a.start_time - #{createdTime} ) ASC LIMIT 1
     </select>
 
 </mapper>

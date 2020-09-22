@@ -21,6 +21,7 @@
         <result property="radiantCaptain" column="radiant_captain" jdbcType="INTEGER"/>
         <result property="direCaptain" column="dire_captain" jdbcType="INTEGER"/>
         <result property="settlementStatus" column="settlement_status" jdbcType="BOOLEAN"/>
+        <result property="doubleAccount" column="double_account" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
@@ -187,7 +188,7 @@
         SELECT
         match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant,
         tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode,
-        radiant_score, dire_score, radiant_captain, dire_captain
+        radiant_score, dire_score, radiant_captain, dire_captain, double_account
         FROM web_match_detail WHERE settlement_status = 0 ORDER BY start_time ASC
     </select>
 
@@ -208,9 +209,20 @@
             b.account_id
     </select>
 
-    <update id="batchUpdateDoubleAccount" parameterType="java.util.Map">
-        <foreach collection="accMap.entrySet()" item="value" index="key" separator=",">
-            update web_double_integral_record Set double_account = #{value} where match_id = #{key}
+    <update id="batchUpdateDoubleAccount" parameterType="java.util.List">
+        update web_match_detail
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="double_account = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.accountIds != null">
+                        when match_id = #{i.matchId} then #{i.accountIds}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            match_id = #{i.matchId}
         </foreach>
     </update>
 

@@ -85,4 +85,8 @@ public class WebMatchDetailPo implements Serializable {
      * 结算状态
      */
     private Boolean settlementStatus;
+    /**
+     * 双倍用户
+     */
+    private String doubleAccount;
 }

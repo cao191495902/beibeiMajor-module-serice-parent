@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.service.impl;
 
+import com.beibeiMajor.common.utils.StringUtils;
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
@@ -98,13 +99,18 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         List<Long> updateList = new ArrayList<>();
         for (WebDoubleIntegralRecord record : webDoubleIntegralRecords) {
             Map<Long, Long> map = webMatchPlayerInfoDao.bindingDoubleAccountToMatch(record.getAccountId(), record.getCreatedTime());
-            Long matchId = map.get("matchId");
-            if (accMap.containsKey(matchId)) {
-                String accountId = accMap.get(matchId);
-                accountId = accountId + "," + map.get("accountId");
-                accMap.put(matchId, accountId);
-            } else {
-                accMap.put(matchId, map.get("accountId")+"");
+            if(map != null && map.size() == 2){
+                Long matchId = map.get("match_id");
+                if (accMap.containsKey(matchId)) {
+                    String accountId = accMap.get(matchId);
+                    accountId = accountId + "," + map.get("account_id");
+                    accMap.put(matchId, accountId);
+                } else {
+                    accMap.put(matchId, map.get("account_id")+"");
+                }
+            }else{
+                //TODO  回滚点击双倍事件
+
             }
             updateList.add(record.getId());
         }
@@ -146,6 +152,10 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         //step 1 按照每把比赛进行计算
         List<WebMatchDetailPo> webMatchDetailPos = webMatchDetailDao.queryAllUnsettledMatch();
         webMatchDetailPos.forEach(webMatchDetailPo -> {
+            List<String> doubleAccountIds = new ArrayList<>();
+            if (StringUtils.isNotEmpty(webMatchDetailPo.getDoubleAccount())){
+                doubleAccountIds = Arrays.asList(webMatchDetailPo.getDoubleAccount().split(","));
+            }
             List<WebUserDotaReportPo> updateIntegralList = new ArrayList<>();
             List<WebUserDotaReportPo> reportPoList = webUserDotaReportDao.queryAll(new WebUserDotaReportPo());
             List<Long> winPlayerID = webMatchPlayerInfoDao.getWinPlayerByMatchId(webMatchDetailPo.getMatchId());
@@ -172,16 +182,25 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                 int disparity = (loseSum - winSum) / 1000;
                 fraction = 100 + disparity*10;
             }
-            Integer finalFraction = fraction;
-            Integer finalFraction1 = fraction;
+            List<String> finalDoubleAccountIds = doubleAccountIds;
+            Integer finalFraction2 = fraction;
             winPlayerID.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().longValue() == item.longValue()).forEach(webUserDotaReportPo -> {
+                int finalFraction = finalFraction2;
                 Integer integral = webUserDotaReportPo.getIntegral();
+                if(finalDoubleAccountIds.contains(item.toString())){
+                    finalFraction = finalFraction *2;
+                }
                 int count = integral + finalFraction;
                 webUserDotaReportPo.setIntegral(count);
                 updateIntegralList.add(webUserDotaReportPo);
             }));
+            Integer finalFraction3 = fraction;
             losePlayerID.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().longValue() == item.longValue()).forEach(webUserDotaReportPo -> {
+                int finalFraction1 = finalFraction3;
                 Integer integral = webUserDotaReportPo.getIntegral();
+                if(finalDoubleAccountIds.contains(item.toString())){
+                    finalFraction1 = finalFraction1 *2;
+                }
                 int count = integral - finalFraction1;
                 webUserDotaReportPo.setIntegral(count);
                 updateIntegralList.add(webUserDotaReportPo);

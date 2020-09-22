@@ -34,6 +34,14 @@ public class DotaTask {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
     }
 
+    @Scheduled(cron = "0 55 1 * * ?")  // 每天1点55触发
+    public void updateUserInfo(){
+        log.info("Schedule updateUserInfo start");
+        //每日更新比赛信息之后，展示数据之前更新用户信息
+        webUserService.selectInsertWebUser();
+        log.info("Schedule updateUserInfo end");
+    }
+
     @Scheduled(cron = "0 0 2 * * ?") // 每天2点触发
     public void getGameInfo(){
         log.info("Schedule getGameInfo start");
@@ -42,13 +50,7 @@ public class DotaTask {
         dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch);
         log.info("Schedule getGameInfo end");
     }
-    @Scheduled(cron = "0 15 2 * * ?")  // 每天2点15触发
-    public void updateUserInfo(){
-        log.info("Schedule updateUserInfo start");
-        //每日更新比赛信息之后，展示数据之前更新用户信息
-        webUserService.selectInsertWebUser();
-        log.info("Schedule updateUserInfo end");
-    }
+
     @Scheduled(cron = "0 30 2 * * ?") // 每天2点15触发
     public void handlerGameInfoToShow(){
         log.info("Schedule handlerGameInfoToShow start");
