@@ -1,17 +1,16 @@
 package com.beibeiMajor.framework.util;
 
+import com.beibeiMajor.common.utils.StringUtils;
+import com.beibeiMajor.framework.shiro.realm.UserRealm;
+import com.beibeiMajor.system.domain.SysUser;
 import com.beibeiMajor.system.domain.WebUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import com.beibeiMajor.common.utils.StringUtils;
-import com.beibeiMajor.common.utils.bean.BeanUtils;
-import com.beibeiMajor.framework.shiro.realm.UserRealm;
-import com.beibeiMajor.system.domain.SysUser;
+import org.apache.shiro.subject.Subject;
 
 /**
  * shiro 工具类
@@ -39,15 +38,17 @@ public class ShiroUtils
     {
         SysUser user = null;
         Object obj = getSubject().getPrincipal();
+
         if (StringUtils.isNotNull(obj))
         {
-            user = new SysUser();
-            BeanUtils.copyBeanProp(user, obj);
+            if(obj instanceof SysUser){
+                return (SysUser)obj;
+            }
         }
         return user;
     }
 
-    public static void setSysUser(SysUser user)
+    public static void setSysUser(Object user)
     {
         Subject subject = getSubject();
         PrincipalCollection principalCollection = subject.getPrincipals();
@@ -99,9 +100,12 @@ public class ShiroUtils
         WebUser user = null;
         Object obj = getSubject().getPrincipal();
         if (StringUtils.isNotNull(obj)) {
-            user = new WebUser();
-            BeanUtils.copyBeanProp(user, obj);
+            if(obj instanceof WebUser){
+                return (WebUser)obj;
+            }
         }
         return user;
     }
+
+
 }

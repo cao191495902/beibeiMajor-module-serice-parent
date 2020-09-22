@@ -3,6 +3,7 @@ package com.beibeiMajor.web.mapper.po;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -77,5 +78,9 @@ public class WebUserDotaReportPo implements Serializable {
      * 总比赛数
      */
     private Integer totalMatchesNum;
+
+    private Integer doubleIntegralTimes;
+
+    private BigDecimal money;
 
 }

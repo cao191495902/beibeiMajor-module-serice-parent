@@ -1,7 +1,6 @@
 package com.beibeiMajor.system.mapper;
 
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -61,6 +60,11 @@ public interface WebDoubleIntegralRecordMapper
      * @return 结果
      */
     public int deleteWebDoubleIntegralRecordByIds(String[] ids);
+
+
+    void insertUpdateToDefaultDoubleTimesRecord();
+
+    WebDoubleIntegralRecord selectByTodayAndAccountId(@Param("accountId")Long accountId, @Param("start")long start, @Param("end")long end);
 
     List<WebDoubleIntegralRecord> selectUnsettledRecordList();
 

@@ -77,6 +77,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <insert id="insertUpdateToDefaultDoubleTimesRecord">
+        INSERT INTO `web_double_integral_record`(account_id,change_times,money,remark,created_time,created_by)
+        SELECT
+        account_id,(2-double_integral_times),0,'系统初始化',UNIX_TIMESTAMP(),'系统'
+        FROM `web_user` WHERE double_integral_times !=2
+    </insert>
+    <select id="selectByTodayAndAccountId" resultMap="WebDoubleIntegralRecordResult">
+        select * from web_double_integral_record
+        where account_id = #{accountId}
+        and created_time >=#{start}
+        and #{end} >created_time
+    </select>
 
     <select id="selectUnsettledRecordList" resultMap="WebDoubleIntegralRecordResult">
         select id, account_id, change_times, money, remark, created_time, created_by from web_double_integral_record where settlement_status = 0

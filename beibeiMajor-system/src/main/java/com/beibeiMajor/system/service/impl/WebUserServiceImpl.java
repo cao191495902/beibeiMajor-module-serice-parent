@@ -6,6 +6,7 @@ import com.beibeiMajor.common.constant.UserConstants;
 import com.beibeiMajor.common.core.text.Convert;
 import com.beibeiMajor.common.utils.DateUtils;
 import com.beibeiMajor.system.domain.WebUser;
+import com.beibeiMajor.system.mapper.WebDoubleIntegralRecordMapper;
 import com.beibeiMajor.system.mapper.WebUserMapper;
 import com.beibeiMajor.system.service.IWebUserService;
 import org.apache.commons.collections.CollectionUtils;
@@ -14,7 +15,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 用户信息Service业务层处理
@@ -35,6 +34,9 @@ public class WebUserServiceImpl implements IWebUserService
 {
     @Autowired
     private WebUserMapper webUserMapper;
+
+    @Autowired
+    private WebDoubleIntegralRecordMapper webDoubleIntegralRecordMapper;
 
     @Value("${customization.leagueMatchId}")
     private String leagueMatch;
@@ -181,5 +183,13 @@ public class WebUserServiceImpl implements IWebUserService
             user = getUpdateWebUserInfo(user);
             webUserMapper.updateWebUser(user);
         }
+    }
+
+    @Override
+    public void updateToDefaultDoubleTimes() {
+        //先插入记录
+        webDoubleIntegralRecordMapper.insertUpdateToDefaultDoubleTimesRecord();
+        //再更新用户表
+        webUserMapper.updateToDefaultDoubleTimes();
     }
 }

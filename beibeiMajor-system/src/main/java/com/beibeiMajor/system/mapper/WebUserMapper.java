@@ -68,4 +68,6 @@ public interface WebUserMapper
     void insertByMatchDetails();
 
     List<WebUser> getAllWebUser();
+
+    void updateToDefaultDoubleTimes();
 }

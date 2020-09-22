@@ -95,6 +95,11 @@ public class WebDoubleIntegralRecordServiceImpl implements IWebDoubleIntegralRec
     }
 
     @Override
+    public WebDoubleIntegralRecord selectByTodayAndAccountId(Long accountId, long start, long end) {
+        return webDoubleIntegralRecordMapper.selectByTodayAndAccountId(accountId,start,end);
+    }
+
+    @Override
     public List<WebDoubleIntegralRecord> selectUnsettledRecordList() {
         return webDoubleIntegralRecordMapper.selectUnsettledRecordList();
     }
