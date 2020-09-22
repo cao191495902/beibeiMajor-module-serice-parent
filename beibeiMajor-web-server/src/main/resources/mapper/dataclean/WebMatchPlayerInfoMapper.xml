@@ -449,9 +449,33 @@
             web_match_detail a
             LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
         WHERE
-            b.account_id = #{accountId} AND a.start_time > #{createdTime}
+            b.account_id = #{accountId} AND (a.start_time + 20 * 60) > #{createdTime}
         ORDER BY
-            ABS( a.start_time - #{createdTime} ) ASC LIMIT 1
+            ABS( (a.start_time + 20 * 60) - #{createdTime} ) ASC LIMIT 1
     </select>
+
+    <update id="batchUpdatePlayerIntegral" parameterType="java.util.List">
+        update web_match_player_info
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="before_integral = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.beforeIntegral != null">
+                        when account_id = #{i.accountId} AND match_id = #{i.matchId} then #{i.beforeIntegral}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="after_integral = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.afterIntegral != null">
+                        when account_id = #{i.accountId} AND match_id = #{i.matchId} then #{i.afterIntegral}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            account_id = #{i.accountId} AND match_id = #{i.matchId}
+        </foreach>
+    </update>
 
 </mapper>

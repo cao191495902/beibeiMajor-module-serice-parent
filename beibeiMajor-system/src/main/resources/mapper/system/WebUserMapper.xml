@@ -171,5 +171,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateToDefaultDoubleTimes">
         update web_user set double_integral_times = 2 where double_integral_times != 2
     </update>
+    <select id="selectWebUserByAccountId" parameterType="Long" resultMap="WebUserResult">
+        <include refid="selectWebUserVo"/>
+        where account_id = #{accountId}
+    </select>
 
 </mapper>

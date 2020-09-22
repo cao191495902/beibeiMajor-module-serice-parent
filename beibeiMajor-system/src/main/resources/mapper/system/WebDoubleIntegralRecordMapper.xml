@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="createdTime != null">created_time,</if>
             <if test="createdBy != null">created_by,</if>
+            <if test="settlementStatus != null">settlement_status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="accountId != null">#{accountId},</if>
@@ -51,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="createdTime != null">#{createdTime},</if>
             <if test="createdBy != null">#{createdBy},</if>
+            <if test="settlementStatus != null">#{settlementStatus},</if>
          </trim>
     </insert>
 

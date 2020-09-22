@@ -95,4 +95,6 @@ public interface IWebUserService
     void selectInsertWebUser();
 
     void updateToDefaultDoubleTimes();
+
+    WebUser selectWebUserByAccountId(Long accountId);
 }

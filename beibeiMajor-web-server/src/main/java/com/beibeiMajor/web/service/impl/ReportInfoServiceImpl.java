@@ -17,6 +17,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -109,8 +110,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                     accMap.put(matchId, map.get("account_id")+"");
                 }
             }else{
-                //TODO  回滚点击双倍事件
-
+                operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId());
             }
             updateList.add(record.getId());
         }
@@ -152,6 +152,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         //step 1 按照每把比赛进行计算
         List<WebMatchDetailPo> webMatchDetailPos = webMatchDetailDao.queryAllUnsettledMatch();
         webMatchDetailPos.forEach(webMatchDetailPo -> {
+            List<MatchPlayerIntegralPo> matchPlayerIntegralPoList = new ArrayList<>();
             List<String> doubleAccountIds = new ArrayList<>();
             if (StringUtils.isNotEmpty(webMatchDetailPo.getDoubleAccount())){
                 doubleAccountIds = Arrays.asList(webMatchDetailPo.getDoubleAccount().split(","));
@@ -185,6 +186,10 @@ public class ReportInfoServiceImpl implements ReportInfoService {
             List<String> finalDoubleAccountIds = doubleAccountIds;
             Integer finalFraction2 = fraction;
             winPlayerID.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().longValue() == item.longValue()).forEach(webUserDotaReportPo -> {
+                MatchPlayerIntegralPo matchPlayerIntegralPo = new MatchPlayerIntegralPo();
+                matchPlayerIntegralPo.setAccountId(item);
+                matchPlayerIntegralPo.setMatchId(webMatchDetailPo.getMatchId());
+                matchPlayerIntegralPo.setBeforeIntegral(webUserDotaReportPo.getIntegral());
                 int finalFraction = finalFraction2;
                 Integer integral = webUserDotaReportPo.getIntegral();
                 if(finalDoubleAccountIds.contains(item.toString())){
@@ -192,10 +197,16 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                 }
                 int count = integral + finalFraction;
                 webUserDotaReportPo.setIntegral(count);
+                matchPlayerIntegralPo.setAfterIntegral(count);
                 updateIntegralList.add(webUserDotaReportPo);
+                matchPlayerIntegralPoList.add(matchPlayerIntegralPo);
             }));
             Integer finalFraction3 = fraction;
             losePlayerID.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().longValue() == item.longValue()).forEach(webUserDotaReportPo -> {
+                MatchPlayerIntegralPo matchPlayerIntegralPo = new MatchPlayerIntegralPo();
+                matchPlayerIntegralPo.setAccountId(item);
+                matchPlayerIntegralPo.setMatchId(webMatchDetailPo.getMatchId());
+                matchPlayerIntegralPo.setBeforeIntegral(webUserDotaReportPo.getIntegral());
                 int finalFraction1 = finalFraction3;
                 Integer integral = webUserDotaReportPo.getIntegral();
                 if(finalDoubleAccountIds.contains(item.toString())){
@@ -203,9 +214,11 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                 }
                 int count = integral - finalFraction1;
                 webUserDotaReportPo.setIntegral(count);
+                matchPlayerIntegralPo.setAfterIntegral(count);
                 updateIntegralList.add(webUserDotaReportPo);
+                matchPlayerIntegralPoList.add(matchPlayerIntegralPo);
             }));
-            operationInfoToDBService.batchUpdateIntegralToDB(updateIntegralList, webMatchDetailPo);
+            operationInfoToDBService.batchUpdateIntegralToDB(updateIntegralList, webMatchDetailPo, matchPlayerIntegralPoList);
         });
         return true;
     }

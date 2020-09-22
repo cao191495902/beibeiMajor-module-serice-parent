@@ -12,7 +12,9 @@ public interface OperationInfoToDBService {
     Boolean HeroesBatchIntoDB(List<WebDotaHeroPo> lists);
 
     @Transactional(rollbackFor = Exception.class)
-    Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, WebMatchDetailPo webMatchDetailPo);
+    Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, WebMatchDetailPo webMatchDetailPo, List<MatchPlayerIntegralPo> matchPlayerIntegralPoList);
 
     Boolean batchUpdateDoubleAccount(Map<Long, String> accMap, List<Long> updateList);
+
+    Boolean rollbackDoubleIntegralRecord(Long accountId);
 }

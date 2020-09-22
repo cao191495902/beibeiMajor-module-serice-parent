@@ -40,6 +40,10 @@ public class WebDoubleIntegralRecord extends BaseEntity
     @Excel(name = "创建人")
     private String createdBy;
 
+    /** 结算状态 */
+    @Excel(name = "结算状态")
+    private Boolean settlementStatus;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -95,16 +99,24 @@ public class WebDoubleIntegralRecord extends BaseEntity
         return createdBy;
     }
 
+    public Boolean getSettlementStatus() {
+        return settlementStatus;
+    }
+
+    public void setSettlementStatus(Boolean settlementStatus) {
+        this.settlementStatus = settlementStatus;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("accountId", getAccountId())
-            .append("changeTimes", getChangeTimes())
-            .append("money", getMoney())
-            .append("remark", getRemark())
-            .append("createdTime", getCreatedTime())
-            .append("createdBy", getCreatedBy())
-            .toString();
+        return "WebDoubleIntegralRecord{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", changeTimes=" + changeTimes +
+                ", money=" + money +
+                ", createdTime=" + createdTime +
+                ", createdBy='" + createdBy + '\'' +
+                ", settlementStatus=" + settlementStatus +
+                '}';
     }
 }

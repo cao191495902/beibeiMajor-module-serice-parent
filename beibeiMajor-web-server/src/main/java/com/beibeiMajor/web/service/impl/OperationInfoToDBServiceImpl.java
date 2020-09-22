@@ -1,7 +1,9 @@
 package com.beibeiMajor.web.service.impl;
 
+import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
+import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.mapper.dao.*;
 import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.OperationInfoToDBService;
@@ -11,11 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author lenovo
+ */
 @Slf4j
 @Service
 public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
@@ -34,6 +39,8 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
     WebUserDotaReportDao webUserDotaReportDao;
     @Resource
     IWebDoubleIntegralRecordService webDoubleIntegralRecordService;
+    @Resource
+    IWebUserService webUserService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -64,12 +71,14 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, WebMatchDetailPo webMatchDetailPo) {
+    public Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, WebMatchDetailPo webMatchDetailPo, List<MatchPlayerIntegralPo> matchPlayerIntegralPoList) {
         try{
             //更新入库
             webUserDotaReportDao.batchUpdate(updateIntegralList);
             //修改比赛结算状态
             webMatchDetailDao.changeMatchStatus(webMatchDetailPo.getMatchId());
+            //更新比赛赛前赛后积分
+            webMatchPlayerInfoDao.batchUpdatePlayerIntegral(matchPlayerIntegralPoList);
             return true;
         }catch (Exception e){
             log.error("batch update integral failed",e.getMessage());
@@ -93,8 +102,34 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
             }
             webMatchDetailDao.batchUpdateDoubleAccount(list);
             webDoubleIntegralRecordService.batchUpdateDoubleAccount(updateList);
+            return true;
         }catch (Exception e){
             log.error("batch update double account failed",e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean rollbackDoubleIntegralRecord(Long accountId) {
+        try{
+            WebUser webUser = webUserService.selectWebUserByAccountId(accountId);
+            //更新记录
+            WebDoubleIntegralRecord newRecord = new WebDoubleIntegralRecord();
+            newRecord.setAccountId(accountId);
+            newRecord.setChangeTimes(+1L);
+            newRecord.setMoney(new BigDecimal(0));
+            newRecord.setCreatedBy(webUser.getNickName());
+            newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
+            newRecord.setSettlementStatus(true);
+            webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);
+            //减去用户次数
+            webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() + 1);
+            webUserService.updateWebUser(webUser);
+            return true;
+        }catch (Exception e){
+            log.error("rollback double integral record failed",e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return false;

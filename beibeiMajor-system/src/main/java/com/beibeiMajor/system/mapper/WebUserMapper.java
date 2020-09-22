@@ -70,4 +70,12 @@ public interface WebUserMapper
     List<WebUser> getAllWebUser();
 
     void updateToDefaultDoubleTimes();
+
+    /**
+     * 查询用户信息
+     *
+     * @param accountId 用户信息ID
+     * @return 用户信息
+     */
+    WebUser selectWebUserByAccountId(Long accountId);
 }

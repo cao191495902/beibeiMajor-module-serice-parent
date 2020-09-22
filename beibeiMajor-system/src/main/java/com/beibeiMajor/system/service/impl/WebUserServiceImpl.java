@@ -192,4 +192,9 @@ public class WebUserServiceImpl implements IWebUserService
         //再更新用户表
         webUserMapper.updateToDefaultDoubleTimes();
     }
+
+    @Override
+    public WebUser selectWebUserByAccountId(Long accountId) {
+        return webUserMapper.selectWebUserByAccountId(accountId);
+    }
 }
