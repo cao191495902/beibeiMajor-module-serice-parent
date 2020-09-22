@@ -4,6 +4,7 @@ import com.beibeiMajor.web.mapper.po.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OperationInfoToDBService {
     Boolean MatchsBatchIntoDB(List<WebMatchDetailPo> detailList, List<WebMatchPicksPo> picksList, List<WebMatchPlayerPo> playerList, List<WebAbilityUpgradesPo> abilityUpgradesList);
@@ -12,4 +13,6 @@ public interface OperationInfoToDBService {
 
     @Transactional(rollbackFor = Exception.class)
     Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, WebMatchDetailPo webMatchDetailPo);
+
+    Boolean batchUpdateDoubleAccount(Map<Long, String> accMap, List<Long> updateList);
 }

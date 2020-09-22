@@ -3,6 +3,7 @@ package com.beibeiMajor.system.service;
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Service接口
@@ -59,4 +60,13 @@ public interface IWebDoubleIntegralRecordService
      * @return 结果
      */
     public int deleteWebDoubleIntegralRecordById(Long id);
+
+    /**
+     * 查询未结算的记录
+     *
+     * @return 结果
+     */
+    List<WebDoubleIntegralRecord> selectUnsettledRecordList();
+
+    Boolean batchUpdateDoubleAccount(List<Long> updateList);
 }

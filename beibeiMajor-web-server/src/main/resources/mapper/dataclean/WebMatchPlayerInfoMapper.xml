@@ -441,4 +441,17 @@
         AND t5.rank = t6.rank
     </select>
 
+    <select id="bindingDoubleAccountToMatch" resultType="java.util.Map">
+        SELECT
+            a.match_id,
+            b.account_id
+        FROM
+            web_match_detail a
+            LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+        WHERE
+            b.account_id = #{accountId}
+        ORDER BY
+            ABS( a.start_time - #{createdTime} ) ASC
+    </select>
+
 </mapper>

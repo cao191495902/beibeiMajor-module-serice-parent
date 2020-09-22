@@ -103,4 +103,5 @@ public interface WebMatchDetailDao {
      */
     List<Map<Long, Long>> getLastPlayTime();
 
+    Boolean batchUpdateDoubleAccount(Map<Long, String> accMap);
 }

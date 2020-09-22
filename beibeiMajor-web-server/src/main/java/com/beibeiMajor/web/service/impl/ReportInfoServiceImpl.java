@@ -1,7 +1,9 @@
 package com.beibeiMajor.web.service.impl;
 
+import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
+import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.mapper.dao.WebMatchDetailDao;
 import com.beibeiMajor.web.mapper.dao.WebMatchPlayerInfoDao;
@@ -33,13 +35,14 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     IWebUserService webUserService;
     @Resource
     OperationInfoToDBService operationInfoToDBService;
+    @Resource
+    IWebDoubleIntegralRecordService webDoubleIntegralRecordService;
 
     @Override
     public List<WebUserDotaReportPo> handlerMatchInfoToReport() {
-
-
-        //STEP 0 更新用户报表
+        //STEP 0 更新用户报表以及绑定双倍比赛Id
         List<WebUserDotaReportPo> reportPoList = updateDotaReportInfo();
+        bindingDoubleAccountToMatch();
         List<WinAndLosePo> list = webUserDotaReportDao.getUserWinAndLose();
         if (CollectionUtils.isNotEmpty(list) && CollectionUtils.isNotEmpty(reportPoList)){
             //STEP 1 计算用户积分
@@ -87,6 +90,25 @@ public class ReportInfoServiceImpl implements ReportInfoService {
             reportPoList = nowReportPoList;
         }
         return reportPoList;
+    }
+
+    private Boolean bindingDoubleAccountToMatch() {
+        List<WebDoubleIntegralRecord> webDoubleIntegralRecords = webDoubleIntegralRecordService.selectUnsettledRecordList();
+        Map<Long,String> accMap = new HashMap<>();
+        List<Long> updateList = new ArrayList<>();
+        for (WebDoubleIntegralRecord record : webDoubleIntegralRecords) {
+            Map<Long, Long> map = webMatchPlayerInfoDao.bindingDoubleAccountToMatch(record.getAccountId(), record.getCreatedTime());
+            Long matchId = map.get("matchId");
+            if (accMap.containsKey(matchId)) {
+                String accountId = accMap.get(matchId);
+                accountId = accountId + "," + map.get("accountId");
+                accMap.put(matchId, accountId);
+            } else {
+                accMap.put(matchId, map.get("accountId")+"");
+            }
+            updateList.add(record.getId());
+        }
+        return operationInfoToDBService.batchUpdateDoubleAccount(accMap, updateList);
     }
 
     private List<WebUserDotaReportPo> updateDotaReportInfo() {

@@ -1,8 +1,10 @@
 package com.beibeiMajor.system.mapper;
 
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 【请填写功能名称】Mapper接口
@@ -59,4 +61,8 @@ public interface WebDoubleIntegralRecordMapper
      * @return 结果
      */
     public int deleteWebDoubleIntegralRecordByIds(String[] ids);
+
+    List<WebDoubleIntegralRecord> selectUnsettledRecordList();
+
+    Boolean batchUpdateDoubleAccount(List<Long> id);
 }

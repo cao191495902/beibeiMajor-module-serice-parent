@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (WebMatchPlayerInfo)表数据库访问层
@@ -94,4 +95,6 @@ public interface WebMatchPlayerInfoDao {
     List<Long> getLosePlayerByMatchId(@Param("matchId") Long matchId);
 
     List<WinsOrLoseCountPo> getWinsOrLoseCount();
+
+    Map<Long, Long> bindingDoubleAccountToMatch(@Param("accountId") Long accountId, @Param("createdTime") Long createdTime);
 }

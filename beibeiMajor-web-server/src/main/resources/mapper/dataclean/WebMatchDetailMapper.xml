@@ -208,4 +208,10 @@
             b.account_id
     </select>
 
+    <update id="batchUpdateDoubleAccount" parameterType="java.util.Map">
+        <foreach collection="accMap.entrySet()" item="value" index="key" separator=",">
+            update web_double_integral_record Set double_account = #{value} where match_id = #{key}
+        </foreach>
+    </update>
+
 </mapper>

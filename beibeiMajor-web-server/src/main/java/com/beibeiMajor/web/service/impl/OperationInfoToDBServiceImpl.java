@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.service.impl;
 
+import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.web.mapper.dao.*;
 import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.OperationInfoToDBService;
@@ -10,6 +11,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -27,6 +29,8 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
     private WebDotaHeroDao webDotaHeroDao;
     @Resource
     WebUserDotaReportDao webUserDotaReportDao;
+    @Resource
+    IWebDoubleIntegralRecordService webDoubleIntegralRecordService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -66,6 +70,19 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
             return true;
         }catch (Exception e){
             log.error("batch update integral failed",e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean batchUpdateDoubleAccount(Map<Long, String> accMap, List<Long> updateList) {
+        try{
+            webMatchDetailDao.batchUpdateDoubleAccount(accMap);
+            webDoubleIntegralRecordService.batchUpdateDoubleAccount(updateList);
+        }catch (Exception e){
+            log.error("batch update double account failed",e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return false;

@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beibeiMajor.system.mapper.WebDoubleIntegralRecordMapper">
     
-    <resultMap type="WebDoubleIntegralRecord" id="WebDoubleIntegralRecordResult">
+    <resultMap type="com.beibeiMajor.system.domain.WebDoubleIntegralRecord" id="WebDoubleIntegralRecordResult">
         <result property="id"    column="id"    />
         <result property="accountId"    column="account_id"    />
         <result property="changeTimes"    column="change_times"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, account_id, change_times, money, remark, created_time, created_by from web_double_integral_record
     </sql>
 
-    <select id="selectWebDoubleIntegralRecordList" parameterType="WebDoubleIntegralRecord" resultMap="WebDoubleIntegralRecordResult">
+    <select id="selectWebDoubleIntegralRecordList" parameterType="com.beibeiMajor.system.domain.WebDoubleIntegralRecord" resultMap="WebDoubleIntegralRecordResult">
         <include refid="selectWebDoubleIntegralRecordVo"/>
         <where>  
             <if test="accountId != null "> and account_id = #{accountId}</if>
@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertWebDoubleIntegralRecord" parameterType="WebDoubleIntegralRecord" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertWebDoubleIntegralRecord" parameterType="com.beibeiMajor.system.domain.WebDoubleIntegralRecord" useGeneratedKeys="true" keyProperty="id">
         insert into web_double_integral_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="accountId != null">account_id,</if>
@@ -54,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateWebDoubleIntegralRecord" parameterType="WebDoubleIntegralRecord">
+    <update id="updateWebDoubleIntegralRecord" parameterType="com.beibeiMajor.system.domain.WebDoubleIntegralRecord">
         update web_double_integral_record
         <trim prefix="SET" suffixOverrides=",">
             <if test="accountId != null">account_id = #{accountId},</if>
@@ -77,5 +77,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectUnsettledRecordList" resultMap="WebDoubleIntegralRecordResult">
+        select id, account_id, change_times, money, remark, created_time, created_by from web_double_integral_record where settlement_status = 0
+    </select>
+
+    <update id="batchUpdateDoubleAccount" parameterType="java.util.List">
+        update web_double_integral_record
+        set settlement_status = 1
+        where
+        <foreach collection="list" separator="or" item="id" index="index" >
+            id = #{id}
+        </foreach>
+    </update>
 
 </mapper>

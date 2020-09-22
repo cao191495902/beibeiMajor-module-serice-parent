@@ -1,6 +1,8 @@
 package com.beibeiMajor.system.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.beibeiMajor.system.mapper.WebDoubleIntegralRecordMapper;
@@ -90,5 +92,15 @@ public class WebDoubleIntegralRecordServiceImpl implements IWebDoubleIntegralRec
     public int deleteWebDoubleIntegralRecordById(Long id)
     {
         return webDoubleIntegralRecordMapper.deleteWebDoubleIntegralRecordById(id);
+    }
+
+    @Override
+    public List<WebDoubleIntegralRecord> selectUnsettledRecordList() {
+        return webDoubleIntegralRecordMapper.selectUnsettledRecordList();
+    }
+
+    @Override
+    public Boolean batchUpdateDoubleAccount(List<Long> updateList) {
+        return webDoubleIntegralRecordMapper.batchUpdateDoubleAccount(updateList);
     }
 }
