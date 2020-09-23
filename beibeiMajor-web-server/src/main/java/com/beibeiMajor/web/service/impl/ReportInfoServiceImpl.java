@@ -107,7 +107,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                     accountId = accountId + "," + map.get("account_id");
                     accMap.put(matchId, accountId);
                 } else {
-                    accMap.put(matchId, map.get("account_id")+"");
+                    accMap.put(matchId, map.get("account_id").toString());
                 }
             }else{
                 operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId());
