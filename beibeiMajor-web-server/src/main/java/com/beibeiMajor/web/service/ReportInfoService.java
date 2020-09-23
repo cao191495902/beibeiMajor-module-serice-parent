@@ -3,6 +3,7 @@ package com.beibeiMajor.web.service;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
+import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import com.beibeiMajor.web.service.dto.TopBean;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface ReportInfoService {
 
     List<WebUser> getYesTodayTopUser(Long startDate,Long endDate);
 
+
+    List<MyMatchDetailBean> getMyRecordList(String userId);
 }

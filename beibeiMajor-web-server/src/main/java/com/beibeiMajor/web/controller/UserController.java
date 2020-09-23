@@ -13,6 +13,7 @@ import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.service.ReportInfoService;
+import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import com.beibeiMajor.web.service.dto.TopBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
@@ -116,15 +117,23 @@ public class UserController extends BaseController{
         return new ModelAndView("index");
     }
 
+    //我的战绩列表
+    @GetMapping("/playRecord")
+    public Object myPlayRecord(ModelMap mmap,String accountId) {
+
+        mmap.addAttribute("accountId", accountId);
+        return new ModelAndView("playRecord");
+    }
+
     /**
      * 获取用户积分列表
+     *
      * @param webUserDotaReport
      * @return
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(WebUserDotaReport webUserDotaReport)
-    {
+    public TableDataInfo list(WebUserDotaReport webUserDotaReport) {
         startPage();
         List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport);
         return getDataTable(list);
@@ -143,21 +152,20 @@ public class UserController extends BaseController{
 
         return getDataTable(result);
     }
-//
-//    /**
-//     * 获取昨日表现
-//     *
-//     * @return
-//     */
-//    @PostMapping("/yesTodayList")
-//    @ResponseBody
-//    public TableDataInfo yesTodayList() {
-////        startPage();
-//        Date startTime = DateUtils.getStartTimeOfDay(new Date());
-//        List<WebUser> list = reportInfoService.getYesTodayTopUser(DateUtils.addDays(startTime, -1).getTime() / 1000, startTime.getTime() / 1000);
-//
-//        return getDataTable(list);
-//    }
+
+    /**
+     * 获取我的战绩
+     *
+     * @return
+     */
+    @PostMapping("/myRecordList")
+    @ResponseBody
+    public TableDataInfo myRecordList(String accountId) {
+        startPage();
+        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId);
+
+        return getDataTable(list);
+    }
 
     /**
      * 报名

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('用户积分列表')" />
+</head>
+
+<a class="btn btn-primary btn-rounded btn-sm" onclick="goIndex()"><i
+        class="fa "></i>&nbsp;返回主页</a>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id="userAccountIdIput" th:value="${accountId}"/>
+
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var prefix = ctx;
+
+    $(function() {
+        var options = {
+            id:"bootstrap-table",
+            url: prefix + "/myRecordList?accountId="+$("#userAccountIdIput").val(),
+            pageSize:10,
+            showSearch: false,                     // 是否显示检索信息
+            showPageGo: false,               		// 是否显示跳转页
+            showRefresh: false,                   // 是否显示刷新按钮
+            showColumns: false,
+            pagination:true,
+            showToggle:true,
+            modalName: "比赛列表",
+            columns: [
+                {
+                    field: 'heroName',
+                    title: '英雄名称',
+                },
+                {
+                    field: 'result',
+                    title: '比赛结果',
+                    formatter: function(value, row, index) {
+                        if(value == 1){
+                            return "胜";
+                        }else{
+                            return "败";
+                        }
+                    },
+                    cellStyle: function(value, row, index) {
+                        if(value == 1){
+                            return {css:{"color":"green"}}
+                        }else{
+                            return {css:{"color":"red"}}
+                        }
+                    }
+                },
+                {
+                    field: 'playDate',
+                    title: '最后比赛时间'
+                },
+                {
+                    field: 'kda',
+                    title: 'KDA',
+                },
+                {
+                    field: 'isDouble',
+                    title: '双倍积分',
+                    formatter: function(value, row, index) {
+                        if(value == 1){
+                            return "是";
+                        }else{
+                            return "否";
+                        }
+                    },
+                    cellStyle: function(value, row, index) {
+                        if(value == 1){
+                            return {css:{"color":"green"}}
+                        }else{
+                            return {css:{"color":"red"}}
+                        }
+                    }
+                },
+                {
+                    field: 'integral',
+                    title: '积分变化'
+                }
+            ]
+        };
+        $.table.init(options);
+    });
+
+    function setDouble() {
+        $.post(ctx+"/updateDoubleTimes", '', function(result) {
+            if (result.code == web_status.SUCCESS) {
+                $.modal.alertSuccess("双倍成功");
+                setTimeout(function(){
+                    $.modal.closeLoading();
+                    $.modal.reload();
+                }, 1000);
+            } else {
+                $.modal.alertError(result.msg);
+                setTimeout(function(){
+                    $.modal.closeLoading();
+                }, 1000);
+            }
+        });
+
+    }
+    function goIndex() {
+        window.location.href = prefix +"/index";
+    }
+</script>
+</body>
+</html>

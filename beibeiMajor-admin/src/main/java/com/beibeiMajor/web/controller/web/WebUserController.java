@@ -130,18 +130,20 @@ public class WebUserController extends BaseController
             webUser.setCreateBy(ShiroUtils.getLoginName());
 
         }
-        if (webUser.getDoubleIntegralTimes() != null) {
+        if (webUser.getDoubleIntegralTimes() != null && webUser.getDoubleIntegralTimes() > 0) {
             WebUser oldWebUser = webUserService.selectWebUserById(webUser.getUserId());
-            webUser.setMoney(MathUtil.addOpt(oldWebUser.getMoney(), (webUser.getDoubleIntegralTimes() -
-                    oldWebUser.getDoubleIntegralTimes()) * 10));
+            if (oldWebUser.getDoubleIntegralTimes() !=webUser.getDoubleIntegralTimes() ) {
+                webUser.setMoney(MathUtil.addOpt(oldWebUser.getMoney(), (webUser.getDoubleIntegralTimes() -
+                        oldWebUser.getDoubleIntegralTimes()) * 10));
 
-            WebDoubleIntegralRecord record = new WebDoubleIntegralRecord();
-            record.setAccountId(webUser.getAccountId());
-            record.setChangeTimes(new Long(webUser.getDoubleIntegralTimes() - oldWebUser.getDoubleIntegralTimes()));
-            record.setMoney(new BigDecimal((webUser.getDoubleIntegralTimes() - oldWebUser.getDoubleIntegralTimes())*10));
-            record.setCreatedBy(ShiroUtils.getLoginName());
-            record.setCreatedTime(System.currentTimeMillis()/1000);
-            webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(record);
+                WebDoubleIntegralRecord record = new WebDoubleIntegralRecord();
+                record.setAccountId(webUser.getAccountId());
+                record.setChangeTimes(new Long(webUser.getDoubleIntegralTimes() - oldWebUser.getDoubleIntegralTimes()));
+                record.setMoney(new BigDecimal((webUser.getDoubleIntegralTimes() - oldWebUser.getDoubleIntegralTimes()) * 10));
+                record.setCreatedBy(ShiroUtils.getLoginName());
+                record.setCreatedTime(System.currentTimeMillis() / 1000);
+                webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(record);
+            }
         }
         int r = webUserService.updateWebUser(webUser);
 

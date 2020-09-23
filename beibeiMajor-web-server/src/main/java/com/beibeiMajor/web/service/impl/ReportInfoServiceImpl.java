@@ -12,6 +12,7 @@ import com.beibeiMajor.web.mapper.dao.WebUserDotaReportDao;
 import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.OperationInfoToDBService;
 import com.beibeiMajor.web.service.ReportInfoService;
+import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import com.beibeiMajor.web.service.dto.TopBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -298,6 +299,11 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     @Override
     public List<WebUser> getYesTodayTopUser(Long startDate,Long endDate) {
         return webUserDotaReportDao.getYesTodayTopUser(startDate,endDate);
+    }
+
+    @Override
+    public List<MyMatchDetailBean> getMyRecordList(String userId) {
+        return webUserDotaReportDao.getMyRecordList(userId);
     }
 
 }

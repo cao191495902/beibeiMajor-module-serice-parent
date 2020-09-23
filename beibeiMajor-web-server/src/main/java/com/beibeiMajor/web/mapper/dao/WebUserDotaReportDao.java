@@ -5,6 +5,7 @@ import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.UserAverageDataPo;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
 import com.beibeiMajor.web.mapper.po.WinAndLosePo;
+import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -96,4 +97,6 @@ public interface WebUserDotaReportDao {
     List<String> getHighestAssistsPerGameTop(@Param("topLimit") int i);
 
     List<WebUser> getYesTodayTopUser(@Param("startDate")Long startDate, @Param("endDate")Long endDate);
+
+    List<MyMatchDetailBean> getMyRecordList(@Param("accountId") String userId);
 }

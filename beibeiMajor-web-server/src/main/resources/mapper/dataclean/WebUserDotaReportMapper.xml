@@ -478,5 +478,20 @@
          GROUP BY wp.`account_id`
          ORDER BY integral DESC
     </select>
+    <select id="getMyRecordList" resultType="com.beibeiMajor.web.service.dto.MyMatchDetailBean">
+        SELECT wh.`zh_name` AS "heroName",
+        IF((wd.`radiant_win`+wp.`team`)=1,'1','0') AS "result",
+        IF((FIND_IN_SET(#{accountId},wd.double_account) >0 AND wd.`settlement_status` =1),'1','0') AS "isDouble",
+        FROM_UNIXTIME(wd.`start_time`) AS "playDate",
+        CONCAT(wb.`before_integral`,IF(wb.`after_integral` > wb.`before_integral`,'+',''),(wb.`after_integral`-wb.`before_integral`)) AS "integral",
+        CONCAT(wb.`kills`,'/',wb.`deaths`,'/',wb.`assists`) AS "kda"
+        FROM `web_match_player_info` wb
+        LEFT JOIN `web_match_detail` wd ON wd.`match_id` = wb.`match_id`
+        LEFT JOIN `web_dota_hero` wh ON wh.`hero_id` = wb.`hero_id`
+        LEFT JOIN `web_match_picks` wp ON wp.`match_id` = wb.`match_id` AND wp.`hero_id` = wb.`hero_id`
+        WHERE wb.`account_id` = #{accountId}
+        ORDER BY wd.`start_time` DESC
+
+    </select>
 
 </mapper>

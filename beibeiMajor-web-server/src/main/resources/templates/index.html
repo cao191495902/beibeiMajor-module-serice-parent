@@ -3,80 +3,10 @@
 <head>
     <th:block th:include="include :: header('用户积分列表')" />
 </head>
-<style>
-    ul,li{
-        list-style: none;
-        margin: 0;
-        padding: 5px;
-        width: 100%;
-    }
-    .box2222{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content:space-between;
-    }
-    .box2222 li{
-        width: calc(50% - 5px);
-        margin: -10px 0 5px 0;
-    }
-    .liContent {
-        display: flex;
-        align-items: center; /*定义body的元素垂直居中*/
-        /*justify-content: center; !*定义body的里的元素水平居中*!*/
-    }
-    .levelContent span{
-        font-size: 40px;
-    }
-</style>
-<div style="text-align: center">
-</div>
-<section>
-    <ul class="box2222">
-        <li>
-            <div><img  th:src="${user.avatar}"></html></div>
-        </li>
-        <li class="liContent">
-            <div class=" levelContent">
-                <p th:if="${info.rank <=5} "><span style="color: red;">特等马</span></p>
-                <p th:if="${info.rank >5 && info.rank <=10} "><span style="color:#00B83F;">上等马</span></p>
-                <p th:if="${info.rank >10 && info.rank <=15} "><span style="color: #0d8ddb;">中等马</span></p>
-                <p th:if="${info.rank > 15} "><span style="color: grey;">下等马</span></p>
-            </div>
-        </li>
-        <li>
-            <div>我的昵称：<span th:text="${user.nickName}"></span></div>
-        </li>
-        <li>
-            <div>我的胜率：<span th:text="${info.winRate}"></span></div>
-        </li>
-        <li>
-            <div>我的积分：<span th:text="${info.integral}"></span></div>
-        </li>
-        <li>
-            <div>积分排名：<span th:text="${info.rank}" style="color: red"></span></div>
-        </li>
-        <li>
-            <div>当前双倍次数：<span th:text="${user.doubleIntegralTimes}" style="color: red"></span></div>
-        </li>
-        <li>
-            <div th:if="${record != null}">
-                <div>今日双倍状态：<span style="font-size: 20px;color: red">已双倍</span></div>
-            </div>
-            <div th:if="${record == null}">
-                <a class="btn btn-primary btn-rounded btn-sm" onclick="setDouble()"><i
-                        class="fa "></i>&nbsp;我要双倍</a>
-            </div>
-        </li>
-        <!--<li>-->
-            <!--<div>昨日之星：<span th:text="${topUser.nickName}" style="color: red;font: 25px"></span></div>-->
-            <!--<div>综合分数：<span th:text="${topUser.integral}" style="color: red;font: 25px"></span></div>-->
-        <!--</li>-->
-    </ul>
-</section>
 
+<th:block th:include="include :: myInfo" />
 <body class="gray-bg">
-<div class="container-div" style="height: 17%">
+<div id="topContainer-div" class="container-div" >
     <div class="row">
         <div class="col-sm-12 select-table table-striped" >
             <table id="bootstrap-table1"></table>
@@ -101,6 +31,11 @@
     var prefix = ctx;
 
     $(function() {
+        if(!$.common.isMobile()){
+            $("#topContainer-div").css("height", "17%");
+        }else {
+            $("#topContainer-div").css("height", "59%");
+        }
         var options = {
             id:"bootstrap-table2",
             url: prefix + "/list",
@@ -119,6 +54,11 @@
             exportUrl: prefix + "/export",
             modalName: "用户积分",
             columns: [
+                {
+                    field: 'userId',
+                    title: '用户ID',
+                    visible: false
+                },
                 {
                     field: 'nickName',
                     title: '用户',
@@ -184,6 +124,15 @@
                 {
                     field: 'lastPlayTime',
                     title: '最后比赛时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs " href="javascript:void(0)" onclick="gotoDetail(\'' + row.userId + '\')"><i class="fa "></i>详情</a> ');
+                        return actions.join('');
+                    }
                 }
             ]
         };
@@ -258,6 +207,9 @@
             }
         });
 
+    }
+    function gotoDetail(accountId) {
+        window.location.href = prefix +"/playRecord?accountId="+accountId;
     }
 </script>
 </body>
