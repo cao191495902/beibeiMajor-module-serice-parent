@@ -19,4 +19,5 @@ public interface ReportInfoService {
     List<TopBean> statisticsTopInfoList();
 
     List<WebUser> getYesTodayTopUser(Long startDate,Long endDate);
+
 }

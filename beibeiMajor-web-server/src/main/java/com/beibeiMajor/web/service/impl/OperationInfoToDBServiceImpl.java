@@ -71,12 +71,12 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, WebMatchDetailPo webMatchDetailPo, List<MatchPlayerIntegralPo> matchPlayerIntegralPoList) {
+    public Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, List<MatchPlayerIntegralPo> matchPlayerIntegralPoList, List<Long> updateMatchList) {
         try{
             //更新入库
             webUserDotaReportDao.batchUpdate(updateIntegralList);
             //修改比赛结算状态
-            webMatchDetailDao.changeMatchStatus(webMatchDetailPo.getMatchId());
+            webMatchDetailDao.changeMatchStatus(updateMatchList);
             //更新比赛赛前赛后积分
             webMatchPlayerInfoDao.batchUpdatePlayerIntegral(matchPlayerIntegralPoList);
             return true;

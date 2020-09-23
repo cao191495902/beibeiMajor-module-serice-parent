@@ -478,4 +478,70 @@
         </foreach>
     </update>
 
+    <select id="getPlayerWinOrLoseList" resultType="com.beibeiMajor.web.mapper.po.PlayerWinOrLosePo">
+        SELECT
+        a.match_id AS matchId,
+        a.winArray AS winArray,
+        b.loseArray AS loseArray,
+        c.double_account AS doubleAccount
+        FROM
+        (
+        SELECT
+        a.match_id,
+        GROUP_CONCAT( a.account_id ) AS winArray
+        FROM
+        (
+        SELECT
+        match_id,
+        account_id
+        FROM
+        web_match_player_info
+        WHERE
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 0 AND settlement_status = 0 GROUP BY match_id )
+        AND <![CDATA[ player_slot > 10 ]]> UNION
+        SELECT
+        match_id,
+        account_id
+        FROM
+        web_match_player_info
+        WHERE
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 1 AND settlement_status = 0 GROUP BY match_id )
+        AND <![CDATA[ player_slot < 10 ]]>
+        ORDER BY
+        match_id ASC
+        ) a
+        GROUP BY
+        a.match_id
+        ) a
+        LEFT JOIN (
+        SELECT
+        a.match_id,
+        GROUP_CONCAT( a.account_id ) AS loseArray
+        FROM
+        (
+        SELECT
+        match_id,
+        account_id
+        FROM
+        web_match_player_info
+        WHERE
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 0 AND settlement_status = 0 GROUP BY match_id )
+        AND <![CDATA[ player_slot < 10 ]]> UNION
+        SELECT
+        match_id,
+        account_id
+        FROM
+        web_match_player_info
+        WHERE
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 1 AND settlement_status = 0 GROUP BY match_id )
+        AND <![CDATA[ player_slot > 10 ]]>
+        ORDER BY
+        match_id ASC
+        ) a
+        GROUP BY
+        a.match_id
+        ) b ON a.match_id = b.match_id
+        LEFT JOIN web_match_detail c ON a.match_id = c.match_id
+    </select>
+
 </mapper>

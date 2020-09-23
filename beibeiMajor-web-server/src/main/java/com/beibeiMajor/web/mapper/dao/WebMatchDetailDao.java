@@ -95,7 +95,7 @@ public interface WebMatchDetailDao {
      *
      * @return 比赛信息集合
      */
-    Boolean changeMatchStatus(@Param("matchId") Long matchId);
+    Boolean changeMatchStatus(List<Long> updateMatchList);
 
     /**
      * 查看所有玩家的最后玩耍时间

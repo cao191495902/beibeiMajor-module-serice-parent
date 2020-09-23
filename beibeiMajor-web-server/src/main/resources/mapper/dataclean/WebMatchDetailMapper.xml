@@ -192,10 +192,13 @@
         FROM web_match_detail WHERE settlement_status = 0 ORDER BY start_time ASC
     </select>
 
-    <update id="changeMatchStatus">
+    <update id="changeMatchStatus" parameterType="java.util.List">
         UPDATE web_match_detail SET
             settlement_status = 1
-        WHERE match_id = #{matchId}
+        WHERE
+        <foreach collection="list" separator="or" item="i" index="index" >
+            match_id = #{i}
+        </foreach>
     </update>
 
     <select id="getLastPlayTime" resultType="java.util.Map">

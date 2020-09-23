@@ -1,6 +1,7 @@
 package com.beibeiMajor.web.mapper.dao;
 
 import com.beibeiMajor.web.mapper.po.MatchPlayerIntegralPo;
+import com.beibeiMajor.web.mapper.po.PlayerWinOrLosePo;
 import com.beibeiMajor.web.mapper.po.WebMatchPlayerPo;
 import com.beibeiMajor.web.mapper.po.WinsOrLoseCountPo;
 import org.apache.ibatis.annotations.Mapper;
@@ -100,4 +101,7 @@ public interface WebMatchPlayerInfoDao {
     Map<Long, Long> bindingDoubleAccountToMatch(@Param("accountId") Long accountId, @Param("createdTime") Long createdTime);
 
     Boolean batchUpdatePlayerIntegral(List<MatchPlayerIntegralPo> matchPlayerIntegralPoList);
+
+    List<PlayerWinOrLosePo> getPlayerWinOrLoseList();
+
 }

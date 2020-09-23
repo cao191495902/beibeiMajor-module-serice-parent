@@ -18,7 +18,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -87,7 +86,6 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                     }
                 });
             });
-            //TODO STEP 5 MVP
             //全量更新表
             webUserDotaReportDao.batchUpdate(nowReportPoList);
             reportPoList = nowReportPoList;
@@ -100,6 +98,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         Map<Long,String> accMap = new HashMap<>();
         List<Long> updateList = new ArrayList<>();
         for (WebDoubleIntegralRecord record : webDoubleIntegralRecords) {
+            //TODO 优化循环SQL
             Map<Long, Long> map = webMatchPlayerInfoDao.bindingDoubleAccountToMatch(record.getAccountId(), record.getCreatedTime());
             if(map != null && map.size() == 2){
                 Long matchId = map.get("match_id");
@@ -151,27 +150,27 @@ public class ReportInfoServiceImpl implements ReportInfoService {
 
     public Boolean handlerIntegralOfUsers(){
         //step 1 按照每把比赛进行计算
-        List<WebMatchDetailPo> webMatchDetailPos = webMatchDetailDao.queryAllUnsettledMatch();
-        webMatchDetailPos.forEach(webMatchDetailPo -> {
-            List<MatchPlayerIntegralPo> matchPlayerIntegralPoList = new ArrayList<>();
+        List<Long> updateMatchList = new ArrayList<>();
+        List<MatchPlayerIntegralPo> matchPlayerIntegralPoList = new ArrayList<>();
+        List<WebUserDotaReportPo> reportPoList = webUserDotaReportDao.queryAll(new WebUserDotaReportPo());
+        List<PlayerWinOrLosePo> winOrLosePlayerList = webMatchPlayerInfoDao.getPlayerWinOrLoseList();
+        winOrLosePlayerList.forEach(PlayerWinOrLosePo -> {
             List<String> doubleAccountIds = new ArrayList<>();
-            if (StringUtils.isNotEmpty(webMatchDetailPo.getDoubleAccount())){
-                doubleAccountIds = Arrays.asList(webMatchDetailPo.getDoubleAccount().split(","));
+            if (StringUtils.isNotEmpty(PlayerWinOrLosePo.getDoubleAccount())){
+                doubleAccountIds = Arrays.asList(PlayerWinOrLosePo.getDoubleAccount().split(","));
             }
-            List<WebUserDotaReportPo> updateIntegralList = new ArrayList<>();
-            List<WebUserDotaReportPo> reportPoList = webUserDotaReportDao.queryAll(new WebUserDotaReportPo());
-            List<Long> winPlayerID = webMatchPlayerInfoDao.getWinPlayerByMatchId(webMatchDetailPo.getMatchId());
-            List<Long> losePlayerID = webMatchPlayerInfoDao.getLosePlayerByMatchId(webMatchDetailPo.getMatchId());
+            List<String> winPlayerList = Arrays.asList(PlayerWinOrLosePo.getWinArray().split(","));
+            List<String> losePlayerList = Arrays.asList(PlayerWinOrLosePo.getLoseArray().split(","));
             List<Integer> winList = new ArrayList<>();
             List<Integer> loseList = new ArrayList<>();
-            winPlayerID.forEach(winPlayerId -> reportPoList.forEach(reportPo->{
-                if (reportPo.getUserId().equals(winPlayerId)){
+            winPlayerList.forEach(winPlayerId -> reportPoList.forEach(reportPo->{
+                if ((reportPo.getUserId().toString()).equals(winPlayerId)){
                     winList.add(reportPo.getIntegral());
                 }
             }));
             int winSum = winList.stream().reduce(Integer::sum).orElse(0);
-            losePlayerID.forEach(losePlayerId -> reportPoList.forEach(reportPo->{
-                if (reportPo.getUserId().equals(losePlayerId)){
+            losePlayerList.forEach(losePlayerId -> reportPoList.forEach(reportPo->{
+                if ((reportPo.getUserId().toString()).equals(losePlayerId)){
                     loseList.add(reportPo.getIntegral());
                 }
             }));
@@ -186,41 +185,40 @@ public class ReportInfoServiceImpl implements ReportInfoService {
             }
             List<String> finalDoubleAccountIds = doubleAccountIds;
             Integer finalFraction2 = fraction;
-            winPlayerID.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().longValue() == item.longValue()).forEach(webUserDotaReportPo -> {
+            winPlayerList.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().toString().equals(item)).forEach(webUserDotaReportPo -> {
                 MatchPlayerIntegralPo matchPlayerIntegralPo = new MatchPlayerIntegralPo();
-                matchPlayerIntegralPo.setAccountId(item);
-                matchPlayerIntegralPo.setMatchId(webMatchDetailPo.getMatchId());
+                matchPlayerIntegralPo.setAccountId(Long.valueOf(item));
+                matchPlayerIntegralPo.setMatchId(PlayerWinOrLosePo.getMatchId());
                 matchPlayerIntegralPo.setBeforeIntegral(webUserDotaReportPo.getIntegral());
                 int finalFraction = finalFraction2;
                 Integer integral = webUserDotaReportPo.getIntegral();
-                if(finalDoubleAccountIds.contains(item.toString())){
+                if(finalDoubleAccountIds.contains(item)){
                     finalFraction = finalFraction *2;
                 }
                 int count = integral + finalFraction;
                 webUserDotaReportPo.setIntegral(count);
                 matchPlayerIntegralPo.setAfterIntegral(count);
-                updateIntegralList.add(webUserDotaReportPo);
                 matchPlayerIntegralPoList.add(matchPlayerIntegralPo);
             }));
             Integer finalFraction3 = fraction;
-            losePlayerID.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().longValue() == item.longValue()).forEach(webUserDotaReportPo -> {
+            losePlayerList.forEach(item -> reportPoList.stream().filter(webUserDotaReportPo -> webUserDotaReportPo.getUserId().toString().equals(item)).forEach(webUserDotaReportPo -> {
                 MatchPlayerIntegralPo matchPlayerIntegralPo = new MatchPlayerIntegralPo();
-                matchPlayerIntegralPo.setAccountId(item);
-                matchPlayerIntegralPo.setMatchId(webMatchDetailPo.getMatchId());
+                matchPlayerIntegralPo.setAccountId(Long.valueOf(item));
+                matchPlayerIntegralPo.setMatchId(PlayerWinOrLosePo.getMatchId());
                 matchPlayerIntegralPo.setBeforeIntegral(webUserDotaReportPo.getIntegral());
                 int finalFraction1 = finalFraction3;
                 Integer integral = webUserDotaReportPo.getIntegral();
-                if(finalDoubleAccountIds.contains(item.toString())){
+                if(finalDoubleAccountIds.contains(item)){
                     finalFraction1 = finalFraction1 *2;
                 }
                 int count = integral - finalFraction1;
                 webUserDotaReportPo.setIntegral(count);
                 matchPlayerIntegralPo.setAfterIntegral(count);
-                updateIntegralList.add(webUserDotaReportPo);
                 matchPlayerIntegralPoList.add(matchPlayerIntegralPo);
             }));
-            operationInfoToDBService.batchUpdateIntegralToDB(updateIntegralList, webMatchDetailPo, matchPlayerIntegralPoList);
         });
+        winOrLosePlayerList.forEach(playerWinOrLosePo -> updateMatchList.add(playerWinOrLosePo.getMatchId()));
+        operationInfoToDBService.batchUpdateIntegralToDB(reportPoList, matchPlayerIntegralPoList, updateMatchList);
         return true;
     }
     @Override
