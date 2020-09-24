@@ -34,7 +34,7 @@ public class DotaTask {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
     }
 
-    @Scheduled(cron = "0 55 1 * * ?")  // 每天1点55触发
+    @Scheduled(cron = "0 0 2 * * ?")  // 每天2点0触发
     public void updateUserInfo(){
         log.info("Schedule updateUserInfo start");
         //每日更新比赛信息之后，展示数据之前更新用户信息
@@ -42,7 +42,7 @@ public class DotaTask {
         log.info("Schedule updateUserInfo end");
     }
 
-    @Scheduled(cron = "0 0 2 * * ?") // 每天2点触发
+    @Scheduled(cron = "0 50 1 * * ?") // 每天1点50触发
     public void getGameInfo(){
         log.info("Schedule getGameInfo start");
         //每日定时更新比赛信息

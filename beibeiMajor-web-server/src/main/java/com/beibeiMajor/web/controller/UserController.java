@@ -99,7 +99,7 @@ public class UserController extends BaseController{
         if (user == null) {
             return new ModelAndView("login");
         }
-        user = webUserService.selectWebUserById(user.getUserId());
+        user = webUserService.selectWebUserByAccountId(user.getAccountId());
 
         WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
         webUserDotaReport.setUserId(user.getAccountId());
@@ -186,7 +186,7 @@ public class UserController extends BaseController{
         //查询当天是否报过名
         WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime()/1000);
         //查询报名次数是否够
-        WebUser webUser = webUserService.selectWebUserById(user.getUserId());
+        WebUser webUser = webUserService.selectWebUserByAccountId(user.getAccountId());
         if (webUser.getDoubleIntegralTimes() <= 0) {
             return AjaxResult.error("双倍次数不够");
         }
