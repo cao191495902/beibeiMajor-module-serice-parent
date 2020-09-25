@@ -16,7 +16,7 @@
     <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/server/context.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/server/context.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>${log.path}/server/context.log.%d{yyyy-MM-dd}</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -28,7 +28,7 @@
     <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/server/file_error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/server/file_error.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>${log.path}/server/file_error.log.%d{yyyy-MM-dd}</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -40,7 +40,7 @@
     <appender name="user_access" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/server/user_access.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/server/user_access.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <fileNamePattern>${log.path}/server/user_access.log.%d{yyyy-MM-dd}</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
