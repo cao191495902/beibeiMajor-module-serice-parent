@@ -90,6 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where account_id = #{accountId}
         and created_time >=#{start}
         and #{end} >created_time
+        and 0 >change_times
+        and remark != '系统初始化'
     </select>
 
     <select id="selectUnsettledRecordList" resultMap="WebDoubleIntegralRecordResult">
