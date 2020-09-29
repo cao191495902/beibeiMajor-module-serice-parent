@@ -133,17 +133,22 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                     });
                 }
             }
+            List<WebUserDotaReportPo> newReportPoList = new ArrayList<>();
             webUsers.forEach(webUser -> {
                 WebUserDotaReportPo reportPo = new WebUserDotaReportPo();
                 reportPo.setUserId(webUser.getAccountId());
                 reportPo.setIntegral(3000);
                 reportPoList.add(reportPo);
+                newReportPoList.add(reportPo);
             });
-            try{
-                webUserDotaReportDao.batchInsert(reportPoList);
-            }catch (Exception e){
-                log.error("batch insert new report info failed", e.getMessage());
+            if (newReportPoList.size() > 0) {
+                try {
+                    webUserDotaReportDao.batchInsert(newReportPoList);
+                } catch (Exception e) {
+                    log.error("batch insert new report info failed", e.getMessage());
+                }
             }
+
             return reportPoList;
         }
         return reportPoList;

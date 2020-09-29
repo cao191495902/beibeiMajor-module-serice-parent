@@ -6,7 +6,7 @@
 	<property name="log.pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n" />
 
     <!-- 控制台日志 -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%5level] %logger{36} [%file:%line] - %msg%n</Pattern>
         </encoder>

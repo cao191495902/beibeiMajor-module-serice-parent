@@ -2,9 +2,9 @@ package com.beibeiMajor.web.controller;
 
 import com.beibeiMajor.web.service.DotaGameInfoService;
 import com.beibeiMajor.web.service.ReportInfoService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * 
  * @author ruoyi
  */
-@Controller
+@RestController
 @RequestMapping("/syn")
 public class SynInfoController {
 
@@ -27,26 +27,29 @@ public class SynInfoController {
      * 增量更新比赛数据
      */
     @GetMapping("/synGameIdOfLeagueMatch")
-    public Boolean incrementalSynGameIdOfLeagueMatch() {
+    public Object incrementalSynGameIdOfLeagueMatch() {
         List<Long> gameIdOfLeagueMatch = dotaGameInfoService.getGameIdOfLeagueMatch();
-        return dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch);
+        if (dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch)) {
+            return "success";
+        } else return "failed";
     }
 
     /**
      * 全量更新英雄数据
      */
     @GetMapping("/synHeroesInfo")
-    public Boolean synHeroesInfo() {
-        return dotaGameInfoService.insertHeroesInfo();
+    public Object synHeroesInfo() {
+        dotaGameInfoService.insertHeroesInfo();
+        return "success";
     }
 
     /**
      * 增量更新report数据
      */
     @GetMapping("/synReportInfo")
-    public Boolean synReportInfo() {
+    public Object synReportInfo() {
         reportInfoService.handlerMatchInfoToReport();
-        return true;
+        return "success";
     }
 
 }

@@ -361,7 +361,7 @@
     </select>
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into web_user_dota_report(user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min)
+        insert IGNORE into web_user_dota_report(user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.userId}, #{item.integral}, #{item.winRate}, #{item.mvpCount}, #{item.kda}, #{item.curMaxCount}, #{item.isWin}, #{item.lastPlayTime}, #{item.averageKills}, #{item.averageDeaths}, #{item.averageAssists}, #{item.goldPerMin}, #{item.xpPerMin})

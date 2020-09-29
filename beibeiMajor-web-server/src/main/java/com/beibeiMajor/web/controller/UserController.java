@@ -197,6 +197,7 @@ public class UserController extends BaseController{
         newRecord.setMoney(new BigDecimal(0));
         newRecord.setCreatedBy(user.getNickName());
         newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
+        newRecord.setType(1);
         iWebDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);
         //减去用户次数
         webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() - 1);

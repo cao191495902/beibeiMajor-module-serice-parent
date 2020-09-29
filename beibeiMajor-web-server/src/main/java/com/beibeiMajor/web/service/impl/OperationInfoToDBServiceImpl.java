@@ -123,6 +123,8 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
             newRecord.setCreatedBy(webUser.getNickName());
             newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
             newRecord.setSettlementStatus(true);
+            newRecord.setType(0);
+            newRecord.setRemark("系统退回");
             webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);
             //减去用户次数
             webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() + 1);

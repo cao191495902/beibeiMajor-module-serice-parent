@@ -2,8 +2,6 @@ package com.beibeiMajor.system.domain;
 
 import com.beibeiMajor.common.annotation.Excel;
 import com.beibeiMajor.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 
@@ -43,6 +41,8 @@ public class WebDoubleIntegralRecord extends BaseEntity
     /** 结算状态 */
     @Excel(name = "结算状态")
     private Boolean settlementStatus;
+
+    private Integer type;
 
     public void setId(Long id) 
     {
@@ -118,5 +118,13 @@ public class WebDoubleIntegralRecord extends BaseEntity
                 ", createdBy='" + createdBy + '\'' +
                 ", settlementStatus=" + settlementStatus +
                 '}';
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

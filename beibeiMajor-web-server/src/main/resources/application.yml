@@ -33,7 +33,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.beibeiMajor: warn
+    com.beibeiMajor: debug
     org.springframework: warn
 
 # 用户配置

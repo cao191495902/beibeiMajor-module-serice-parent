@@ -43,6 +43,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="createdTime != null">created_time,</if>
             <if test="createdBy != null">created_by,</if>
+            <if test="type != null">type,</if>
+            <if test="createdTime != null">created_date,</if>
             <if test="settlementStatus != null">settlement_status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -52,8 +54,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="createdTime != null">#{createdTime},</if>
             <if test="createdBy != null">#{createdBy},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createdTime != null">FROM_UNIXTIME(#{createdTime}),</if>
             <if test="settlementStatus != null">#{settlementStatus},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateWebDoubleIntegralRecord" parameterType="com.beibeiMajor.system.domain.WebDoubleIntegralRecord">
@@ -80,9 +84,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <insert id="insertUpdateToDefaultDoubleTimesRecord">
-        INSERT INTO `web_double_integral_record`(account_id,change_times,money,remark,created_time,created_by)
+        INSERT INTO `web_double_integral_record`(account_id,change_times,money,remark,created_time,created_by,settlement_status,type)
         SELECT
-        account_id,(2-double_integral_times),0,'系统初始化',UNIX_TIMESTAMP(),'系统'
+        account_id,(2-double_integral_times),0,'每周初始化',UNIX_TIMESTAMP(),'admin',1,0
         FROM `web_user` WHERE double_integral_times !=2
     </insert>
     <select id="selectByTodayAndAccountId" resultMap="WebDoubleIntegralRecordResult">
@@ -91,11 +95,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and created_time >=#{start}
         and #{end} >created_time
         and 0 >change_times
-        and remark != '系统初始化'
+        and type = 1
     </select>
 
     <select id="selectUnsettledRecordList" resultMap="WebDoubleIntegralRecordResult">
-        select id, account_id, change_times, money, remark, created_time, created_by from web_double_integral_record where settlement_status = 0
+        select id, account_id, change_times, money, remark, created_time, created_by from web_double_integral_record where settlement_status = 0 and type = 1
     </select>
 
     <update id="batchUpdateDoubleAccount" parameterType="java.util.List">
