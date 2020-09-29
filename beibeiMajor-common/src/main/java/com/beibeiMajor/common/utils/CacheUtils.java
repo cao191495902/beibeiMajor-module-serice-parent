@@ -1,12 +1,13 @@
 package com.beibeiMajor.common.utils;
 
-import java.util.Iterator;
-import java.util.Set;
+import com.beibeiMajor.common.utils.spring.SpringUtils;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.beibeiMajor.common.utils.spring.SpringUtils;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Cache工具类
@@ -182,6 +183,21 @@ public class CacheUtils
             throw new RuntimeException("当前系统中没有定义“" + cacheName + "”这个缓存。");
         }
         return cache;
+    }
+
+    /**
+     * 清除指定cache name下面的所有缓存
+     *
+     * @param ecName
+     */
+    public static boolean removeAllCache(String ecName) {
+        net.sf.ehcache.CacheManager manager = net.sf.ehcache.CacheManager.getCacheManager("ruoyi");     //通过manager可以生成指定名称的Cache对象
+        net.sf.ehcache.Cache cache = manager.getCache(ecName);
+        if (cache != null) {
+            cache.removeAll();
+            return true;
+        }
+        return false;
     }
 
 }

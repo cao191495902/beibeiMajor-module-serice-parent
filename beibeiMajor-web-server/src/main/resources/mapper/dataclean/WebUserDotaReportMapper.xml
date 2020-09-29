@@ -340,7 +340,7 @@
     <select id="selectWebUserDotaReportList" parameterType="com.beibeiMajor.system.domain.WebUserDotaReport" resultMap="WebUserDotaReportMap">
         select user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min ,
         (select nick_name from web_user where account_id = w.user_id) as nick_name,
-        (SELECT COUNT(DISTINCT integral) FROM `web_user_dota_report` AS b WHERE w.integral &lt; b.integral) +1 AS "rank"
+        (SELECT COUNT(integral) FROM `web_user_dota_report` AS b WHERE w.integral &lt; b.integral) +1 AS "rank"
         from web_user_dota_report w
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>

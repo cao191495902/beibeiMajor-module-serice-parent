@@ -16,6 +16,7 @@ import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import com.beibeiMajor.web.service.dto.TopBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -228,11 +229,13 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         return true;
     }
     @Override
+    @Cacheable(value = "selectWebUserDotaReportList",key="#root.methodName+'_'+#webUserDotaReport.userId")
     public List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport) {
         return webUserDotaReportDao.selectWebUserDotaReportList(webUserDotaReport);
     }
 
     @Override
+    @Cacheable(value = "statisticsTopInfoList",key="#root.methodName")
     public List<TopBean> statisticsTopInfoList() {
         List<TopBean> result = new ArrayList<>(3);
         TopBean top1 = new TopBean();
@@ -307,6 +310,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     }
 
     @Override
+    @Cacheable(value = "getMyRecordList", key = "#root.methodName+'_'+#userId")
     public List<MyMatchDetailBean> getMyRecordList(String userId) {
         return webUserDotaReportDao.getMyRecordList(userId);
     }

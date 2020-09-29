@@ -1,7 +1,11 @@
 package com.beibeiMajor.web.controller;
 
+import com.beibeiMajor.common.utils.CacheUtils;
+import com.beibeiMajor.common.utils.StringUtils;
 import com.beibeiMajor.web.service.DotaGameInfoService;
 import com.beibeiMajor.web.service.ReportInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +26,10 @@ public class SynInfoController {
     private DotaGameInfoService dotaGameInfoService;
     @Resource
     private ReportInfoService reportInfoService;
+    @Resource
+    private CacheManager cacheManager;
+
+
 
     /**
      * 增量更新比赛数据
@@ -52,4 +60,12 @@ public class SynInfoController {
         return "success";
     }
 
+    /**
+     * 清除缓存
+     */
+    @GetMapping("/clearCache")
+    public Object clearCache(String cacheName) {
+        cacheManager.getCache(cacheName).clear();
+        return "success";
+    }
 }
