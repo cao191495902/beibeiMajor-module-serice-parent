@@ -67,6 +67,8 @@ Roll点，Roll了点之后，点数最大的在天辉和夜宴。然后，队长
 
 域名名称: rocka 7777
 
+steamId: 418062487
+
 
 访问示例:
 http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1/?match_id=5597599555&key=815C228EBE41BBDC9341E58C0B9151E1
