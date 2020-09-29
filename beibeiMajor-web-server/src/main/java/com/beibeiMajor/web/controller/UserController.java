@@ -2,7 +2,9 @@ package com.beibeiMajor.web.controller;
 
 import com.beibeiMajor.common.core.controller.BaseController;
 import com.beibeiMajor.common.core.domain.AjaxResult;
+import com.beibeiMajor.common.core.page.PageDomain;
 import com.beibeiMajor.common.core.page.TableDataInfo;
+import com.beibeiMajor.common.core.page.TableSupport;
 import com.beibeiMajor.common.utils.DateUtils;
 import com.beibeiMajor.common.utils.ServletUtils;
 import com.beibeiMajor.common.utils.StringUtils;
@@ -103,7 +105,7 @@ public class UserController extends BaseController{
 
         WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
         webUserDotaReport.setUserId(user.getAccountId());
-        List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport);
+        List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,1,10);
         if(CollectionUtils.isNotEmpty(list)){
             mmap.addAttribute("info",list.get(0));
         }
@@ -135,7 +137,8 @@ public class UserController extends BaseController{
     @ResponseBody
     public TableDataInfo list(WebUserDotaReport webUserDotaReport) {
         startPage();
-        List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport);
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,pageDomain.getPageNum(),pageDomain.getPageSize());
         return getDataTable(list);
     }
 
@@ -162,7 +165,8 @@ public class UserController extends BaseController{
     @ResponseBody
     public TableDataInfo myRecordList(String accountId) {
         startPage();
-        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId);
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,pageDomain.getPageNum(),pageDomain.getPageSize());
 
         return getDataTable(list);
     }

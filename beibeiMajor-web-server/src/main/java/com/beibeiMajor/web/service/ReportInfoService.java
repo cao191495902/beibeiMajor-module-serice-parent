@@ -15,12 +15,12 @@ public interface ReportInfoService {
 
     List<WebUserDotaReportPo> handlerMatchInfoToReport();
 
-    List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
+    List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize);
 
     List<TopBean> statisticsTopInfoList();
 
     List<WebUser> getYesTodayTopUser(Long startDate,Long endDate);
 
 
-    List<MyMatchDetailBean> getMyRecordList(String userId);
+    List<MyMatchDetailBean> getMyRecordList(String userId,Integer pageNum,Integer pageSize);
 }

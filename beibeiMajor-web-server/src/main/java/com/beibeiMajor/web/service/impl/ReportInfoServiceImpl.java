@@ -229,8 +229,8 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         return true;
     }
     @Override
-    @Cacheable(value = "selectWebUserDotaReportList",key="#root.methodName+'_'+#webUserDotaReport.userId")
-    public List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport) {
+    @Cacheable(value = "selectWebUserDotaReportList",key="#root.methodName+'_'+#webUserDotaReport.userId+'_'+#pageNum+'_'+#pageSize")
+    public List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize) {
         return webUserDotaReportDao.selectWebUserDotaReportList(webUserDotaReport);
     }
 
@@ -310,8 +310,8 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     }
 
     @Override
-    @Cacheable(value = "getMyRecordList", key = "#root.methodName+'_'+#userId")
-    public List<MyMatchDetailBean> getMyRecordList(String userId) {
+    @Cacheable(value = "getMyRecordList", key = "#root.methodName+'_'+#userId+'_'+#pageNum+'_'+#pageSize")
+    public List<MyMatchDetailBean> getMyRecordList(String userId,Integer pageNum,Integer pageSize) {
         return webUserDotaReportDao.getMyRecordList(userId);
     }
 
