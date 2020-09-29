@@ -42,7 +42,7 @@ public class WebPasswordService
 
     public void validate(WebUser user, String password)
     {
-        String loginName = user.getLoginName();
+        String loginName = user.getAccountId()+"";
 
         AtomicInteger retryCount = loginRecordCache.get(loginName);
 
@@ -71,7 +71,7 @@ public class WebPasswordService
 
     public boolean matches(WebUser user, String newPassword)
     {
-        return user.getPassword().equals(encryptPassword(user.getLoginName(), newPassword, user.getSalt()));
+        return user.getPassword().equals(encryptPassword(user.getAccountId()+"", newPassword, user.getSalt()));
     }
 
     public void clearLoginRecordCache(String username)

@@ -126,7 +126,7 @@ public class WebUserController extends BaseController
         //更新密码
         if (StringUtils.isNotEmpty(webUser.getPassword()) && webUser.getPassword().length() < 20) {
             webUser.setSalt(ShiroUtils.randomSalt());
-            webUser.setPassword(passwordService.encryptPassword(webUser.getLoginName(), webUser.getPassword(), webUser.getSalt()));
+            webUser.setPassword(passwordService.encryptPassword(webUser.getAccountId()+"", webUser.getPassword(), webUser.getSalt()));
             webUser.setCreateBy(ShiroUtils.getLoginName());
 
         }

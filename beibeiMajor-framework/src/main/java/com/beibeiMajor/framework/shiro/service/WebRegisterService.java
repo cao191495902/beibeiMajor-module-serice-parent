@@ -69,7 +69,7 @@ public class WebRegisterService
         else
         {
             user.setSalt(ShiroUtils.randomSalt());
-            user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
+            user.setPassword(passwordService.encryptPassword(user.getAccountId()+"", user.getPassword(), user.getSalt()));
             boolean regFlag = userService.registerUser(user);
             if (!regFlag)
             {
