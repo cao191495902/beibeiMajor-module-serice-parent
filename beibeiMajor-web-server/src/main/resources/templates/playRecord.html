@@ -91,23 +91,6 @@
         $.table.init(options);
     });
 
-    function setDouble() {
-        $.post(ctx+"/updateDoubleTimes", '', function(result) {
-            if (result.code == web_status.SUCCESS) {
-                $.modal.alertSuccess("双倍成功");
-                setTimeout(function(){
-                    $.modal.closeLoading();
-                    $.modal.reload();
-                }, 1000);
-            } else {
-                $.modal.alertError(result.msg);
-                setTimeout(function(){
-                    $.modal.closeLoading();
-                }, 1000);
-            }
-        });
-
-    }
     function goIndex() {
         window.location.href = prefix +"/index";
     }

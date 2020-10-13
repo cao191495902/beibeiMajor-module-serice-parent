@@ -171,6 +171,22 @@ public class UserController extends BaseController{
         return getDataTable(list);
     }
 
+
+    /**
+     * 获取我最近五场的战绩
+     *
+     * @return
+     */
+    @PostMapping("/myRecordListRecent")
+    @ResponseBody
+    public TableDataInfo myRecordListRecent(String accountId) {
+        startPage();
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,pageDomain.getPageNum(),pageDomain.getPageSize());
+        List<MyMatchDetailBean> newList = list.subList(0, list.size() > 5 ? 5 : list.size());
+        return getDataTable(newList);
+    }
+
     /**
      * 报名
      *

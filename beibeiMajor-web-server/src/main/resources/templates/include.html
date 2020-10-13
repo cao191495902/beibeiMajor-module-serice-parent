@@ -54,15 +54,15 @@
             flex-wrap: wrap;
             justify-content:space-between;
         }
-        .box2222 li{
-            width: calc(50% - 5px);
-            margin: -10px 0 5px 0;
-        }
-        .liContent {
-            display: flex;
-            align-items: center; /*定义body的元素垂直居中*/
-            /*justify-content: center; !*定义body的里的元素水平居中*!*/
-        }
+        /*.box2222 li{*/
+            /*width: calc(50% - 5px);*/
+            /*margin: -10px 0 5px 0;*/
+        /*}*/
+        /*.liContent {*/
+            /*display: flex;*/
+            /*align-items: center; !*定义body的元素垂直居中*!*/
+            /*!*justify-content: center; !*定义body的里的元素水平居中*!*!*/
+        /*}*/
         .levelContent span{
             font-size: 40px;
         }
@@ -71,14 +71,6 @@
         <ul class="box2222">
             <li>
                 <div><img  th:src="${user.avatar}"></div>
-            </li>
-            <li class="liContent">
-                <div class=" levelContent">
-                    <p th:if="${info.rank <=5} "><span style="color: red;">特等马</span></p>
-                    <p th:if="${info.rank >5 && info.rank <=10} "><span style="color:#00B83F;">上等马</span></p>
-                    <p th:if="${info.rank >10 && info.rank <=15} "><span style="color: #0d8ddb;">中等马</span></p>
-                    <p th:if="${info.rank > 15} "><span style="color: grey;">下等马</span></p>
-                </div>
             </li>
             <li>
                 <div>我的昵称：<span th:text="${user.nickName}"></span></div>
@@ -91,6 +83,14 @@
             </li>
             <li>
                 <div>积分排名：<span th:text="${info.rank}" style="color: red"></span></div>
+            </li>
+            <li class="liContent">
+                <div class=" levelContent">
+                    <p th:if="${info.rank <=5} "><span style="color: red;">特等马</span></p>
+                    <p th:if="${info.rank >5 && info.rank <=10} "><span style="color:#00B83F;">上等马</span></p>
+                    <p th:if="${info.rank >10 && info.rank <=15} "><span style="color: #0d8ddb;">中等马</span></p>
+                    <p th:if="${info.rank > 15} "><span style="color: grey;">下等马</span></p>
+                </div>
             </li>
             <li>
                 <div>当前双倍次数：<span th:text="${user.doubleIntegralTimes}" style="color: red"></span></div>

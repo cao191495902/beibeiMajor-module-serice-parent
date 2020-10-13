@@ -1,51 +1,173 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('用户积分列表')" />
+    <th:block th:include="include :: header('用户积分列表')"/>
+    <link href="../static/css/index.css" th:href="@{/css/index.css}" rel="stylesheet"/>
 </head>
 
-<th:block th:include="include :: myInfo" />
 <body class="gray-bg">
-<div id="topContainer-div" class="container-div" >
-    <div class="row">
-        <div class="col-sm-12 select-table table-striped" >
-            <table id="bootstrap-table1"></table>
+
+<div id="global">
+    <div id="content_menu">
+        <ul class="box2222">
+            <li>
+                <div><img class="circleImg" th:src="${user.avatar}"></div>
+            </li>
+            <li>
+                <div><span th:text="${user.nickName}"></span></div>
+            </li>
+            <li>
+                <div>胜率：<span th:text="${info.winRate}"></span></div>
+            </li>
+            <li>
+                <div>积分：<span th:text="${info.integral}"></span></div>
+            </li>
+            <li>
+                <div>排名：<span th:text="${info.rank}" style="color: red"></span></div>
+            </li>
+            <li class="liContent">
+                <div class=" levelContent">
+                    <p th:if="${info.rank <=5} "><span style="color: red;">特等马</span></p>
+                    <p th:if="${info.rank >5 && info.rank <=10} "><span style="color:#00B83F;">上等马</span></p>
+                    <p th:if="${info.rank >10 && info.rank <=15} "><span style="color: #0d8ddb;">中等马</span></p>
+                    <p th:if="${info.rank > 15} "><span style="color: grey;">下等马</span></p>
+                </div>
+            </li>
+            <li>
+                <div>当前双倍次数：<span th:text="${user.doubleIntegralTimes}" style="color: red"></span></div>
+            </li>
+            <li>
+                <div th:if="${record != null}">
+                    <div>今日双倍状态：<span style="font-size: 20px;color: red">已双倍</span></div>
+                </div>
+                <div th:if="${record == null}">
+                    <a class="btn btn-primary btn-rounded btn-sm" onclick="setDouble()"><i
+                            class="fa "></i>&nbsp;我要双倍</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+    <div id="content_body">
+
+        <div id="topContainer-div" class="container-div">
+            <div class="row">
+                <div class="col-sm-12 select-table table-striped">
+                    <table class="divTable" id="bootstrap-table1"></table>
+
+                    <div th:if="${record == null}">
+                        <a class="btn btn-primary btn-rounded btn-sm" onclick="gotoAccountDetail()">
+                            <i class="fa "></i>&nbsp;更多</a>
+                    </div>
+
+                    <table class="divTable" id="bootstrap-table2"></table>
+
+                    <table class="divTable" id="bootstrap-table3"></table>
+                </div>
+
+            </div>
         </div>
 
     </div>
-</div>
-<div class="container-div">
-    <div class="row">
-        <!--<div class="col-sm-12 select-table table-striped">-->
-            <!--<table id="bootstrap-table2"></table>-->
-        <!--</div>-->
-        <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table2"></table>
-        </div>
 
-    </div>
+
+    <div id="floor"></div>
+    <th:block th:include="include :: footer"/>
 </div>
 
-<th:block th:include="include :: footer" />
+<input type="hidden" id="userAccountIdIput" th:value="${user.accountId}"/>
+
 <script th:inline="javascript">
     var prefix = ctx;
 
-    $(function() {
-        if(!$.common.isMobile()){
-            $("#topContainer-div").css("height", "17%");
-        }else {
-            $("#topContainer-div").css("height", "65%");
-        }
+    $(function () {
         var options = {
-            id:"bootstrap-table2",
-            url: prefix + "/list",
-            pageSize:15,
+            id: "bootstrap-table1",
+            url: prefix + "/myRecordListRecent?accountId=" + $("#userAccountIdIput").val(),
+            pageSize: 5,
+            pageNumber: 1,
             showSearch: false,                     // 是否显示检索信息
             showPageGo: false,               		// 是否显示跳转页
             showRefresh: false,                   // 是否显示刷新按钮
             showColumns: false,
-            pagination:true,
-            showToggle:false,
+            pagination: false,
+            showToggle: false,
+            modalName: "比赛列表",
+            columns: [
+                {
+                    field: 'heroName',
+                    title: '英雄名称',
+                },
+                {
+                    field: 'result',
+                    title: '比赛结果',
+                    formatter: function (value, row, index) {
+                        if (value == 1) {
+                            return "胜";
+                        } else {
+                            return "败";
+                        }
+                    },
+                    cellStyle: function (value, row, index) {
+                        if (value == 1) {
+                            return {css: {"color": "green"}}
+                        } else {
+                            return {css: {"color": "red"}}
+                        }
+                    }
+                },
+                {
+                    field: 'playDate',
+                    title: '比赛时间'
+                },
+                {
+                    field: 'kda',
+                    title: 'KDA',
+                },
+                {
+                    field: 'isDouble',
+                    title: '双倍积分',
+                    formatter: function (value, row, index) {
+                        if (value == 1) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    },
+                    cellStyle: function (value, row, index) {
+                        if (value == 1) {
+                            return {css: {"color": "green"}}
+                        } else {
+                            return {css: {"color": "red"}}
+                        }
+                    }
+                },
+                {
+                    field: 'integral',
+                    title: '积分变化'
+                }
+            ]
+        }
+        $.table.init(options);
+    })
+
+    $(function () {
+        if (!$.common.isMobile()) {
+            $("#topContainer-div").css("height", "17%");
+        } else {
+            $("#topContainer-div").css("height", "65%");
+        }
+        var options = {
+            id: "bootstrap-table2",
+            url: prefix + "/list",
+            pageSize: 15,
+            showSearch: false,                     // 是否显示检索信息
+            showPageGo: false,               		// 是否显示跳转页
+            showRefresh: false,                   // 是否显示刷新按钮
+            showColumns: false,
+            pagination: true,
+            showToggle: false,
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
@@ -104,18 +226,18 @@
                 {
                     field: 'isWin',
                     title: '连胜/连败',
-                    formatter: function(value, row, index) {
-                        if(value != 1){
+                    formatter: function (value, row, index) {
+                        if (value != 1) {
                             return "连胜";
-                        }else{
+                        } else {
                             return "连败";
                         }
                     },
-                    cellStyle: function(value, row, index) {
-                        if(value != 1){
-                            return {css:{"color":"green"}}
-                        }else{
-                            return {css:{"color":"red"}}
+                    cellStyle: function (value, row, index) {
+                        if (value != 1) {
+                            return {css: {"color": "green"}}
+                        } else {
+                            return {css: {"color": "red"}}
                         }
                     }
                 },
@@ -137,17 +259,17 @@
         $.table.init(options);
     });
 
-    $(function() {
+    $(function () {
         var options = {
-            id:"bootstrap-table1",
+            id: "bootstrap-table3",
             url: prefix + "/topList",
-            pageSize:3,
+            pageSize: 3,
             showSearch: false,                     // 是否显示检索信息
             showPageGo: false,               		// 是否显示跳转页
             showRefresh: false,                   // 是否显示刷新按钮
             showColumns: false,
-            pagination:false,
-            showToggle:false,
+            pagination: false,
+            showToggle: false,
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
@@ -188,24 +310,30 @@
     });
 
     function setDouble() {
-        $.post(ctx+"/updateDoubleTimes", '', function(result) {
+        $.post(ctx + "/updateDoubleTimes", '', function (result) {
             if (result.code == web_status.SUCCESS) {
                 $.modal.alertSuccess("双倍成功");
-                setTimeout(function(){
+                setTimeout(function () {
                     $.modal.closeLoading();
                     $.modal.reload();
                 }, 1000);
             } else {
                 $.modal.alertError(result.msg);
-                setTimeout(function(){
+                setTimeout(function () {
                     $.modal.closeLoading();
                 }, 1000);
             }
         });
 
     }
+
     function gotoDetail(accountId) {
-        window.location.href = prefix +"/playRecord?accountId="+accountId;
+        window.location.href = prefix + "/playRecord?accountId=" + accountId;
+    }
+
+    function gotoAccountDetail() {
+        var accountId = document.getElementById("accountId").value;
+        window.location.href = prefix + "/playRecord?accountId=" + accountId;
     }
 </script>
 </body>
