@@ -325,6 +325,9 @@
 
     }
 
+    function gotoDetail(accountId) {
+        window.location.href = prefix + "/playRecord?accountId=" + accountId;
+    }
 
     function gotoAccountDetail() {
         var accountId = $("#userAccountIdIput").val();
