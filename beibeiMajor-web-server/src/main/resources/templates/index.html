@@ -54,16 +54,14 @@
         <div id="topContainer-div" class="container-div">
             <div class="row">
                 <div class="col-sm-12 select-table table-striped">
+                    <h2>总榜单：</h2>
+                    <table class="divTable" id="bootstrap-table3"></table>
+                    <h2>最近比赛记录：</h2>
                     <table class="divTable" id="bootstrap-table1"></table>
-
-                    <div th:if="${record == null}">
-                        <a class="btn btn-primary btn-rounded btn-sm" onclick="gotoAccountDetail()">
-                            <i class="fa "></i>&nbsp;更多</a>
-                    </div>
-
+                    <a class="btn btn-success btn-xs " href="javascript:void(0)" onclick="gotoAccountDetail()"><i class="fa "></i>更多</a>
+                    <h2>积分排行榜：</h2>
                     <table class="divTable" id="bootstrap-table2"></table>
 
-                    <table class="divTable" id="bootstrap-table3"></table>
                 </div>
 
             </div>
@@ -327,12 +325,9 @@
 
     }
 
-    function gotoDetail(accountId) {
-        window.location.href = prefix + "/playRecord?accountId=" + accountId;
-    }
 
     function gotoAccountDetail() {
-        var accountId = document.getElementById("accountId").value;
+        var accountId = $("#userAccountIdIput").val();
         window.location.href = prefix + "/playRecord?accountId=" + accountId;
     }
 </script>
