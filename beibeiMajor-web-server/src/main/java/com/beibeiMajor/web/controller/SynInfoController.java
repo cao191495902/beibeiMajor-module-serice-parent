@@ -1,10 +1,8 @@
 package com.beibeiMajor.web.controller;
 
-import com.beibeiMajor.common.utils.CacheUtils;
-import com.beibeiMajor.common.utils.StringUtils;
+import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.service.DotaGameInfoService;
 import com.beibeiMajor.web.service.ReportInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +26,8 @@ public class SynInfoController {
     private ReportInfoService reportInfoService;
     @Resource
     private CacheManager cacheManager;
+    @Resource
+    private IWebUserService webUserService;
 
 
 
@@ -40,6 +40,15 @@ public class SynInfoController {
         if (dotaGameInfoService.insertMatchDetailInfo(gameIdOfLeagueMatch)) {
             return "success";
         } else return "failed";
+    }
+
+    /**
+     * 增量更新用户数据
+     */
+    @GetMapping("/synWebUser")
+    public Object synWebUser() {
+        webUserService.selectInsertWebUser();
+       return "success";
     }
 
     /**
