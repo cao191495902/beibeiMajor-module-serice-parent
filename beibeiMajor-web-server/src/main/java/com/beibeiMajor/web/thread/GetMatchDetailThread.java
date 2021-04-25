@@ -25,7 +25,8 @@ public class GetMatchDetailThread implements Callable<MatchDetailDto> {
         MatchDetailDto matchDetailById = matchDetailInfoService.getMatchDetailById(matchId);
         List<PlayersBean> players = matchDetailById.getPlayers();
         int count= (int) players.stream().filter(item -> item.getLeaverStatus() != 0).count();
-        if (count > 0){
+        //有三个人离开比赛的状态不正确 就不算
+        if (count > 2){
             return null;
         }
         return matchDetailById;

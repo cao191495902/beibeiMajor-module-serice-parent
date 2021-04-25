@@ -49,7 +49,9 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
             webMatchDetailDao.batchInsert(detailList);
             webMatchPicksDao.batchInsert(picksList);
             webMatchPlayerInfoDao.batchInsert(playerList);
-            webAbilityUpgradesDao.batchInsert(abilityUpgradesList);
+            if(abilityUpgradesList != null && abilityUpgradesList.size() >0){
+                webAbilityUpgradesDao.batchInsert(abilityUpgradesList);
+            }
             return true;
         }catch (Exception e) {
             log.error("batch insert to DB failed!" + e.getMessage());
