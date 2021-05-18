@@ -42,6 +42,8 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     @Resource
     IWebDoubleIntegralRecordService webDoubleIntegralRecordService;
 
+    private static final int TOP_COUNT = 5;
+
     @Override
     public List<WebUserDotaReportPo> handlerMatchInfoToReport() {
         //STEP 0 更新用户报表以及绑定双倍比赛Id
@@ -237,89 +239,60 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     @Override
     @Cacheable(value = "statisticsTopInfoList",key="#root.methodName")
     public List<TopBean> statisticsTopInfoList() {
-        List<TopBean> result = new ArrayList<>(3);
-        TopBean top1 = new TopBean();
-        TopBean top2 = new TopBean();
-        TopBean top3 = new TopBean();
+        List<TopBean> result = new ArrayList<>(TOP_COUNT);
 
         //参战率 TOP3
-        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(3, "DESC");
-        if (warRateTopList != null && warRateTopList.size() >= 1)
-            top1.setWarRate(warRateTopList.get(0));
-        if (warRateTopList != null && warRateTopList.size() >= 2)
-            top2.setWarRate(warRateTopList.get(1));
-        if (warRateTopList != null && warRateTopList.size() >= 3)
-            top3.setWarRate(warRateTopList.get(2));
+        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(TOP_COUNT, "DESC");
         //最高胜率 TOP3
-        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(3,"DESC");
-        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 1)
-            top1.setWinRate(highestWinPerTopList.get(0));
-        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 2)
-            top2.setWinRate(highestWinPerTopList.get(1));
-        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 3)
-            top3.setWinRate(highestWinPerTopList.get(2));
+        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(TOP_COUNT, "DESC");
         //最高KDA TOP3
-        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(3,"DESC");
-        if (highestKDATopList != null && highestKDATopList.size() >= 1)
-            top1.setKad(highestKDATopList.get(0));
-        if (highestKDATopList != null && highestKDATopList.size() >= 2)
-            top2.setKad(highestKDATopList.get(1));
-        if (highestKDATopList != null && highestKDATopList.size() >= 3)
-            top3.setKad(highestKDATopList.get(2));
+        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(TOP_COUNT, "DESC");
         //最高场均击杀 TOP3
-        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(3,"DESC");
-        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 1)
-            top1.setKillsPerGame(highestKillsPerGameTopList.get(0));
-        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 2)
-            top2.setKillsPerGame(highestKillsPerGameTopList.get(1));
-        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 3)
-            top3.setKillsPerGame(highestKillsPerGameTopList.get(2));
+        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(TOP_COUNT, "DESC");
         //最少场均死亡 TOP3
-        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(3,"ASC");
-        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 1)
-            top1.setDeathPerGame(leastDeathPerGameTopList.get(0));
-        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 2)
-            top2.setDeathPerGame(leastDeathPerGameTopList.get(1));
-        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 3)
-            top3.setDeathPerGame(leastDeathPerGameTopList.get(2));
+        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(TOP_COUNT, "ASC");
         //最高场均助攻 TOP3
-        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(3,"DESC");
-        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 1)
-            top1.setAssistsPerGame(highestAssistsPerGameTopList.get(0));
-        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 2)
-            top2.setAssistsPerGame(highestAssistsPerGameTopList.get(1));
-        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 3)
-            top3.setAssistsPerGame(highestAssistsPerGameTopList.get(2));
-
+        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(TOP_COUNT, "DESC");
         //英雄胜率
-        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(3,"DESC");
-        if (heroWinRateList != null && heroWinRateList.size() >= 1)
-            top1.setHeroWinRate(heroWinRateList.get(0));
-        if (heroWinRateList != null && heroWinRateList.size() >= 2)
-            top2.setHeroWinRate(heroWinRateList.get(1));
-        if (heroWinRateList != null && heroWinRateList.size() >= 3)
-            top3.setHeroWinRate(heroWinRateList.get(2));
-
+        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(TOP_COUNT, "DESC");
         //英雄数量
-        List<String> heroCountList = webUserDotaReportDao.getHeroCountTop(3,"DESC");
-        if (heroCountList != null && heroCountList.size() >= 1)
-            top1.setHeroCount(heroCountList.get(0));
-        if (heroCountList != null && heroCountList.size() >= 2)
-            top2.setHeroCount(heroCountList.get(1));
-        if (heroCountList != null && heroCountList.size() >= 3)
-            top3.setHeroCount(heroCountList.get(2));
-
+        List<String> heroCountList = webUserDotaReportDao.getHeroCountTop(TOP_COUNT, "DESC");
         //场均英雄次数占比
-        List<String> heroRateList = webUserDotaReportDao.heroRateTop(3,"DESC");
-        if (heroRateList != null && heroRateList.size() >= 1)
-            top1.setHeroRate(heroRateList.get(0));
-        if (heroRateList != null && heroRateList.size() >= 2)
-            top2.setHeroRate(heroRateList.get(1));
-        if (heroRateList != null && heroRateList.size() >= 3)
-            top3.setHeroRate(heroRateList.get(2));
-        result.add(top1);
-        result.add(top2);
-        result.add(top3);
+        List<String> heroRateList = webUserDotaReportDao.heroRateTop(TOP_COUNT, "DESC");
+
+        for (int i = 0; i < TOP_COUNT; i++) {
+            TopBean top = new TopBean();
+
+            if (warRateTopList != null && warRateTopList.size() > i) {
+                top.setWarRate(warRateTopList.get(i));
+            }
+            if (highestWinPerTopList != null && highestWinPerTopList.size() > i) {
+                top.setWinRate(highestWinPerTopList.get(i));
+            }
+            if (highestKDATopList != null && highestKDATopList.size() > i) {
+                top.setKad(highestKDATopList.get(i));
+            }
+            if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() > i) {
+                top.setKillsPerGame(highestKillsPerGameTopList.get(i));
+            }
+            if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() > i) {
+                top.setDeathPerGame(leastDeathPerGameTopList.get(i));
+            }
+            if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() > i) {
+                top.setAssistsPerGame(highestAssistsPerGameTopList.get(i));
+            }
+            if (heroWinRateList != null && heroWinRateList.size() > i) {
+                top.setHeroWinRate(heroWinRateList.get(i));
+            }
+            if (heroCountList != null && heroCountList.size() > i) {
+                top.setHeroCount(heroCountList.get(i));
+            }
+            if (heroRateList != null && heroRateList.size() > i) {
+                top.setHeroRate(heroRateList.get(i));
+            }
+
+            result.add(top);
+        }
         return result;
     }
 
@@ -338,81 +311,55 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     @Override
     @Cacheable(value = "statisticsLossInfoList",key="#root.methodName")
     public List<TopBean> statisticsLossInfoList() {
-        List<TopBean> result = new ArrayList<>(3);
-        TopBean top1 = new TopBean();
-        TopBean top2 = new TopBean();
-        TopBean top3 = new TopBean();
+        List<TopBean> result = new ArrayList<>(TOP_COUNT);
 
         //参战率 TOP3
-        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(3, "ASC");
-        if (warRateTopList != null && warRateTopList.size() >= 1)
-            top1.setWarRate(warRateTopList.get(0));
-        if (warRateTopList != null && warRateTopList.size() >= 2)
-            top2.setWarRate(warRateTopList.get(1));
-        if (warRateTopList != null && warRateTopList.size() >= 3)
-            top3.setWarRate(warRateTopList.get(2));
+        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(TOP_COUNT, "ASC");
         //最高胜率 TOP3
-        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(3,"ASC");
-        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 1)
-            top1.setWinRate(highestWinPerTopList.get(0));
-        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 2)
-            top2.setWinRate(highestWinPerTopList.get(1));
-        if (highestWinPerTopList != null && highestWinPerTopList.size() >= 3)
-            top3.setWinRate(highestWinPerTopList.get(2));
+        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(TOP_COUNT, "ASC");
         //最高KDA TOP3
-        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(3,"ASC");
-        if (highestKDATopList != null && highestKDATopList.size() >= 1)
-            top1.setKad(highestKDATopList.get(0));
-        if (highestKDATopList != null && highestKDATopList.size() >= 2)
-            top2.setKad(highestKDATopList.get(1));
-        if (highestKDATopList != null && highestKDATopList.size() >= 3)
-            top3.setKad(highestKDATopList.get(2));
+        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(TOP_COUNT, "ASC");
         //最高场均击杀 TOP3
-        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(3,"ASC");
-        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 1)
-            top1.setKillsPerGame(highestKillsPerGameTopList.get(0));
-        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 2)
-            top2.setKillsPerGame(highestKillsPerGameTopList.get(1));
-        if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() >= 3)
-            top3.setKillsPerGame(highestKillsPerGameTopList.get(2));
+        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(TOP_COUNT, "ASC");
         //最少场均死亡 TOP3
-        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(3,"DESC");
-        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 1)
-            top1.setDeathPerGame(leastDeathPerGameTopList.get(0));
-        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 2)
-            top2.setDeathPerGame(leastDeathPerGameTopList.get(1));
-        if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() >= 3)
-            top3.setDeathPerGame(leastDeathPerGameTopList.get(2));
+        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(TOP_COUNT, "DESC");
         //最高场均助攻 TOP3
-        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(3,"ASC");
-        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 1)
-            top1.setAssistsPerGame(highestAssistsPerGameTopList.get(0));
-        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 2)
-            top2.setAssistsPerGame(highestAssistsPerGameTopList.get(1));
-        if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() >= 3)
-            top3.setAssistsPerGame(highestAssistsPerGameTopList.get(2));
-
+        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(TOP_COUNT, "ASC");
         //英雄胜率
-        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(3,"ASC");
-        if (heroWinRateList != null && heroWinRateList.size() >= 1)
-            top1.setHeroWinRate(heroWinRateList.get(0));
-        if (heroWinRateList != null && heroWinRateList.size() >= 2)
-            top2.setHeroWinRate(heroWinRateList.get(1));
-        if (heroWinRateList != null && heroWinRateList.size() >= 3)
-            top3.setHeroWinRate(heroWinRateList.get(2));
+        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(TOP_COUNT, "ASC");
 
         //场均英雄次数占比
-        List<String> heroRateList = webUserDotaReportDao.heroRateTop(3,"ASC");
-        if (heroRateList != null && heroRateList.size() >= 1)
-            top1.setHeroRate(heroRateList.get(0));
-        if (heroRateList != null && heroRateList.size() >= 2)
-            top2.setHeroRate(heroRateList.get(1));
-        if (heroRateList != null && heroRateList.size() >= 3)
-            top3.setHeroRate(heroRateList.get(2));
+        List<String> heroRateList = webUserDotaReportDao.heroRateTop(TOP_COUNT, "ASC");
 
-        result.add(top1);
-        result.add(top2);
-        result.add(top3);
+        for (int i = 0; i < TOP_COUNT; i++) {
+            TopBean top = new TopBean();
+
+            if (warRateTopList != null && warRateTopList.size() > i) {
+                top.setWarRate(warRateTopList.get(i));
+            }
+            if (highestWinPerTopList != null && highestWinPerTopList.size() > i) {
+                top.setWinRate(highestWinPerTopList.get(i));
+            }
+            if (highestKDATopList != null && highestKDATopList.size() > i) {
+                top.setKad(highestKDATopList.get(i));
+            }
+            if (highestKillsPerGameTopList != null && highestKillsPerGameTopList.size() > i) {
+                top.setKillsPerGame(highestKillsPerGameTopList.get(i));
+            }
+            if (leastDeathPerGameTopList != null && leastDeathPerGameTopList.size() > i) {
+                top.setDeathPerGame(leastDeathPerGameTopList.get(i));
+            }
+            if (highestAssistsPerGameTopList != null && highestAssistsPerGameTopList.size() > i) {
+                top.setAssistsPerGame(highestAssistsPerGameTopList.get(i));
+            }
+            if (heroWinRateList != null && heroWinRateList.size() > i) {
+                top.setHeroWinRate(heroWinRateList.get(i));
+            }
+            if (heroRateList != null && heroRateList.size() > i) {
+                top.setHeroRate(heroRateList.get(i));
+            }
+            result.add(top);
+        }
         return result;
     }
 }

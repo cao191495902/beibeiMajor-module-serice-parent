@@ -559,7 +559,7 @@
         ) r
         WHERE r.con > 3
 
-        ORDER BY ROUND(win/con*100,2) ${desc}
+        ORDER BY ROUND(win/con*100,2) ${desc},con ${desc}
         LIMIT #{topLimit}
     </select>
     <select id="heroRateTop" resultType="java.lang.String">
@@ -574,7 +574,7 @@
         ) r
         WHERE r.con >10
 
-        ORDER BY ROUND(heroId/con*100,2) ${desc}
+        ORDER BY ROUND(heroId/con*100,2) ${desc},con ${desc}
         LIMIT #{topLimit}
     </select>
 
