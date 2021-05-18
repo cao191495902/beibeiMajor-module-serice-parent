@@ -150,8 +150,22 @@ public class UserController extends BaseController{
     @PostMapping("/topList")
     @ResponseBody
     public TableDataInfo topList() {
-//        startPage();
+
         List<TopBean> result = reportInfoService.statisticsTopInfoList();
+
+        return getDataTable(result);
+    }
+
+    /**
+     * 获取loss信息表
+     *
+     * @return
+     */
+    @PostMapping("/lossList")
+    @ResponseBody
+    public TableDataInfo lossList() {
+
+        List<TopBean> result = reportInfoService.statisticsLossInfoList();
 
         return getDataTable(result);
     }
@@ -204,7 +218,11 @@ public class UserController extends BaseController{
         Date startTime = DateUtils.getStartTimeOfDay(new Date());
         Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime,1));
         //查询当天是否报过名
-        WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime()/1000);
+        WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime() / 1000);
+
+        if (record != null) {
+            return AjaxResult.error("今日已经双倍");
+        }
         //查询报名次数是否够
         WebUser webUser = webUserService.selectWebUserByAccountId(user.getAccountId());
         if (webUser.getDoubleIntegralTimes() <= 0) {
@@ -223,6 +241,18 @@ public class UserController extends BaseController{
         webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() - 1);
         webUserService.updateWebUser(webUser);
         ShiroUtils.setSysUser(webUser);
+        return AjaxResult.success();
+    }
+
+    /**
+     * 登出
+     *
+     * @return
+     */
+    @PostMapping("/logout")
+    @ResponseBody
+    public Object logout(String accountId) {
+        ShiroUtils.logout();
         return AjaxResult.success();
     }
 }

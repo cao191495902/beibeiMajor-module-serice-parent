@@ -82,21 +82,29 @@ public interface WebUserDotaReportDao {
 
     List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
 
-    List<String> getHighestPointsTop(@Param("topLimit") int i);
+    List<String> getHighestPointsTop(@Param("topLimit") int i,@Param("desc")String desc);
 
-    List<String> getHighestWinPerTop(@Param("topLimit") int i);
+    List<String> getHighestWinPerTop(@Param("topLimit") int i,@Param("desc")String desc);
 
-    List<String> getHighestKDATop(@Param("topLimit") int i);
+    List<String> getHighestKDATop(@Param("topLimit") int i,@Param("desc")String desc);
 
-    List<String> getLongestWinningStreakTop(@Param("topLimit") int i);
+    List<String> getLongestWinningStreakTop(@Param("topLimit") int i,@Param("desc")String desc);
 
-    List<String> getHighestKillsPerGameTop(@Param("topLimit") int i);
+    List<String> getHighestKillsPerGameTop(@Param("topLimit") int i,@Param("desc")String desc);
 
-    List<String> getLeastDeathPerGameTop(@Param("topLimit") int i);
+    List<String> getLeastDeathPerGameTop(@Param("topLimit") int i,@Param("desc")String desc);
 
-    List<String> getHighestAssistsPerGameTop(@Param("topLimit") int i);
+    List<String> getHighestAssistsPerGameTop(@Param("topLimit") int i,@Param("desc")String desc);
 
     List<WebUser> getYesTodayTopUser(@Param("startDate")Long startDate, @Param("endDate")Long endDate);
 
     List<MyMatchDetailBean> getMyRecordList(@Param("accountId") String userId);
+
+    List<String> getWarRateTop(@Param("topLimit")int i, @Param("desc")String desc);
+
+    List<String> getHeroCountTop(@Param("topLimit")int i, @Param("desc")String desc);
+
+    List<String> getheroWinRateTop(@Param("topLimit")int i, @Param("desc")String desc);
+
+    List<String> heroRateTop(@Param("topLimit")int i, @Param("desc")String desc);
 }

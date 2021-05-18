@@ -10,16 +10,24 @@ import java.util.Date;
 @Data
 public class MyMatchDetailBean {
 
-  private String heroName;
+    private String heroName;
 
-  private String result;
+    private String result;
 
-  private Date playDate;
+    private Date playDate;
 
-  private String isDouble;
+    private String isDouble;
 
-  private String kda;
+    private String kda;
 
-  private String integral;
+    private String integral;
+
+    private String lastHits;
+
+    private String denies;
+
+    private String goldPerMin;
+
+    private String xpPerMin;
 
 }

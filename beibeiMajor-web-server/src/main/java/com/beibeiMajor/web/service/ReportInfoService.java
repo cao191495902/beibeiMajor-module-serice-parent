@@ -23,4 +23,6 @@ public interface ReportInfoService {
 
 
     List<MyMatchDetailBean> getMyRecordList(String userId,Integer pageNum,Integer pageSize);
+
+    List<TopBean> statisticsLossInfoList();
 }

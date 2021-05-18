@@ -45,6 +45,10 @@
                             class="fa "></i>&nbsp;我要双倍</a>
                 </div>
             </li>
+            <li>
+                <a class="btn btn-primary btn-rounded btn-sm" onclick="logout()"><i
+                        class="fa "></i>&nbsp;退出当前账号</a>
+            </li>
         </ul>
     </div>
 
@@ -54,8 +58,10 @@
         <div id="topContainer-div" class="container-div">
             <div class="row">
                 <div class="col-sm-12 select-table table-striped">
-                    <h2>总榜单：</h2>
+                    <h2>高手榜————长剑应犹在，千里不留行；行云流水间，万古流芳处</h2>
                     <table class="divTable" id="bootstrap-table3"></table>
+                    <h2>低手榜————十年磨一剑，霜刃未曾试；勤练斩楼兰，不日定超凡</h2>
+                    <table class="divTable" id="bootstrap-table4"></table>
                     <h2>最近比赛记录：</h2>
                     <table class="divTable" id="bootstrap-table1"></table>
                     <a class="btn btn-success btn-xs " href="javascript:void(0)" onclick="gotoAccountDetail()"><i class="fa "></i>更多</a>
@@ -116,12 +122,28 @@
                     }
                 },
                 {
-                    field: 'playDate',
-                    title: '比赛时间'
-                },
-                {
                     field: 'kda',
                     title: 'KDA',
+                },
+                {
+                    field: 'lastHits',
+                    title: '正补数量',
+                },
+                {
+                    field: 'denies',
+                    title: '反补数量',
+                },
+                {
+                    field: 'goldPerMin',
+                    title: 'GPM',
+                },
+                {
+                    field: 'xpPerMin',
+                    title: 'XPM',
+                },
+                {
+                    field: 'playDate',
+                    title: '比赛时间'
                 },
                 {
                     field: 'isDouble',
@@ -259,6 +281,61 @@
 
     $(function () {
         var options = {
+            id: "bootstrap-table4",
+            url: prefix + "/lossList",
+            pageSize: 3,
+            showSearch: false,                     // 是否显示检索信息
+            showPageGo: false,               		// 是否显示跳转页
+            showRefresh: false,                   // 是否显示刷新按钮
+            showColumns: false,
+            pagination: false,
+            showToggle: false,
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "最低榜单",
+            columns: [
+                {
+                    field: 'winRate',
+                    title: '胜率最低',
+                },
+                {
+                    field: 'warRate',
+                    title: '参战率最低'
+                },
+                {
+                    field: 'kad',
+                    title: 'KAD最低'
+                },
+                {
+                    field: 'killsPerGame',
+                    title: '击杀最低'
+                },
+                {
+                    field: 'deathPerGame',
+                    title: '死亡最多'
+                },
+                {
+                    field: 'assistsPerGame',
+                    title: '助攻最低'
+                },
+                {
+                    field: 'heroWinRate',
+                    title: '英雄胜率'
+                },
+                {
+                    field: 'heroRate',
+                    title: '场均英雄数量'
+                }
+
+            ]
+        };
+        $.table.init(options);
+    });
+
+    $(function () {
+        var options = {
             id: "bootstrap-table3",
             url: prefix + "/topList",
             pageSize: 3,
@@ -272,35 +349,43 @@
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
-            modalName: "TOP榜单",
+            modalName: "最高榜单",
             columns: [
                 {
-                    field: 'integral',
-                    title: '积分榜',
+                    field: 'winRate',
+                    title: '胜率最高',
                 },
                 {
-                    field: 'winRate',
-                    title: '胜率榜'
+                    field: 'warRate',
+                    title: '参战率最高'
                 },
                 {
                     field: 'kad',
-                    title: 'KAD榜'
-                },
-                {
-                    field: 'winningStreak',
-                    title: '连胜榜'
+                    title: 'KAD最高'
                 },
                 {
                     field: 'killsPerGame',
-                    title: '击杀榜'
+                    title: '击杀最高'
                 },
                 {
                     field: 'deathPerGame',
-                    title: '死亡最少榜'
+                    title: '死亡最少'
                 },
                 {
                     field: 'assistsPerGame',
-                    title: '助攻榜'
+                    title: '助攻最高'
+                },
+                {
+                    field: 'heroWinRate',
+                    title: '英雄胜率'
+                },
+                {
+                    field: 'heroRate',
+                    title: '场均英雄数量'
+                },
+                {
+                    field: 'heroCount',
+                    title: '英雄次数'
                 }
             ]
         };
@@ -311,6 +396,24 @@
         $.post(ctx + "/updateDoubleTimes", '', function (result) {
             if (result.code == web_status.SUCCESS) {
                 $.modal.alertSuccess("双倍成功");
+                setTimeout(function () {
+                    $.modal.closeLoading();
+                    $.modal.reload();
+                }, 1000);
+            } else {
+                $.modal.alertError(result.msg);
+                setTimeout(function () {
+                    $.modal.closeLoading();
+                }, 1000);
+            }
+        });
+
+    }
+
+    function logout() {
+        $.post(ctx + "/logout", '', function (result) {
+            if (result.code == web_status.SUCCESS) {
+                $.modal.alertSuccess("退出成功");
                 setTimeout(function () {
                     $.modal.closeLoading();
                     $.modal.reload();

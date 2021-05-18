@@ -85,7 +85,7 @@ mybatis:
 pagehelper: 
   helperDialect: mysql
   reasonable: true
-  supportMethodsArguments: true
+  supportMethodsArguments: false
   params: count=countSql 
 
 # Shiro

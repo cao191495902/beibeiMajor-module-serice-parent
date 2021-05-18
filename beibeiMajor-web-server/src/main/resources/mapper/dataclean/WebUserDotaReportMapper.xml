@@ -391,8 +391,8 @@
         WHERE
 	        a.total_matches_num > 10
         ORDER BY
-            a.win_rate DESC,
-            a.integral DESC
+            a.win_rate ${desc},
+            a.integral ${desc}
             LIMIT #{topLimit}
     </select>
 
@@ -405,8 +405,8 @@
         WHERE
 	        a.total_matches_num > 10
         ORDER BY
-            a.kda DESC,
-            a.integral DESC
+            a.kda ${desc},
+            a.integral ${desc}
             LIMIT #{topLimit}
     </select>
 
@@ -420,8 +420,8 @@
             a.total_matches_num > 10
             AND a.iswin = 0
         ORDER BY
-            a.cur_max_count DESC,
-            a.integral DESC
+            a.cur_max_count ${desc},
+            a.integral ${desc}
             LIMIT #{topLimit}
     </select>
 
@@ -434,8 +434,8 @@
         WHERE
             a.total_matches_num > 10
         ORDER BY
-            a.average_kills DESC,
-            a.integral DESC
+            a.average_kills ${desc},
+            a.integral ${desc}
             LIMIT #{topLimit}
     </select>
 
@@ -448,8 +448,8 @@
         WHERE
             a.total_matches_num > 10
         ORDER BY
-            a.average_deaths ASC,
-            a.integral DESC
+            a.average_deaths ${desc},
+            a.integral ${desc}
             LIMIT #{topLimit}
     </select>
 
@@ -462,8 +462,8 @@
         WHERE
             a.total_matches_num > 10
         ORDER BY
-            a.average_assists DESC,
-            a.integral DESC
+            a.average_assists ${desc},
+            a.integral ${desc}
             LIMIT #{topLimit}
     </select>
     <select id="getYesTodayTopUser" resultType="com.beibeiMajor.system.domain.WebUser">
@@ -480,18 +480,102 @@
     </select>
     <select id="getMyRecordList" resultType="com.beibeiMajor.web.service.dto.MyMatchDetailBean">
         SELECT wh.`zh_name` AS "heroName",
-        IF((wd.`radiant_win`+wp.`team`)=1,'1','0') AS "result",
+        CASE
+        WHEN ( radiant_win = 0 AND <![CDATA[ player_slot < 10 ]]> )
+        OR ( radiant_win = 1 AND <![CDATA[ player_slot > 10 ]]> ) THEN
+        0 ELSE 1
+        END  AS "result",
         IF((FIND_IN_SET(#{accountId},wd.double_account) >0 AND wd.`settlement_status` =1),'1','0') AS "isDouble",
         FROM_UNIXTIME(wd.`start_time`) AS "playDate",
         CONCAT(wb.`before_integral`,IF(wb.`after_integral` > wb.`before_integral`,'+',''),(wb.`after_integral`-wb.`before_integral`)) AS "integral",
-        CONCAT(wb.`kills`,'/',wb.`deaths`,'/',wb.`assists`) AS "kda"
+        CONCAT(wb.`kills`,'/',wb.`deaths`,'/',wb.`assists`) AS "kda",
+        wb.last_hits AS "lastHits",
+        wb.denies AS "denies",
+        wb.gold_per_min AS "goldPerMin",
+        wb.xp_per_min AS "xpPerMin"
         FROM `web_match_player_info` wb
         LEFT JOIN `web_match_detail` wd ON wd.`match_id` = wb.`match_id`
         LEFT JOIN `web_dota_hero` wh ON wh.`hero_id` = wb.`hero_id`
-        LEFT JOIN `web_match_picks` wp ON wp.`match_id` = wb.`match_id` AND wp.`hero_id` = wb.`hero_id`
         WHERE wb.`account_id` = #{accountId}
         ORDER BY wd.`start_time` DESC
+    </select>
+    <select id="getWarRateTop" resultType="java.lang.String">
+        SELECT
+        CONCAT(b.nick_name, '(',ROUND( b.warRate*100,2),')')
+        FROM
+        ( SELECT
+        b.nick_name,
+        ROUND( ( SUM( a.kills ) + SUM( a.assists ) ) / SUM(IF(10 > player_slot
+        , radiant_score,dire_score)), 4 ) AS warRate
 
+        FROM
+        web_match_player_info a
+        LEFT JOIN web_user b ON a.account_id = b.account_id
+        LEFT JOIN `web_match_detail` c ON c.match_id = a.match_id
+
+        GROUP BY
+        a.account_id
+        ) AS b
+        ORDER BY b.warRate ${desc}
+        LIMIT #{topLimit}
+    </select>
+
+    <select id="getHeroCountTop" resultType="java.lang.String">
+        SELECT
+         CONCAT(wd.zh_name, '(',COUNT(wm.hero_id),')')
+        FROM `web_match_player_info` wm
+        JOIN `web_dota_hero` wd ON wd.hero_id = wm.hero_id
+        WHERE 1=1
+        GROUP BY wm.hero_id
+        ORDER BY COUNT(wm.hero_id)  ${desc}
+        LIMIT #{topLimit}
+    </select>
+    <select id="getheroWinRateTop" resultType="java.lang.String">
+
+        SELECT
+
+        CONCAT(zh_name, '(',win,'/',con,')') AS rsc
+
+        FROM (
+
+        SELECT
+        wd.`zh_name`,COUNT(wm.hero_id) AS con,
+
+        (SELECT
+
+        SUM(CASE
+        WHEN ( radiant_win = 0 AND   10 >player_slot  )
+        OR ( radiant_win = 1 AND player_slot > 10  ) THEN
+        0 ELSE 1
+        END  ) AS win
+        FROM `web_match_player_info` wb
+        LEFT JOIN `web_match_detail` wd ON wd.`match_id` = wb.`match_id`
+        WHERE wb.hero_id = wm.hero_id) AS win
+
+        FROM `web_match_player_info` wm
+        JOIN `web_dota_hero` wd ON wd.hero_id = wm.hero_id
+        WHERE 1=1
+        GROUP BY wm.hero_id
+        ) r
+        WHERE r.con > 3
+
+        ORDER BY ROUND(win/con*100,2) ${desc}
+        LIMIT #{topLimit}
+    </select>
+    <select id="heroRateTop" resultType="java.lang.String">
+      SELECT
+         CONCAT(nick_name, '(',heroId,'/',con,')') AS rsc
+        FROM (
+
+        SELECT nick_name,
+        (SELECT COUNT(*) FROM `web_match_player_info` WHERE account_id = w.`account_id`) AS con,
+        (SELECT COUNT(DISTINCT hero_id) FROM `web_match_player_info` WHERE account_id = w.`account_id`) AS heroId
+        FROM `web_user` w
+        ) r
+        WHERE r.con >10
+
+        ORDER BY ROUND(heroId/con*100,2) ${desc}
+        LIMIT #{topLimit}
     </select>
 
 </mapper>
