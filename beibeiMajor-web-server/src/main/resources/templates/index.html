@@ -46,7 +46,7 @@
                 </div>
             </li>
             <li>
-                <a class="btn btn-primary btn-rounded btn-sm" onclick="logout()"><i
+                <a class="btn btn-primary btn-rounded btn-sm" href="logout"><i
                         class="fa "></i>&nbsp;退出当前账号</a>
             </li>
         </ul>
@@ -411,23 +411,6 @@
 
     }
 
-    function logout() {
-        $.post(ctx + "/logout", '', function (result) {
-            if (result.code == web_status.SUCCESS) {
-                $.modal.alertSuccess("退出成功");
-                setTimeout(function () {
-                    $.modal.closeLoading();
-                    $.modal.reload();
-                }, 1000);
-            } else {
-                $.modal.alertError(result.msg);
-                setTimeout(function () {
-                    $.modal.closeLoading();
-                }, 1000);
-            }
-        });
-
-    }
 
     function gotoDetail(accountId) {
         window.location.href = prefix + "/playRecord?accountId=" + accountId;

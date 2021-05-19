@@ -17,6 +17,7 @@ import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.service.ReportInfoService;
 import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import com.beibeiMajor.web.service.dto.TopBean;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -139,6 +140,7 @@ public class UserController extends BaseController{
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
         List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,pageDomain.getPageNum(),pageDomain.getPageSize());
+        PageHelper.clearPage();
         return getDataTable(list);
     }
 
@@ -181,7 +183,7 @@ public class UserController extends BaseController{
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
         List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,pageDomain.getPageNum(),pageDomain.getPageSize());
-
+        PageHelper.clearPage();
         return getDataTable(list);
     }
 
@@ -196,8 +198,9 @@ public class UserController extends BaseController{
     public TableDataInfo myRecordListRecent(String accountId) {
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
-        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,pageDomain.getPageNum(),pageDomain.getPageSize());
+        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId, pageDomain.getPageNum(), pageDomain.getPageSize());
         List<MyMatchDetailBean> newList = list.subList(0, list.size() > 5 ? 5 : list.size());
+        PageHelper.clearPage();
         return getDataTable(newList);
     }
 
@@ -244,16 +247,16 @@ public class UserController extends BaseController{
         return AjaxResult.success();
     }
 
-    /**
-     * 登出
-     *
-     * @return
-     */
-    @PostMapping("/logout")
-    @ResponseBody
-    public Object logout(String accountId) {
-        ShiroUtils.logout();
-        return AjaxResult.success();
-    }
+//    /**
+//     * 登出
+//     *
+//     * @return
+//     */
+//    @PostMapping("/logout")
+//    @ResponseBody
+//    public Object logout(String accountId) {
+//        ShiroUtils.logout();
+//        return AjaxResult.success();
+//    }
 }
 
