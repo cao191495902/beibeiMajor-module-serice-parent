@@ -98,7 +98,7 @@ public interface WebMatchPlayerInfoDao {
 
     List<WinsOrLoseCountPo> getWinsOrLoseCount();
 
-    Map<Long, Long> bindingDoubleAccountToMatch(@Param("accountId") Long accountId, @Param("createdTime") Long createdTime);
+    Map<Long, Long> bindingDoubleAccountToMatch(@Param("accountId") Long accountId,@Param("createdTime") Long createdTime);
 
     Boolean batchUpdatePlayerIntegral(List<MatchPlayerIntegralPo> matchPlayerIntegralPoList);
 

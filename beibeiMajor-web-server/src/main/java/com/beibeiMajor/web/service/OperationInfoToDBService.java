@@ -16,5 +16,5 @@ public interface OperationInfoToDBService {
 
     Boolean batchUpdateDoubleAccount(Map<Long, String> accMap, List<Long> updateList);
 
-    Boolean rollbackDoubleIntegralRecord(Long accountId);
+    Boolean rollbackDoubleIntegralRecord(Long accountId,Long times,Integer type,String remark);
 }

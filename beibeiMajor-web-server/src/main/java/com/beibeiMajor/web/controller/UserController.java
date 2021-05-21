@@ -8,12 +8,14 @@ import com.beibeiMajor.common.core.page.TableSupport;
 import com.beibeiMajor.common.utils.DateUtils;
 import com.beibeiMajor.common.utils.ServletUtils;
 import com.beibeiMajor.common.utils.StringUtils;
+import com.beibeiMajor.framework.manager.JedisManager;
 import com.beibeiMajor.framework.util.ShiroUtils;
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
+import com.beibeiMajor.web.service.OperationInfoToDBService;
 import com.beibeiMajor.web.service.ReportInfoService;
 import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
 import com.beibeiMajor.web.service.dto.TopBean;
@@ -25,15 +27,11 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +48,11 @@ public class UserController extends BaseController{
     @Autowired
     IWebUserService webUserService;
     @Autowired
+    JedisManager jedisManager;
+    @Autowired
     IWebDoubleIntegralRecordService iWebDoubleIntegralRecordService;
+    @Autowired
+    OperationInfoToDBService operationInfoToDBService;
 
     /**
      * 登录接口
@@ -209,17 +211,31 @@ public class UserController extends BaseController{
      *
      * @return
      */
-    @PostMapping("/updateDoubleTimes")
+    @RequestMapping("/updateDoubleTimes")
     @ResponseBody
+//    @RepeatSubmit
     public Object updateDoubleTimes(WebUserDotaReport webUserDotaReport) {
+
+
         // 取身份信息
         WebUser user = ShiroUtils.getWebUser();
         //没有身份信息，跳转登录
         if (user == null) {
             return AjaxResult.error("用户不存在");
         }
+
+        // 采用redis方式实现 网络波动导致重复插入
+        int seconds = 5;
+        boolean roll = true;
+        int times = 1;
+        String ipFrequencyLimitKey = String.format("user:double:times:%s", user.getAccountId());
+        long occurTimes = jedisManager.incr(ipFrequencyLimitKey, seconds, roll);
+        if (occurTimes > times) {
+            return AjaxResult.error("请勿重复操作，5秒后再尝试");
+        }
+
         Date startTime = DateUtils.getStartTimeOfDay(new Date());
-        Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime,1));
+        Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime, 1));
         //查询当天是否报过名
         WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime() / 1000);
 
@@ -231,32 +247,11 @@ public class UserController extends BaseController{
         if (webUser.getDoubleIntegralTimes() <= 0) {
             return AjaxResult.error("双倍次数不够");
         }
-        //更新记录
-        WebDoubleIntegralRecord newRecord = new WebDoubleIntegralRecord();
-        newRecord.setAccountId(webUser.getAccountId());
-        newRecord.setChangeTimes(-1L);
-        newRecord.setMoney(new BigDecimal(0));
-        newRecord.setCreatedBy(user.getNickName());
-        newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
-        newRecord.setType(1);
-        iWebDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);
-        //减去用户次数
-        webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() - 1);
-        webUserService.updateWebUser(webUser);
+        operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId(), -1L, 1, "网站添加双倍");
         ShiroUtils.setSysUser(webUser);
         return AjaxResult.success();
     }
 
-//    /**
-//     * 登出
-//     *
-//     * @return
-//     */
-//    @PostMapping("/logout")
-//    @ResponseBody
-//    public Object logout(String accountId) {
-//        ShiroUtils.logout();
-//        return AjaxResult.success();
-//    }
+
 }
 

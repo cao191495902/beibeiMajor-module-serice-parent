@@ -71,6 +71,18 @@ spring:
     restart:
       # 热部署开关
       enabled: true
+  redis:
+    host: 82.157.98.157
+    port: 6379
+    timeout: 3000
+    password: beibeiMajor_fT4u2v
+    lettuce:
+     pool:
+      minIdle: 1
+      maxIdle: 10
+      maxWait: 3000
+      maxActive: 8
+
 
 # MyBatis
 mybatis:
@@ -142,3 +154,5 @@ swagger:
 customization:
   leagueMatchId: 12815
   key: 815C228EBE41BBDC9341E58C0B9151E1
+
+

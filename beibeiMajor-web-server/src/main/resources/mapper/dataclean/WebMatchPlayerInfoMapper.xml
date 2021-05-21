@@ -455,6 +455,7 @@
             LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
         WHERE
             b.account_id = #{accountId} AND (a.start_time + 20 * 60) > #{createdTime}
+            and (#{createdTime} +24*60 * 60) > (a.start_time + 20 * 60)
         ORDER BY
             ABS( (a.start_time + 20 * 60) - #{createdTime} ) ASC LIMIT 1
     </select>

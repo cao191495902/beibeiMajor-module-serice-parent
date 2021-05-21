@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -102,8 +103,12 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
                 doubleAccountPo.setAccountIds(mapValue);
                 list.add(doubleAccountPo);
             }
-            webMatchDetailDao.batchUpdateDoubleAccount(list);
-            webDoubleIntegralRecordService.batchUpdateDoubleAccount(updateList);
+            if (!CollectionUtils.isEmpty(list)) {
+                webMatchDetailDao.batchUpdateDoubleAccount(list);
+            }
+            if (!CollectionUtils.isEmpty(updateList)) {
+                webDoubleIntegralRecordService.batchUpdateDoubleAccount(updateList);
+            }
             return true;
         }catch (Exception e){
             log.error("batch update double account failed",e.getMessage());
@@ -114,22 +119,22 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean rollbackDoubleIntegralRecord(Long accountId) {
+    public Boolean rollbackDoubleIntegralRecord(Long accountId,Long times,Integer type,String remark) {
         try{
             WebUser webUser = webUserService.selectWebUserByAccountId(accountId);
             //更新记录
             WebDoubleIntegralRecord newRecord = new WebDoubleIntegralRecord();
             newRecord.setAccountId(accountId);
-            newRecord.setChangeTimes(+1L);
+            newRecord.setChangeTimes(times);
             newRecord.setMoney(new BigDecimal(0));
             newRecord.setCreatedBy(webUser.getNickName());
             newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
             newRecord.setSettlementStatus(true);
-            newRecord.setType(0);
-            newRecord.setRemark("系统退回");
+            newRecord.setType(type);
+            newRecord.setRemark(remark);
             webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);
             //减去用户次数
-            webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() + 1);
+            webUser.setDoubleIntegralTimes(webUser.getDoubleIntegralTimes() + times.intValue());
             webUserService.updateWebUser(webUser);
             return true;
         }catch (Exception e){

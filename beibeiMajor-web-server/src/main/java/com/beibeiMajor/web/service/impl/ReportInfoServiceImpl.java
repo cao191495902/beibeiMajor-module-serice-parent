@@ -114,7 +114,8 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                     accMap.put(matchId, map.get("account_id").toString());
                 }
             }else{
-                operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId());
+
+                operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId(),1L,0,"系统回退");
             }
             updateList.add(record.getId());
         }

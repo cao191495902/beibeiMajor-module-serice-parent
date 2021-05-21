@@ -96,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and #{end} >created_time
         and 0 >change_times
         and type = 1
+        limit 1
     </select>
 
     <select id="selectUnsettledRecordList" resultMap="WebDoubleIntegralRecordResult">
