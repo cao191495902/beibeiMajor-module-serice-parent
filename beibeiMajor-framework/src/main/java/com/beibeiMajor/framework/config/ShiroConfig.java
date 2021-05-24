@@ -1,11 +1,18 @@
 package com.beibeiMajor.framework.config;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import javax.servlet.Filter;
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.beibeiMajor.common.utils.StringUtils;
+import com.beibeiMajor.common.utils.spring.SpringUtils;
+import com.beibeiMajor.framework.shiro.realm.UserRealm;
+import com.beibeiMajor.framework.shiro.session.OnlineSessionDAO;
+import com.beibeiMajor.framework.shiro.session.OnlineSessionFactory;
+import com.beibeiMajor.framework.shiro.web.filter.LogoutFilter;
+import com.beibeiMajor.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
+import com.beibeiMajor.framework.shiro.web.filter.kickout.KickoutSessionFilter;
+import com.beibeiMajor.framework.shiro.web.filter.online.OnlineSessionFilter;
+import com.beibeiMajor.framework.shiro.web.filter.sync.SyncOnlineSessionFilter;
+import com.beibeiMajor.framework.shiro.web.session.OnlineWebSessionManager;
+import com.beibeiMajor.framework.shiro.web.session.SpringSessionValidationScheduler;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
@@ -21,19 +28,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.beibeiMajor.common.utils.StringUtils;
-import com.beibeiMajor.common.utils.spring.SpringUtils;
-import com.beibeiMajor.framework.shiro.realm.UserRealm;
-import com.beibeiMajor.framework.shiro.session.OnlineSessionDAO;
-import com.beibeiMajor.framework.shiro.session.OnlineSessionFactory;
-import com.beibeiMajor.framework.shiro.web.filter.LogoutFilter;
-import com.beibeiMajor.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
-import com.beibeiMajor.framework.shiro.web.filter.kickout.KickoutSessionFilter;
-import com.beibeiMajor.framework.shiro.web.filter.online.OnlineSessionFilter;
-import com.beibeiMajor.framework.shiro.web.filter.sync.SyncOnlineSessionFilter;
-import com.beibeiMajor.framework.shiro.web.session.OnlineWebSessionManager;
-import com.beibeiMajor.framework.shiro.web.session.SpringSessionValidationScheduler;
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+
+import javax.servlet.Filter;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 权限配置加载
@@ -277,6 +278,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/img/**", "anon");
         filterChainDefinitionMap.put("/ajax/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
+        filterChainDefinitionMap.put("/app-api/**", "anon");
         filterChainDefinitionMap.put("/ruoyi/**", "anon");
         filterChainDefinitionMap.put("/syn/**", "anon");
         filterChainDefinitionMap.put("/captcha/captchaImage**", "anon");

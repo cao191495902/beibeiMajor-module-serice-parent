@@ -134,6 +134,18 @@ public class JedisManager {
     }
 
     /**
+     * 哈希获取删除
+     *
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    public Object hmdel(String key, Object hashKey) {
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        return hash.delete(key, hashKey);
+    }
+
+    /**
      * 列表添加
      *
      * @param k

@@ -233,7 +233,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     }
     @Override
     @Cacheable(value = "selectWebUserDotaReportList",key="#root.methodName+'_'+#webUserDotaReport.userId+'_'+#pageNum+'_'+#pageSize")
-    public List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize) {
+    public List<WebUserDotaReportPo> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize) {
         return webUserDotaReportDao.selectWebUserDotaReportList(webUserDotaReport);
     }
 

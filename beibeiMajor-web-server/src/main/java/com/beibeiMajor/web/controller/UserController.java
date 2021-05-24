@@ -9,12 +9,14 @@ import com.beibeiMajor.common.utils.DateUtils;
 import com.beibeiMajor.common.utils.ServletUtils;
 import com.beibeiMajor.common.utils.StringUtils;
 import com.beibeiMajor.framework.manager.JedisManager;
+import com.beibeiMajor.framework.util.RSAUtil;
 import com.beibeiMajor.framework.util.ShiroUtils;
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
+import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
 import com.beibeiMajor.web.service.OperationInfoToDBService;
 import com.beibeiMajor.web.service.ReportInfoService;
 import com.beibeiMajor.web.service.dto.MyMatchDetailBean;
@@ -66,6 +68,10 @@ public class UserController extends BaseController{
     public AjaxResult ajaxLogin(String username, String password, Boolean rememberMe)
     {
         //这个验证器和后台通用，用host来区分是哪个模块的用户，目前暂时使用后台的用户来验证,host-web前端，host-admin为后台
+
+        if (StringUtils.isNotEmpty(password) && password.length() > 32) {
+            password = RSAUtil.decryptRequestParam(password);
+        }
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe,"web");
         Subject subject = SecurityUtils.getSubject();
         try
@@ -108,7 +114,7 @@ public class UserController extends BaseController{
 
         WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
         webUserDotaReport.setUserId(user.getAccountId());
-        List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,1,10);
+        List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,1,10);
         if(CollectionUtils.isNotEmpty(list)){
             mmap.addAttribute("info",list.get(0));
         }
@@ -141,7 +147,7 @@ public class UserController extends BaseController{
     public TableDataInfo list(WebUserDotaReport webUserDotaReport) {
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
-        List<WebUserDotaReport> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,pageDomain.getPageNum(),pageDomain.getPageSize());
+        List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,pageDomain.getPageNum(),pageDomain.getPageSize());
         PageHelper.clearPage();
         return getDataTable(list);
     }
@@ -247,7 +253,7 @@ public class UserController extends BaseController{
         if (webUser.getDoubleIntegralTimes() <= 0) {
             return AjaxResult.error("双倍次数不够");
         }
-        operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId(), -1L, 1, "网站添加双倍");
+        operationInfoToDBService.rollbackDoubleIntegralRecord(user.getAccountId(), -1L, 1, "网站添加双倍");
         ShiroUtils.setSysUser(webUser);
         return AjaxResult.success();
     }

@@ -15,7 +15,7 @@ public interface ReportInfoService {
 
     List<WebUserDotaReportPo> handlerMatchInfoToReport();
 
-    List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize);
+    List<WebUserDotaReportPo> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize);
 
     List<TopBean> statisticsTopInfoList();
 

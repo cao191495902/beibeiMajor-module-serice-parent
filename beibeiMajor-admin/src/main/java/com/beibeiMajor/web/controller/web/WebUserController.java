@@ -15,6 +15,7 @@ import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -126,7 +127,7 @@ public class WebUserController extends BaseController
         //更新密码
         if (StringUtils.isNotEmpty(webUser.getPassword()) && webUser.getPassword().length() < 20) {
             webUser.setSalt(ShiroUtils.randomSalt());
-            webUser.setPassword(passwordService.encryptPassword(webUser.getAccountId()+"", webUser.getPassword(), webUser.getSalt()));
+            webUser.setPassword(new Md5Hash(webUser.getPassword()).toHex());
             webUser.setCreateBy(ShiroUtils.getLoginName());
 
         }

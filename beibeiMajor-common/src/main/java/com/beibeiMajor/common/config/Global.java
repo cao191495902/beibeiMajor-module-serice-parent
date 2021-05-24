@@ -43,14 +43,14 @@ public class Global
         Global.name = name;
     }
 
-    public static String getVersion()
-    {
-        return version;
-    }
-
     public void setVersion(String version)
     {
         Global.version = version;
+    }
+
+    public static String getVersion()
+    {
+        return version;
     }
 
     public static String getCopyrightYear()

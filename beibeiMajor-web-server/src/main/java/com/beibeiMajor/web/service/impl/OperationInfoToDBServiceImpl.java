@@ -77,11 +77,17 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
     public Boolean batchUpdateIntegralToDB(List<WebUserDotaReportPo> updateIntegralList, List<MatchPlayerIntegralPo> matchPlayerIntegralPoList, List<Long> updateMatchList) {
         try{
             //更新入库
-            webUserDotaReportDao.batchUpdate(updateIntegralList);
+            if (!CollectionUtils.isEmpty(updateIntegralList)) {
+                webUserDotaReportDao.batchUpdate(updateIntegralList);
+            }
             //修改比赛结算状态
-            webMatchDetailDao.changeMatchStatus(updateMatchList);
-            //更新比赛赛前赛后积分
-            webMatchPlayerInfoDao.batchUpdatePlayerIntegral(matchPlayerIntegralPoList);
+            if (!CollectionUtils.isEmpty(updateMatchList)) {
+                webMatchDetailDao.changeMatchStatus(updateMatchList);
+            }
+            if (!CollectionUtils.isEmpty(matchPlayerIntegralPoList)) {
+                //更新比赛赛前赛后积分
+                webMatchPlayerInfoDao.batchUpdatePlayerIntegral(matchPlayerIntegralPoList);
+            }
             return true;
         }catch (Exception e){
             log.error("batch update integral failed",e.getMessage());

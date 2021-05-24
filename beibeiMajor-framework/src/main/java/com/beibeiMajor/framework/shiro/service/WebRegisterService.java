@@ -5,6 +5,7 @@ import com.beibeiMajor.common.constant.ShiroConstants;
 import com.beibeiMajor.common.constant.UserConstants;
 import com.beibeiMajor.common.utils.MessageUtils;
 import com.beibeiMajor.common.utils.ServletUtils;
+import com.beibeiMajor.common.utils.security.Md5Utils;
 import com.beibeiMajor.framework.manager.AsyncManager;
 import com.beibeiMajor.framework.manager.factory.AsyncFactory;
 import com.beibeiMajor.framework.util.ShiroUtils;
@@ -69,7 +70,7 @@ public class WebRegisterService
         else
         {
             user.setSalt(ShiroUtils.randomSalt());
-            user.setPassword(passwordService.encryptPassword(user.getAccountId()+"", user.getPassword(), user.getSalt()));
+            user.setPassword(Md5Utils.hash(user.getPassword()));
             boolean regFlag = userService.registerUser(user);
             if (!regFlag)
             {

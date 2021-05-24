@@ -1,7 +1,8 @@
 package com.beibeiMajor.common.core.domain;
 
-import java.util.HashMap;
 import com.beibeiMajor.common.utils.StringUtils;
+
+import java.util.HashMap;
 
 /**
  * 操作消息提醒
@@ -74,6 +75,23 @@ public class AjaxResult extends HashMap<String, Object>
     public AjaxResult(Type type, String msg, Object data)
     {
         super.put(CODE_TAG, type.value);
+        super.put(MSG_TAG, msg);
+        if (StringUtils.isNotNull(data))
+        {
+            super.put(DATA_TAG, data);
+        }
+    }
+
+    /**
+     * 初始化一个新创建的 AjaxResult 对象
+     *
+     * @param type 状态类型
+     * @param msg 返回内容
+     * @param data 数据对象
+     */
+    public AjaxResult(int type, String msg, Object data)
+    {
+        super.put(CODE_TAG, type);
         super.put(MSG_TAG, msg);
         if (StringUtils.isNotNull(data))
         {
@@ -170,13 +188,27 @@ public class AjaxResult extends HashMap<String, Object>
 
     /**
      * 返回错误消息
-     * 
+     *
      * @param msg 返回内容
+     * @return 警告消息
+     */
+    public static AjaxResult error(int code,String msg)
+    {
+       return new AjaxResult(code, msg, null);
+    }
+
+    /**
+     * 返回错误消息
+     *
+     * @param msg  返回内容
      * @param data 数据对象
      * @return 警告消息
      */
-    public static AjaxResult error(String msg, Object data)
-    {
+    public static AjaxResult error(String msg, Object data) {
         return new AjaxResult(Type.ERROR, msg, data);
+    }
+
+    public static AjaxResult success(int code, Object data) {
+        return new AjaxResult(200, "请求成功", data);
     }
 }

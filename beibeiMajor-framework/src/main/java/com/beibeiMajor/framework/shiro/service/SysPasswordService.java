@@ -1,13 +1,5 @@
 package com.beibeiMajor.framework.shiro.service;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.PostConstruct;
-import org.apache.shiro.cache.Cache;
-import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.crypto.hash.Md5Hash;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import com.beibeiMajor.common.constant.Constants;
 import com.beibeiMajor.common.constant.ShiroConstants;
 import com.beibeiMajor.common.exception.user.UserPasswordNotMatchException;
@@ -16,6 +8,15 @@ import com.beibeiMajor.common.utils.MessageUtils;
 import com.beibeiMajor.framework.manager.AsyncManager;
 import com.beibeiMajor.framework.manager.factory.AsyncFactory;
 import com.beibeiMajor.system.domain.SysUser;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 登录密码方法
@@ -78,11 +79,15 @@ public class SysPasswordService
         loginRecordCache.remove(username);
     }
 
-    public String encryptPassword(String username, String password, String salt)
+    public String encryptPassword(String username, String password)
     {
-        return new Md5Hash(username + password + salt).toHex();
+        return new Md5Hash(username + password ).toHex();
     }
 
+    public String encryptPassword(String username, String password,String salt)
+    {
+        return new Md5Hash(username + password+salt ).toHex();
+    }
     public void unlock(String loginName)
     {
         loginRecordCache.remove(loginName);

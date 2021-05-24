@@ -69,9 +69,8 @@ public class WebPasswordService
         }
     }
 
-    public boolean matches(WebUser user, String newPassword)
-    {
-        return user.getPassword().equals(encryptPassword(user.getAccountId()+"", newPassword, user.getSalt()));
+    public boolean matches(WebUser user, String newPassword) {
+        return user.getPassword().equals(new Md5Hash(newPassword).toHex());
     }
 
     public void clearLoginRecordCache(String username)
@@ -79,9 +78,9 @@ public class WebPasswordService
         loginRecordCache.remove(username);
     }
 
-    public String encryptPassword(String username, String password, String salt)
+    public String encryptPassword(String username, String password)
     {
-        return new Md5Hash(username + password + salt).toHex();
+        return new Md5Hash(username + password).toHex();
     }
 
     public void unlock(String loginName)

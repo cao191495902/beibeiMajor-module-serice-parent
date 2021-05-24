@@ -80,7 +80,7 @@ public interface WebUserDotaReportDao {
 
     Boolean batchInsert(List<WebUserDotaReportPo> reportPoList);
 
-    List<WebUserDotaReport> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
+    List<WebUserDotaReportPo> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
 
     List<String> getHighestPointsTop(@Param("topLimit") int i,@Param("desc")String desc);
 
