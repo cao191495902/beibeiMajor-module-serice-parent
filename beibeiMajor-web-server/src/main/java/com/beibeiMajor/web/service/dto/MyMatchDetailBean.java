@@ -12,6 +12,10 @@ public class MyMatchDetailBean {
 
     private String heroName;
 
+    private Integer heroId;
+
+    private String heroIcon;
+
     private String result;
 
     private Date playDate;

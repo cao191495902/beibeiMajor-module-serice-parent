@@ -15,4 +15,6 @@ public class HeroBean {
     private Integer heroId;
     @JSONField(name = "localized_name")
     private String zhName;
+    @JSONField(name = "icon")
+    private String icon;
 }

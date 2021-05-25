@@ -479,7 +479,7 @@
          ORDER BY integral DESC
     </select>
     <select id="getMyRecordList" resultType="com.beibeiMajor.web.service.dto.MyMatchDetailBean">
-        SELECT wh.`zh_name` AS "heroName",
+        SELECT wh.`zh_name` AS "heroName", wh.hero_id as "heroId",wh.icon as "heroIcon",
         CASE
         WHEN ( radiant_win = 0 AND <![CDATA[ player_slot < 10 ]]> )
         OR ( radiant_win = 1 AND <![CDATA[ player_slot > 10 ]]> ) THEN
