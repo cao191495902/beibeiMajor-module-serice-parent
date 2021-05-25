@@ -115,7 +115,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
                 }
             }else{
 
-                operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId(),1L,0,"系统回退");
+                operationInfoToDBService.rollbackDoubleIntegralRecord(record.getAccountId(),1L,0,"系统回退",true);
             }
             updateList.add(record.getId());
         }

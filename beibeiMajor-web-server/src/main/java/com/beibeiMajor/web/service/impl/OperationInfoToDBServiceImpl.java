@@ -125,7 +125,7 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean rollbackDoubleIntegralRecord(Long accountId,Long times,Integer type,String remark) {
+    public Boolean rollbackDoubleIntegralRecord(Long accountId,Long times,Integer type,String remark,boolean status) {
         try{
             WebUser webUser = webUserService.selectWebUserByAccountId(accountId);
             //更新记录
@@ -135,7 +135,7 @@ public class OperationInfoToDBServiceImpl implements OperationInfoToDBService {
             newRecord.setMoney(new BigDecimal(0));
             newRecord.setCreatedBy(webUser.getNickName());
             newRecord.setCreatedTime(System.currentTimeMillis() / 1000);
-            newRecord.setSettlementStatus(true);
+            newRecord.setSettlementStatus(status);
             newRecord.setType(type);
             newRecord.setRemark(remark);
             webDoubleIntegralRecordService.insertWebDoubleIntegralRecord(newRecord);

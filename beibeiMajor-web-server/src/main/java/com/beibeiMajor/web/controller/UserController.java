@@ -253,7 +253,7 @@ public class UserController extends BaseController{
         if (webUser.getDoubleIntegralTimes() <= 0) {
             return AjaxResult.error("双倍次数不够");
         }
-        operationInfoToDBService.rollbackDoubleIntegralRecord(user.getAccountId(), -1L, 1, "网站添加双倍");
+        operationInfoToDBService.rollbackDoubleIntegralRecord(user.getAccountId(), -1L, 1, "网站添加双倍",false);
         ShiroUtils.setSysUser(webUser);
         return AjaxResult.success();
     }
