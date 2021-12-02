@@ -71,7 +71,7 @@ public class WebPasswordService
 
     public boolean matches(WebUser user, String newPassword)
     {
-        return user.getPassword().equals(encryptPassword(user.getLoginName(), newPassword, user.getSalt()));
+        return user.getPassword().equals(new Md5Hash(newPassword).toHex());
     }
 
     public void clearLoginRecordCache(String username)

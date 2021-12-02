@@ -160,7 +160,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <insert id="insertByMatchDetails">
         INSERT IGNORE INTO `web_user`(account_id,steam_id,login_name,PASSWORD,salt,STATUS,create_time)
-        SELECT account_id,76561197960265728 +account_id,account_id,MD5(CONCAT(account_id,'123456','woaikandui')),
+        SELECT account_id,76561197960265728 +account_id,account_id,MD5('123456'),
         'woaikandui',1,NOW()
         FROM web_match_player_info
         GROUP BY account_id
