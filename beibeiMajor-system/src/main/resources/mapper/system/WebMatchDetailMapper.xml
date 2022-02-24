@@ -131,4 +131,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="getDefaultLeagueInfo" resultType="com.beibeiMajor.system.domain.WebLeague">
+        SELECT id ,access_key  as "key" FROM web_league WHERE is_default = 1 LIMIT 1
+    </select>
+
 </mapper>

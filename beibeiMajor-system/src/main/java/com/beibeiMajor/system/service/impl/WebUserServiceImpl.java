@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.beibeiMajor.common.constant.UserConstants;
 import com.beibeiMajor.common.core.text.Convert;
 import com.beibeiMajor.common.utils.DateUtils;
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.mapper.WebDoubleIntegralRecordMapper;
 import com.beibeiMajor.system.mapper.WebUserMapper;
+import com.beibeiMajor.system.service.IWebMatchDetailService;
 import com.beibeiMajor.system.service.IWebUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.http.client.ResponseHandler;
@@ -16,7 +18,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -38,11 +40,14 @@ public class WebUserServiceImpl implements IWebUserService
     @Autowired
     private WebDoubleIntegralRecordMapper webDoubleIntegralRecordMapper;
 
-    @Value("${customization.leagueMatchId}")
-    private String leagueMatch;
+    @Autowired
+    IWebMatchDetailService webMatchDetailService;
 
-    @Value("${customization.key}")
-    private String key;
+//    @Value("${customization.leagueMatchId}")
+//    private String leagueMatch;
+//
+//    @Value("${customization.key}")
+//    private String key;
 
     /**
      * 查询用户信息
@@ -140,6 +145,8 @@ public class WebUserServiceImpl implements IWebUserService
     @Override
     public WebUser getUpdateWebUserInfo(WebUser webUser) {
 
+        WebLeague webLeague = webMatchDetailService.getDefaultLeagueInfo();
+        String key = webLeague.getKey();
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002?steamids=" + webUser.getSteamId() + "&key=" + key);
         ResponseHandler<String> handler = new BasicResponseHandler();
@@ -196,5 +203,16 @@ public class WebUserServiceImpl implements IWebUserService
     @Override
     public WebUser selectWebUserByAccountId(Long accountId) {
         return webUserMapper.selectWebUserByAccountId(accountId);
+    }
+
+    @Override
+    @Cacheable(value = "getLeagueList", key = "#root.methodName")
+    public List<WebLeague> getLeagueList() {
+        return webUserMapper.getLeagueList();
+    }
+
+    @Override
+    public List<WebUser> selectWebUserListByLeague() {
+        return webUserMapper.selectWebUserListByLeague();
     }
 }

@@ -26,16 +26,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <result property="money"    column="money"    />
+        <result property="leagueId"    column="league_id"    />
         <result property="doubleIntegralTimes"    column="double_integral_times"    />
     </resultMap>
 
     <sql id="selectWebUserVo">
-        select user_id, steam_id, account_id, login_name, nick_name, email, phone, sex, avatar, password, salt, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark, money, double_integral_times from web_user
+        select user_id, steam_id, account_id, login_name, nick_name, email, phone, sex, avatar, password, salt, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time, remark, money, double_integral_times
+         ,(select id from web_league where is_default = 1 limit 1) as "league_id"
+         from web_user
     </sql>
 
     <select id="selectWebUserList" parameterType="WebUser" resultMap="WebUserResult">
         <include refid="selectWebUserVo"/>
-        <where>  
+        <where>
             <if test="steamId != null and steamId != ''"> and steam_id = #{steamId}</if>
             <if test="loginName != null  and loginName != ''"> and login_name like concat('%', #{loginName}, '%')</if>
             <if test="accountId != null "> and account_id = #{accountId}</if>
@@ -162,7 +165,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         INSERT IGNORE INTO `web_user`(account_id,steam_id,login_name,PASSWORD,salt,STATUS,create_time)
         SELECT account_id,76561197960265728 +account_id,account_id,MD5('123456'),
         'woaikandui',1,NOW()
-        FROM web_match_player_info
+        FROM web_match_player_info wm
+        JOIN  web_match_detail b ON wm.`match_id` = b.match_id
+        WHERE 1=1
+        AND b.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
         GROUP BY account_id
     </insert>
     <select id="getAllWebUser" resultMap="WebUserResult">
@@ -174,6 +180,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectWebUserByAccountId" parameterType="Long" resultMap="WebUserResult">
         <include refid="selectWebUserVo"/>
         where account_id = #{accountId}
+    </select>
+
+    <select id="getLeagueList" resultType="com.beibeiMajor.system.domain.WebLeague">
+
+        select id,name from web_league order by is_default desc,created_time desc
+
+    </select>
+
+    <select id="selectWebUserListByLeague" resultMap="WebUserResult">
+        <include refid="selectWebUserVo"/>
+
+        where account_id in (
+        SELECT account_id
+        FROM web_match_player_info wm
+        JOIN  web_match_detail b ON wm.`match_id` = b.match_id
+        WHERE 1=1
+        AND b.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
+        GROUP BY account_id
+        )
+
     </select>
 
 </mapper>

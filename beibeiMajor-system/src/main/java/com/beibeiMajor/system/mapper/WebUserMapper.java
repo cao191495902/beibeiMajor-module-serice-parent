@@ -1,5 +1,6 @@
 package com.beibeiMajor.system.mapper;
 
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.domain.WebUser;
 import org.apache.ibatis.annotations.Param;
 
@@ -78,4 +79,8 @@ public interface WebUserMapper
      * @return 用户信息
      */
     WebUser selectWebUserByAccountId(Long accountId);
+
+    List<WebLeague> getLeagueList();
+
+    List<WebUser> selectWebUserListByLeague();
 }

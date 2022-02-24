@@ -3,6 +3,8 @@ package com.beibeiMajor.web.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.beibeiMajor.system.domain.WebLeague;
+import com.beibeiMajor.system.service.IWebMatchDetailService;
 import com.beibeiMajor.web.service.MatchDetailInfoService;
 import com.beibeiMajor.web.service.dto.HeroBean;
 import com.beibeiMajor.web.service.dto.MatchDetailDto;
@@ -12,7 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,14 +25,18 @@ import java.util.Map;
 @Service
 public class MatchDetailInfoServiceImpl implements MatchDetailInfoService {
 
-    @Value("${customization.leagueMatchId}")
-    private String leagueMatch;
-
-    @Value("${customization.key}")
-    private String key;
+//    @Value("${customization.leagueMatchId}")
+//    private String leagueMatch;
+//
+//    @Value("${customization.key}")
+//    private String key;
+    @Autowired
+    IWebMatchDetailService webMatchDetailService;
 
     @Override
     public MatchDetailDto getMatchDetailById(Long matchId) {
+        WebLeague webLeague = webMatchDetailService.getDefaultLeagueInfo();
+        String key = webLeague.getKey();
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1?match_id=" + matchId + "&key=" + key);
         ResponseHandler<String> handler = new BasicResponseHandler();
@@ -58,6 +64,8 @@ public class MatchDetailInfoServiceImpl implements MatchDetailInfoService {
     @Override
     public List<HeroBean> GetHeroesDetailInfo() {
         CloseableHttpClient client = HttpClients.createDefault();
+        WebLeague webLeague = webMatchDetailService.getDefaultLeagueInfo();
+        String key = webLeague.getKey();
         HttpGet httpGet = new HttpGet("http://api.steampowered.com/IEconDOTA2_570/GetHeroes/v1/?" + "key=" + key + "&language=zh_cn");
         ResponseHandler<String> handler = new BasicResponseHandler();
         String execute;

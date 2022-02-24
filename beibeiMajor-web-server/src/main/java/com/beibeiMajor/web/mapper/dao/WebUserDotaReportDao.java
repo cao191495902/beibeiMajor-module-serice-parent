@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.mapper.dao;
 
+import com.beibeiMajor.system.domain.RecentPerform;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.UserAverageDataPo;
@@ -76,35 +77,45 @@ public interface WebUserDotaReportDao {
 
     List<UserAverageDataPo> getUserAverageData();
 
-    Boolean batchUpdate(List<WebUserDotaReportPo> reportPoList);
+    Boolean batchUpdate(@Param("reportPoList") List<WebUserDotaReportPo> reportPoList);
 
     Boolean batchInsert(List<WebUserDotaReportPo> reportPoList);
 
     List<WebUserDotaReportPo> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport);
 
-    List<String> getHighestPointsTop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getHighestPointsTop(@Param("topLimit") int i, @Param("desc") String desc);
 
-    List<String> getHighestWinPerTop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getHighestWinPerTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> getHighestKDATop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getHighestKDATop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> getLongestWinningStreakTop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getLongestWinningStreakTop(@Param("topLimit") int i, @Param("desc") String desc);
 
-    List<String> getHighestKillsPerGameTop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getHighestKillsPerGameTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> getLeastDeathPerGameTop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getLeastDeathPerGameTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> getHighestAssistsPerGameTop(@Param("topLimit") int i,@Param("desc")String desc);
+    List<String> getHighestAssistsPerGameTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<WebUser> getYesTodayTopUser(@Param("startDate")Long startDate, @Param("endDate")Long endDate);
+    List<WebUser> getYesTodayTopUser(@Param("startDate") Long startDate, @Param("endDate") Long endDate);
 
-    List<MyMatchDetailBean> getMyRecordList(@Param("accountId") String userId);
+    List<MyMatchDetailBean> getMyRecordList(@Param("accountId") String userId, @Param("leagueId") Integer leagueId);
 
-    List<String> getWarRateTop(@Param("topLimit")int i, @Param("desc")String desc);
+    List<String> getWarRateTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> getHeroCountTop(@Param("topLimit")int i, @Param("desc")String desc);
+    List<String> getHeroCountTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> getheroWinRateTop(@Param("topLimit")int i, @Param("desc")String desc);
+    List<String> getheroWinRateTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
 
-    List<String> heroRateTop(@Param("topLimit")int i, @Param("desc")String desc);
+    List<String> heroRateTop(@Param("topLimit") int i, @Param("leagueId") Integer leagueId, @Param("desc") String desc);
+
+    RecentPerform getMyWarRate(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
+
+    RecentPerform getMyKad(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
+
+    RecentPerform getMyGold(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
+
+    RecentPerform getMyDamage(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
+
+    RecentPerform getMyTower(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
 }

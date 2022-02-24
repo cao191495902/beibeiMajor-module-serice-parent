@@ -9,9 +9,7 @@ import com.beibeiMajor.common.utils.security.Md5Utils;
 import com.beibeiMajor.framework.app.service.TokenService;
 import com.beibeiMajor.framework.manager.JedisManager;
 import com.beibeiMajor.framework.util.ShiroUtils;
-import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
-import com.beibeiMajor.system.domain.WebUser;
-import com.beibeiMajor.system.domain.WebUserDotaReport;
+import com.beibeiMajor.system.domain.*;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
 import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
@@ -100,9 +98,11 @@ public class UserApiController extends BaseController{
             result.put("nickName", user.getNickName());
             result.put("avatarUrl", user.getAvatar());
             result.put("doubleCount", user.getDoubleIntegralTimes());
+            result.put("leagueId",user.getLeagueId());
 
             WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
             webUserDotaReport.setUserId(user.getAccountId());
+            webUserDotaReport.setLeagueId(user.getLeagueId());
             List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport, 1, 1);
             if (CollectionUtils.isNotEmpty(list)) {
                 result.put("rank", list.get(0).getRank());
@@ -115,6 +115,13 @@ public class UserApiController extends BaseController{
             //查询当天是否报过名
             WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime() / 1000);
             result.put("isDouble", record == null ? false : true);
+
+            //获取五边形所需要的数据，近5场比赛的参战能力，多面能力，打钱能力，辅助能力，推塔能力
+
+            //联赛信息
+            List<WebLeague> leagueList = webUserService.getLeagueList();
+            result.put("leagueList",leagueList);
+
             return AjaxResult.success(200,result);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -143,12 +150,20 @@ public class UserApiController extends BaseController{
             @RequestParam(value = "pf", required = false) @ApiParam(value = "平台") String pf,
             @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
             @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证",required = true)String token,
+            @RequestParam(value = "leagueId", required = false) @ApiParam(value = "联赛id,不传使用默认联赛id",required = false)Integer leagueId,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1")  @ApiParam(value = "页码") int pageNum,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") @ApiParam(value = "页数") int pageSize) {
 
         try {
+            WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
+            if (leagueId == null) {
+                webUserDotaReport.setLeagueId(leagueId);
+            } else {
+                WebUser user = tokenService.getChannelByToken(token);
+                webUserDotaReport.setLeagueId(user.getLeagueId());
+            }
             startPage();
-            List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(new WebUserDotaReport(), pageNum, pageSize);
+            List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport, pageNum, pageSize);
             PageHelper.clearPage();
             Map<String, Object> result = new HashMap<>();
             result.put("pages", new PageInfo(list).getPages());
@@ -177,14 +192,20 @@ public class UserApiController extends BaseController{
             @RequestParam(value = "version", required = false) @ApiParam(value = "版本号") Integer version,
             @RequestParam(value = "pf", required = false) @ApiParam(value = "平台") String pf,
             @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
+            @RequestParam(value = "leagueId", required = false) @ApiParam(value = "联赛id,不传使用默认联赛id",required = false)Integer leagueId,
             @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证", required = true) String token) {
 
         try {
             Map<String, Object> result = new HashMap<>();
 
-            List<TopBean> topList = reportInfoService.statisticsTopInfoList();
+            if (leagueId == null) {
+                WebUser user = tokenService.getChannelByToken(token);
+                leagueId = user.getLeagueId();
+            }
 
-            List<TopBean> lossList = reportInfoService.statisticsLossInfoList();
+            List<TopBean> topList = reportInfoService.statisticsTopInfoList(leagueId);
+
+            List<TopBean> lossList = reportInfoService.statisticsLossInfoList(leagueId);
 
             result.put("topList", topList);
             result.put("lossList", lossList);
@@ -219,6 +240,7 @@ public class UserApiController extends BaseController{
             @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
             @RequestParam(value = "userId", required = false) @ApiParam(value = "用户ID，传谁的就获取谁的，不传获取自己的" )String userId,
             @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证",required = true)String token,
+            @RequestParam(value = "leagueId", required = false) @ApiParam(value = "联赛id,不传使用默认联赛id",required = false)Integer leagueId,
             @RequestParam(value = "pageNum", required = false, defaultValue = "1")  @ApiParam(value = "页码") int pageNum,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") @ApiParam(value = "页数") int pageSize) {
 
@@ -229,8 +251,11 @@ public class UserApiController extends BaseController{
             if (StringUtils.isEmpty(userId) && user != null) {
                 userId = user.getAccountId() + "";
             }
+            if (leagueId == null) {
+                leagueId = user.getLeagueId();
+            }
             startPage();
-            List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(userId, pageNum, pageSize);
+            List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(userId, leagueId, pageNum, pageSize);
             PageHelper.clearPage();
             Map<String, Object> result = new HashMap<>();
             result.put("pages", new PageInfo(list).getPages());
@@ -296,11 +321,172 @@ public class UserApiController extends BaseController{
             }
             operationInfoToDBService.rollbackDoubleIntegralRecord(user.getAccountId(), -1L, 1, "网站添加双倍",false);
             ShiroUtils.setSysUser(webUser);
-            return AjaxResult.success();
+            return AjaxResult.success(200,"操作成功");
         }catch (Exception e){
             logger.error(e.getMessage(), e);
             return AjaxResult.error("系统错误");
         }
+    }
+
+    /**
+     *功能描述
+     * @author caowei
+     * @date 2022/2/16
+     * @param version
+     * @param pf
+     * @param deviceInfo
+     * @param token
+    */
+    @PostMapping(USER_APP_API_LOGIN_OUT)
+    @ResponseBody
+    @ApiLogin
+    @ApiOperation("注销用户")
+    public Object loginout(
+            @RequestParam(value = "version", required = false) @ApiParam(value = "版本号") Integer version,
+            @RequestParam(value = "pf", required = false) @ApiParam(value = "平台") String pf,
+            @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
+            @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证",required = true)String token){
+
+
+        try {
+            tokenService.cleanTokenUserByToken(token);
+            return AjaxResult.success(200,"操作成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return AjaxResult.error("系统错误");
+        }
+
+    }
+
+
+    /**
+     *功能描述
+     * @author caowei
+     * @date 2022/2/16
+     * @param version
+     * @param pf
+     * @param deviceInfo
+     * @param token
+     */
+    @PostMapping(USER_APP_API_LEAGUE_LIST)
+    @ResponseBody
+    @ApiLogin
+    @ApiOperation("获取所有联赛列表")
+    public Object getLeagueList(
+            @RequestParam(value = "version", required = false) @ApiParam(value = "版本号") Integer version,
+            @RequestParam(value = "pf", required = false) @ApiParam(value = "平台") String pf,
+            @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
+            @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证",required = true)String token){
+
+
+        try {
+            List<WebLeague> leagueList = webUserService.getLeagueList();
+            Map<String, Object> result = new HashMap<>();
+            result.put("list", leagueList);
+            return AjaxResult.success(200, result);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return AjaxResult.error("系统错误");
+        }
+
+    }
+
+    /**
+     *功能描述
+     * @author caowei
+     * @date 2022/2/16
+     * @param version
+     * @param pf
+     * @param deviceInfo
+     * @param token
+     */
+    @PostMapping(USER_APP_API_CHANGE_LEAGUE)
+    @ResponseBody
+    @ApiLogin
+    @ApiOperation("切换当前默认联赛")
+    public Object changeLeague(
+            @RequestParam(value = "version", required = false) @ApiParam(value = "版本号") Integer version,
+            @RequestParam(value = "pf", required = false) @ApiParam(value = "平台") String pf,
+            @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
+            @RequestParam(value = "leagueId", required = false) @ApiParam(value = "联赛id",required = true)Integer leagueId,
+            @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证",required = true)String token){
+
+
+        try {
+            WebUser user = tokenService.getChannelByToken(token);
+            user.setLeagueId(leagueId);
+            tokenService.addTokenToCache(token, user);
+            return AjaxResult.success(200,"操作成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return AjaxResult.error("系统错误");
+        }
+
+    }
+
+    /**
+     * 功能描述
+     *
+     * @param version
+     * @param pf
+     * @param deviceInfo
+     * @param token
+     * @author caowei
+     * @date 2022/2/16
+     */
+    @PostMapping(USER_APP_API_GET_USER_INFO)
+    @ResponseBody
+    @ApiLogin
+    @ApiOperation("获取个人信息")
+    public Object UserInfo(
+            @RequestParam(value = "version", required = false) @ApiParam(value = "版本号") Integer version,
+            @RequestParam(value = "pf", required = false) @ApiParam(value = "平台") String pf,
+            @RequestParam(value = "deviceInfo", required = false) @ApiParam(value = "设备信息") String deviceInfo,
+            @RequestParam(value = "leagueId", required = false) @ApiParam(value = "联赛id,不传使用默认联赛id", required = false) Integer leagueId,
+            @RequestParam(value = "token", required = false) @ApiParam(value = "登录凭证", required = true) String token) {
+
+
+        try {
+            Map<String, Object> result = new HashMap<>();
+
+            WebUser user = tokenService.getChannelByToken(token);
+            if (leagueId == null) {
+                leagueId = user.getLeagueId();
+            }
+
+            result.put("accountId", user.getAccountId());
+            result.put("nickName", user.getNickName());
+            result.put("avatarUrl", user.getAvatar());
+            result.put("doubleCount", user.getDoubleIntegralTimes());
+            result.put("leagueId", user.getLeagueId());
+
+            WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
+            webUserDotaReport.setUserId(user.getAccountId());
+            webUserDotaReport.setLeagueId(leagueId);
+            List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport, 1, 1);
+            if (CollectionUtils.isNotEmpty(list)) {
+                result.put("rank", list.get(0).getRank());
+                result.put("winRate", list.get(0).getWinRate() + "");
+                result.put("integral", list.get(0).getIntegral());
+            }
+            Date startTime = DateUtils.getStartTimeOfDay(new Date());
+            Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime, 1));
+            //查询当天是否报过名
+            WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime() / 1000);
+            result.put("isDouble", record == null ? false : true);
+
+            //获取五边形所需要的数据，近5场比赛的参战能力,KAD,打钱能力，输出能力，推塔能力
+
+            List<RecentPerform> recentPerformList = reportInfoService.getRecentPerformList(user.getAccountId(), leagueId);
+            if (!CollectionUtils.isEmpty(recentPerformList)) {
+                result.put("recentPerformList", recentPerformList);
+            }
+            return AjaxResult.success(200, result);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return AjaxResult.error("系统错误");
+        }
+
     }
 
 

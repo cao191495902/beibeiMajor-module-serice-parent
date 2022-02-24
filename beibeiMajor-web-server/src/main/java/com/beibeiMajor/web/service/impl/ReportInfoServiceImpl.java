@@ -1,10 +1,9 @@
 package com.beibeiMajor.web.service.impl;
 
 import com.beibeiMajor.common.utils.StringUtils;
-import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
-import com.beibeiMajor.system.domain.WebUser;
-import com.beibeiMajor.system.domain.WebUserDotaReport;
+import com.beibeiMajor.system.domain.*;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
+import com.beibeiMajor.system.service.IWebMatchDetailService;
 import com.beibeiMajor.system.service.IWebUserService;
 import com.beibeiMajor.web.mapper.dao.WebMatchDetailDao;
 import com.beibeiMajor.web.mapper.dao.WebMatchPlayerInfoDao;
@@ -41,11 +40,17 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     OperationInfoToDBService operationInfoToDBService;
     @Resource
     IWebDoubleIntegralRecordService webDoubleIntegralRecordService;
+    @Resource
+    IWebMatchDetailService webMatchDetailService;
+
 
     private static final int TOP_COUNT = 5;
 
     @Override
     public List<WebUserDotaReportPo> handlerMatchInfoToReport() {
+
+        WebLeague webLeague = webMatchDetailService.getDefaultLeagueInfo();
+        Integer leagueId = webLeague.getId();
         //STEP 0 更新用户报表以及绑定双倍比赛Id
         List<WebUserDotaReportPo> reportPoList = updateDotaReportInfo();
         bindingDoubleAccountToMatch();
@@ -124,7 +129,7 @@ public class ReportInfoServiceImpl implements ReportInfoService {
 
     private List<WebUserDotaReportPo> updateDotaReportInfo() {
         List<WebUserDotaReportPo> reportPoList = webUserDotaReportDao.queryAll(new WebUserDotaReportPo());
-        List<WebUser> webUsers = webUserService.selectWebUserList(new WebUser());
+        List<WebUser> webUsers = webUserService.selectWebUserListByLeague();
         if (webUsers.size() > reportPoList.size()){
             if (CollectionUtils.isNotEmpty(reportPoList)){
                 Iterator<WebUser> iterator = webUsers.iterator();
@@ -232,34 +237,35 @@ public class ReportInfoServiceImpl implements ReportInfoService {
         return true;
     }
     @Override
-    @Cacheable(value = "selectWebUserDotaReportList",key="#root.methodName+'_'+#webUserDotaReport.userId+'_'+#pageNum+'_'+#pageSize")
+    @Cacheable(value = "selectWebUserDotaReportList",key="#root.methodName+'_'+#webUserDotaReport.userId+'_'+#webUserDotaReport.leagueId+'_'+#pageNum+'_'+#pageSize")
     public List<WebUserDotaReportPo> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize) {
         return webUserDotaReportDao.selectWebUserDotaReportList(webUserDotaReport);
     }
 
     @Override
-    @Cacheable(value = "statisticsTopInfoList",key="#root.methodName")
-    public List<TopBean> statisticsTopInfoList() {
+    @Cacheable(value = "statisticsTopInfoList",key="#root.methodName+'_'+#leagueId")
+    public List<TopBean> statisticsTopInfoList(Integer leagueId) {
+
         List<TopBean> result = new ArrayList<>(TOP_COUNT);
 
         //参战率 TOP3
-        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(TOP_COUNT, "DESC");
+        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(TOP_COUNT, leagueId, "DESC");
         //最高胜率 TOP3
-        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(TOP_COUNT, "DESC");
+        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(TOP_COUNT, leagueId, "DESC");
         //最高KDA TOP3
-        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(TOP_COUNT, "DESC");
+        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(TOP_COUNT, leagueId, "DESC");
         //最高场均击杀 TOP3
-        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(TOP_COUNT, "DESC");
+        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(TOP_COUNT, leagueId, "DESC");
         //最少场均死亡 TOP3
-        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(TOP_COUNT, "ASC");
+        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(TOP_COUNT, leagueId, "ASC");
         //最高场均助攻 TOP3
-        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(TOP_COUNT, "DESC");
+        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(TOP_COUNT, leagueId, "DESC");
         //英雄胜率
-        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(TOP_COUNT, "DESC");
+        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(TOP_COUNT, leagueId, "DESC");
         //英雄数量
-        List<String> heroCountList = webUserDotaReportDao.getHeroCountTop(TOP_COUNT, "DESC");
+        List<String> heroCountList = webUserDotaReportDao.getHeroCountTop(TOP_COUNT,leagueId, "DESC");
         //场均英雄次数占比
-        List<String> heroRateList = webUserDotaReportDao.heroRateTop(TOP_COUNT, "DESC");
+        List<String> heroRateList = webUserDotaReportDao.heroRateTop(TOP_COUNT, leagueId, "DESC");
 
         for (int i = 0; i < TOP_COUNT; i++) {
             TopBean top = new TopBean();
@@ -303,34 +309,34 @@ public class ReportInfoServiceImpl implements ReportInfoService {
     }
 
     @Override
-    @Cacheable(value = "getMyRecordList", key = "#root.methodName+'_'+#userId+'_'+#pageNum+'_'+#pageSize")
-    public List<MyMatchDetailBean> getMyRecordList(String userId,Integer pageNum,Integer pageSize) {
-        return webUserDotaReportDao.getMyRecordList(userId);
+    @Cacheable(value = "getMyRecordList", key = "#root.methodName+'_'+#userId+'_'+#leagueId+'_'+#pageNum+'_'+#pageSize")
+    public List<MyMatchDetailBean> getMyRecordList(String userId, Integer leagueId, Integer pageNum, Integer pageSize) {
+        return webUserDotaReportDao.getMyRecordList(userId,leagueId);
     }
 
 
     @Override
-    @Cacheable(value = "statisticsLossInfoList",key="#root.methodName")
-    public List<TopBean> statisticsLossInfoList() {
+    @Cacheable(value = "statisticsLossInfoList",key="#root.methodName+'_'+#leagueId")
+    public List<TopBean> statisticsLossInfoList(Integer leagueId) {
         List<TopBean> result = new ArrayList<>(TOP_COUNT);
 
         //参战率 TOP3
-        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(TOP_COUNT, "ASC");
+        List<String> warRateTopList = webUserDotaReportDao.getWarRateTop(TOP_COUNT,leagueId, "ASC");
         //最高胜率 TOP3
-        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(TOP_COUNT, "ASC");
+        List<String> highestWinPerTopList = webUserDotaReportDao.getHighestWinPerTop(TOP_COUNT,leagueId, "ASC");
         //最高KDA TOP3
-        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(TOP_COUNT, "ASC");
+        List<String> highestKDATopList = webUserDotaReportDao.getHighestKDATop(TOP_COUNT,leagueId, "ASC");
         //最高场均击杀 TOP3
-        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(TOP_COUNT, "ASC");
+        List<String> highestKillsPerGameTopList = webUserDotaReportDao.getHighestKillsPerGameTop(TOP_COUNT,leagueId, "ASC");
         //最少场均死亡 TOP3
-        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(TOP_COUNT, "DESC");
+        List<String> leastDeathPerGameTopList = webUserDotaReportDao.getLeastDeathPerGameTop(TOP_COUNT,leagueId, "DESC");
         //最高场均助攻 TOP3
-        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(TOP_COUNT, "ASC");
+        List<String> highestAssistsPerGameTopList = webUserDotaReportDao.getHighestAssistsPerGameTop(TOP_COUNT,leagueId, "ASC");
         //英雄胜率
-        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(TOP_COUNT, "ASC");
+        List<String> heroWinRateList = webUserDotaReportDao.getheroWinRateTop(TOP_COUNT,leagueId, "ASC");
 
         //场均英雄次数占比
-        List<String> heroRateList = webUserDotaReportDao.heroRateTop(TOP_COUNT, "ASC");
+        List<String> heroRateList = webUserDotaReportDao.heroRateTop(TOP_COUNT,leagueId, "ASC");
 
         for (int i = 0; i < TOP_COUNT; i++) {
             TopBean top = new TopBean();
@@ -362,5 +368,40 @@ public class ReportInfoServiceImpl implements ReportInfoService {
             result.add(top);
         }
         return result;
+    }
+
+    @Override
+    @Cacheable(value = "getRecentPerformList", key = "#root.methodName+'_'+#accountId+'_'+#leagueId")
+    public List<RecentPerform> getRecentPerformList(Long accountId, Integer leagueId) {
+        //先通过account和leagueId查询，如果场次少于5，则不计算
+        List<MyMatchDetailBean> list = webUserDotaReportDao.getMyRecordList(accountId + "", leagueId);
+        if (list == null || list.size() < 5) {
+            return null;
+        }
+        List<RecentPerform> recentPerformList = new ArrayList<>(5);
+        //获取五边形所需要的数据，近5场比赛的参战能力,KAD,打钱能力，输出能力，推塔能力
+
+        //获取参战能力
+        RecentPerform RecentPerformWar = webUserDotaReportDao.getMyWarRate(accountId,leagueId);
+        recentPerformList.add(RecentPerformWar);
+
+        //获取kad
+        RecentPerform RecentPerformKad = webUserDotaReportDao.getMyKad(accountId,leagueId);
+        recentPerformList.add(RecentPerformKad);
+
+        //获取打钱能力
+        RecentPerform RecentPerformGold = webUserDotaReportDao.getMyGold(accountId,leagueId);
+        recentPerformList.add(RecentPerformGold);
+
+        //获取输出能力
+        RecentPerform RecentPerformDamage = webUserDotaReportDao.getMyDamage(accountId,leagueId);
+        recentPerformList.add(RecentPerformDamage);
+
+        //获取推塔能力
+        RecentPerform RecentPerformTower = webUserDotaReportDao.getMyTower(accountId,leagueId);
+        recentPerformList.add(RecentPerformTower);
+
+
+        return recentPerformList;
     }
 }

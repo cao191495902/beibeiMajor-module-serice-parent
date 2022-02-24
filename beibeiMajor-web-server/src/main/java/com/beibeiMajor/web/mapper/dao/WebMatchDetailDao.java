@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.mapper.dao;
 
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.web.mapper.po.DoubleAccountPo;
 import com.beibeiMajor.web.mapper.po.WebMatchDetailPo;
 import org.apache.ibatis.annotations.Mapper;
@@ -105,4 +106,6 @@ public interface WebMatchDetailDao {
     List<Map<Long, Long>> getLastPlayTime();
 
     Boolean batchUpdateDoubleAccount(List<DoubleAccountPo> list);
+
+    WebLeague getDefaultLeagueInfo();
 }

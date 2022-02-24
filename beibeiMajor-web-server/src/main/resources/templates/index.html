@@ -14,6 +14,13 @@
                 <div><img class="circleImg" th:src="${user.avatar}"></div>
             </li>
             <li>
+                <label style="width: 80px">当前联赛：</label>
+                <select id="leagueSelect">
+                    <option th:each="list:${leagueList}" th:value="${list.id}" th:text="${list.name}"
+                            th:selected="${list.id == user.leagueId}"></option>
+                </select>
+            </li>
+            <li>
                 <div><span th:text="${user.nickName}"></span></div>
             </li>
             <li>
@@ -410,6 +417,26 @@
         });
 
     }
+
+    $(function () {
+        $('#leagueSelect').on("change", function() {
+            var leagueId = $('#leagueSelect option:selected').val();
+            var urlData = {leagueId: leagueId};
+            $.post(ctx + "/changeLeagueId", urlData, function (result) {
+                if (result.code == web_status.SUCCESS) {
+                    setTimeout(function () {
+                        $.modal.closeLoading();
+                        $.modal.reload();
+                    }, 1000);
+                } else {
+                    $.modal.alertError(result.msg);
+                    setTimeout(function () {
+                        $.modal.closeLoading();
+                    }, 1000);
+                }
+            });
+        });
+    });
 
 
     function gotoDetail(accountId) {

@@ -1,12 +1,15 @@
 package com.beibeiMajor.system.service.impl;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.beibeiMajor.system.mapper.WebMatchDetailMapper;
-import com.beibeiMajor.system.domain.WebMatchDetail;
-import com.beibeiMajor.system.service.IWebMatchDetailService;
 import com.beibeiMajor.common.core.text.Convert;
+import com.beibeiMajor.system.domain.WebLeague;
+import com.beibeiMajor.system.domain.WebMatchDetail;
+import com.beibeiMajor.system.mapper.WebMatchDetailMapper;
+import com.beibeiMajor.system.service.IWebMatchDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 比赛详情Service业务层处理
@@ -19,6 +22,7 @@ public class WebMatchDetailServiceImpl implements IWebMatchDetailService
 {
     @Autowired
     private WebMatchDetailMapper webMatchDetailMapper;
+
 
     /**
      * 查询比赛详情
@@ -90,5 +94,11 @@ public class WebMatchDetailServiceImpl implements IWebMatchDetailService
     public int deleteWebMatchDetailById(Long matchId)
     {
         return webMatchDetailMapper.deleteWebMatchDetailById(matchId);
+    }
+
+    @Override
+    @Cacheable(value = "getDefaultLeagueInfo", key = "#root.methodName")
+    public WebLeague getDefaultLeagueInfo() {
+        return webMatchDetailMapper.getDefaultLeagueInfo();
     }
 }

@@ -182,6 +182,7 @@
 
     <select id="queryAllId" resultType="java.lang.Long">
         select match_id from web_match_detail
+        where league_id = (SELECT id FROM web_league WHERE is_default = 1 LIMIT 1)
     </select>
 
     <select id="queryAllUnsettledMatch" resultMap="WebMatchDetailMap">
@@ -189,7 +190,7 @@
         match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant,
         tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode,
         radiant_score, dire_score, radiant_captain, dire_captain, double_account
-        FROM web_match_detail WHERE settlement_status = 0 ORDER BY start_time ASC
+        FROM web_match_detail WHERE settlement_status = 0 and league_id = (SELECT id FROM web_league WHERE is_default = 1 LIMIT 1) ORDER BY start_time ASC
     </select>
 
     <update id="changeMatchStatus" parameterType="java.util.List">
@@ -228,5 +229,9 @@
             match_id = #{i.matchId}
         </foreach>
     </update>
+
+    <select id="getDefaultLeagueInfo" resultType="com.beibeiMajor.system.domain.WebLeague">
+        SELECT id ,access_key  as "key" FROM web_league WHERE is_default = 1 LIMIT 1
+    </select>
 
 </mapper>

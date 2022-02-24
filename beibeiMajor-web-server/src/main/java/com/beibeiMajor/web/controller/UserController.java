@@ -12,6 +12,7 @@ import com.beibeiMajor.framework.manager.JedisManager;
 import com.beibeiMajor.framework.util.RSAUtil;
 import com.beibeiMajor.framework.util.ShiroUtils;
 import com.beibeiMajor.system.domain.WebDoubleIntegralRecord;
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.system.service.IWebDoubleIntegralRecordService;
@@ -110,21 +111,44 @@ public class UserController extends BaseController{
         if (user == null) {
             return new ModelAndView("login");
         }
+        List<WebLeague> leagueList = webUserService.getLeagueList();
+         Integer leagueId = user.getLeagueId();
+        if (leagueId == null) {
+            leagueId = leagueList.get(0).getId();
+        }
         user = webUserService.selectWebUserByAccountId(user.getAccountId());
+        user.setLeagueId(leagueId);
 
         WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
         webUserDotaReport.setUserId(user.getAccountId());
-        List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,1,10);
+        webUserDotaReport.setLeagueId(user.getLeagueId());
+        List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport, 1, 10);
         if(CollectionUtils.isNotEmpty(list)){
             mmap.addAttribute("info",list.get(0));
+        }else {
+            mmap.addAttribute("info",new WebUserDotaReportPo());
         }
         mmap.addAttribute("user",user);
+
+        for (WebLeague web : leagueList) {
+            if (web.getId().equals(leagueId)) {
+                mmap.addAttribute("league",web);
+                break;
+            }
+        }
+
+
+
 
         Date startTime = DateUtils.getStartTimeOfDay(new Date());
         Date endTime = DateUtils.getStartTimeOfDay(DateUtils.addDays(startTime,1));
         //查询当天是否报过名
         WebDoubleIntegralRecord record = iWebDoubleIntegralRecordService.selectByTodayAndAccountId(user.getAccountId(), startTime.getTime() / 1000, endTime.getTime()/1000);
         mmap.addAttribute("record", record);
+
+        //查询联赛信息
+        mmap.addAttribute("leagueList", leagueList);
+        ShiroUtils.setSysUser(user);
         return new ModelAndView("index");
     }
 
@@ -139,15 +163,18 @@ public class UserController extends BaseController{
     /**
      * 获取用户积分列表
      *
-     * @param webUserDotaReport
      * @return
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(WebUserDotaReport webUserDotaReport) {
+    public TableDataInfo list() {
+        // 取身份信息
+        WebUser user = ShiroUtils.getWebUser();
+        WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
+        webUserDotaReport.setLeagueId(user.getLeagueId());
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
-        List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport,pageDomain.getPageNum(),pageDomain.getPageSize());
+        List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport, pageDomain.getPageNum(), pageDomain.getPageSize());
         PageHelper.clearPage();
         return getDataTable(list);
     }
@@ -160,8 +187,10 @@ public class UserController extends BaseController{
     @PostMapping("/topList")
     @ResponseBody
     public TableDataInfo topList() {
+        WebUser user = ShiroUtils.getWebUser();
+        Integer leagueId = user.getLeagueId();
 
-        List<TopBean> result = reportInfoService.statisticsTopInfoList();
+        List<TopBean> result = reportInfoService.statisticsTopInfoList(leagueId);
 
         return getDataTable(result);
     }
@@ -174,8 +203,9 @@ public class UserController extends BaseController{
     @PostMapping("/lossList")
     @ResponseBody
     public TableDataInfo lossList() {
-
-        List<TopBean> result = reportInfoService.statisticsLossInfoList();
+        WebUser user = ShiroUtils.getWebUser();
+        Integer leagueId = user.getLeagueId();
+        List<TopBean> result = reportInfoService.statisticsLossInfoList(leagueId);
 
         return getDataTable(result);
     }
@@ -188,9 +218,11 @@ public class UserController extends BaseController{
     @PostMapping("/myRecordList")
     @ResponseBody
     public TableDataInfo myRecordList(String accountId) {
+        WebUser user = ShiroUtils.getWebUser();
+        Integer leagueId = user.getLeagueId();
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
-        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,pageDomain.getPageNum(),pageDomain.getPageSize());
+        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,leagueId,pageDomain.getPageNum(),pageDomain.getPageSize());
         PageHelper.clearPage();
         return getDataTable(list);
     }
@@ -204,9 +236,11 @@ public class UserController extends BaseController{
     @PostMapping("/myRecordListRecent")
     @ResponseBody
     public TableDataInfo myRecordListRecent(String accountId) {
+        WebUser user = ShiroUtils.getWebUser();
+        Integer leagueId = user.getLeagueId();
         startPage();
         PageDomain pageDomain = TableSupport.buildPageRequest();
-        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId, pageDomain.getPageNum(), pageDomain.getPageSize());
+        List<MyMatchDetailBean> list = reportInfoService.getMyRecordList(accountId,leagueId, pageDomain.getPageNum(), pageDomain.getPageSize());
         List<MyMatchDetailBean> newList = list.subList(0, list.size() > 5 ? 5 : list.size());
         PageHelper.clearPage();
         return getDataTable(newList);
@@ -255,6 +289,28 @@ public class UserController extends BaseController{
         }
         operationInfoToDBService.rollbackDoubleIntegralRecord(user.getAccountId(), -1L, 1, "网站添加双倍",false);
         ShiroUtils.setSysUser(webUser);
+        return AjaxResult.success();
+    }
+
+
+    /**
+     * 更换联赛信息
+     *
+     * @return
+     */
+    @RequestMapping("/changeLeagueId")
+    @ResponseBody
+    public Object changeLeagueId(@RequestParam(value = "leagueId", required = true) Integer leagueId) {
+
+        // 取身份信息
+        WebUser user = ShiroUtils.getWebUser();
+        //没有身份信息，跳转登录
+        if (user == null) {
+            return AjaxResult.error("用户不存在");
+        }
+        user.setLeagueId(leagueId);
+
+        ShiroUtils.setSysUser(user);
         return AjaxResult.success();
     }
 

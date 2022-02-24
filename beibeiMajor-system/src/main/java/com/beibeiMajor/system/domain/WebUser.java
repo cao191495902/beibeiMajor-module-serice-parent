@@ -80,13 +80,17 @@ public class WebUser extends BaseEntity
     @Excel(name = "最后登陆IP")
     private String loginIp;
 
-    /** 最后登陆时间 */
+    /**
+     * 最后登陆时间
+     */
     @Excel(name = "最后登陆时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date loginDate;
 
     private Integer doubleIntegralTimes;
 
     private BigDecimal money;
+    //当前用户选择的联赛id
+    private Integer leagueId;
 
     public Integer getDoubleIntegralTimes() {
         return doubleIntegralTimes;
@@ -272,5 +276,13 @@ public class WebUser extends BaseEntity
 
     public void setIntegral(Long integral) {
         this.integral = integral;
+    }
+
+    public Integer getLeagueId() {
+        return leagueId;
+    }
+
+    public void setLeagueId(Integer leagueId) {
+        this.leagueId = leagueId;
     }
 }

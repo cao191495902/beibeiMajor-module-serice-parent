@@ -2,6 +2,8 @@ package com.beibeiMajor.web.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.beibeiMajor.system.domain.WebLeague;
+import com.beibeiMajor.system.service.IWebMatchDetailService;
 import com.beibeiMajor.web.mapper.dao.WebMatchDetailDao;
 import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.DotaGameInfoService;
@@ -18,7 +20,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,11 +41,11 @@ import static com.beibeiMajor.web.util.executor.LocalExecutorMananger.getExecuto
 @Slf4j
 public class DotaGameInfoServiceImpl implements DotaGameInfoService {
 
-    @Value("${customization.leagueMatchId}")
-    private String leagueMatch;
-
-    @Value("${customization.key}")
-    private String key;
+//    @Value("${customization.leagueMatchId}")
+//    private String leagueMatch;
+//
+//    @Value("${customization.key}")
+//    private String key;
 
     @Resource
     private MatchDetailInfoService matchDetailInfoService;
@@ -52,9 +53,15 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
     private WebMatchDetailDao webMatchDetailDao;
     @Resource
     private OperationInfoToDBService operationInfoToDBService;
+    @Resource
+    IWebMatchDetailService webMatchDetailService;
 
     @Override
     public List<Long> getGameIdOfLeagueMatch() {
+
+        WebLeague webLeague = webMatchDetailService.getDefaultLeagueInfo();
+        String key = webLeague.getKey();
+        Integer leagueMatch = webLeague.getId();
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?league_id=" + leagueMatch + "&key=" + key);
         ResponseHandler<String> handler = new BasicResponseHandler();

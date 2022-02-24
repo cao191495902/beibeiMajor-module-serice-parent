@@ -1,5 +1,6 @@
 package com.beibeiMajor.system.service;
 
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.domain.WebUser;
 
 import java.util.List;
@@ -97,4 +98,8 @@ public interface IWebUserService
     void updateToDefaultDoubleTimes();
 
     WebUser selectWebUserByAccountId(Long accountId);
+
+    List<WebLeague> getLeagueList();
+
+    List<WebUser> selectWebUserListByLeague();
 }

@@ -1,5 +1,6 @@
 package com.beibeiMajor.web.service;
 
+import com.beibeiMajor.system.domain.RecentPerform;
 import com.beibeiMajor.system.domain.WebUser;
 import com.beibeiMajor.system.domain.WebUserDotaReport;
 import com.beibeiMajor.web.mapper.po.WebUserDotaReportPo;
@@ -17,12 +18,14 @@ public interface ReportInfoService {
 
     List<WebUserDotaReportPo> selectWebUserDotaReportList(WebUserDotaReport webUserDotaReport,Integer pageNum,Integer pageSize);
 
-    List<TopBean> statisticsTopInfoList();
+    List<TopBean> statisticsTopInfoList(Integer leagueId);
 
     List<WebUser> getYesTodayTopUser(Long startDate,Long endDate);
 
 
-    List<MyMatchDetailBean> getMyRecordList(String userId,Integer pageNum,Integer pageSize);
+    List<MyMatchDetailBean> getMyRecordList(String userId, Integer leagueId, Integer pageNum, Integer pageSize);
 
-    List<TopBean> statisticsLossInfoList();
+    List<TopBean> statisticsLossInfoList(Integer leagueId);
+
+    List<RecentPerform> getRecentPerformList(Long accountId, Integer leagueId);
 }

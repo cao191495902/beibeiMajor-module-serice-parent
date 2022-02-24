@@ -71,6 +71,8 @@ public class WebUserDotaReport extends BaseEntity
     @Excel(name = "XPM")
     private Integer xpPerMin;
 
+    private Integer leagueId;
+
     public void setUserId(Long userId)
     {
         this.userId = userId;
@@ -207,5 +209,13 @@ public class WebUserDotaReport extends BaseEntity
 
     public void setRank(Integer rank) {
         this.rank = rank;
+    }
+
+    public Integer getLeagueId() {
+        return leagueId;
+    }
+
+    public void setLeagueId(Integer leagueId) {
+        this.leagueId = leagueId;
     }
 }

@@ -1,7 +1,9 @@
 package com.beibeiMajor.system.service;
 
-import java.util.List;
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.domain.WebMatchDetail;
+
+import java.util.List;
 
 /**
  * 比赛详情Service接口
@@ -58,4 +60,6 @@ public interface IWebMatchDetailService
      * @return 结果
      */
     public int deleteWebMatchDetailById(Long matchId);
+
+    WebLeague getDefaultLeagueInfo();
 }

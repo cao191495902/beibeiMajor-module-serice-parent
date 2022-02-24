@@ -335,6 +335,7 @@
         FROM
         web_match_detail a
         LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+        where a.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
         ORDER BY
         b.account_id,
         a.start_time DESC
@@ -370,6 +371,7 @@
         FROM
         web_match_detail a
         LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+        where a.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
         ORDER BY
         b.account_id,
         a.start_time DESC
@@ -400,6 +402,7 @@
         FROM
         web_match_detail a
         LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+        where a.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
         GROUP BY
         b.account_id
         ) t4
@@ -436,6 +439,7 @@
         FROM
         web_match_detail a
         LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+        where a.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
         ORDER BY
         b.account_id,
         a.start_time DESC
@@ -453,8 +457,9 @@
         FROM
             web_match_detail a
             LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
-        WHERE
-            b.account_id = #{accountId} AND (a.start_time + 20 * 60) > #{createdTime}
+        WHERE 1=1
+            and a.league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
+            and b.account_id = #{accountId} AND (a.start_time + 20 * 60) > #{createdTime}
             and (#{createdTime} +24*60 * 60) > (a.start_time + 20 * 60)
         ORDER BY
             ABS( (a.start_time + 20 * 60) - #{createdTime} ) ASC LIMIT 1
@@ -503,7 +508,7 @@
         FROM
         web_match_player_info
         WHERE
-        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 0 AND settlement_status = 0 GROUP BY match_id )
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 0 AND settlement_status = 0 and league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1) GROUP BY match_id )
         AND <![CDATA[ player_slot > 10 ]]> UNION
         SELECT
         match_id,
@@ -511,7 +516,7 @@
         FROM
         web_match_player_info
         WHERE
-        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 1 AND settlement_status = 0 GROUP BY match_id )
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 1 AND settlement_status = 0 and league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1) GROUP BY match_id )
         AND <![CDATA[ player_slot < 10 ]]>
         ORDER BY
         match_id ASC
@@ -531,7 +536,7 @@
         FROM
         web_match_player_info
         WHERE
-        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 0 AND settlement_status = 0 GROUP BY match_id )
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 0 AND settlement_status = 0 and league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1) GROUP BY match_id )
         AND <![CDATA[ player_slot < 10 ]]> UNION
         SELECT
         match_id,
@@ -539,7 +544,7 @@
         FROM
         web_match_player_info
         WHERE
-        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 1 AND settlement_status = 0 GROUP BY match_id )
+        match_id IN ( SELECT match_id FROM web_match_detail WHERE radiant_win = 1 AND settlement_status = 0 and league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)GROUP BY match_id )
         AND <![CDATA[ player_slot > 10 ]]>
         ORDER BY
         match_id ASC

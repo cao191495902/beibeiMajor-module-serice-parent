@@ -44,6 +44,31 @@
            timeToIdleSeconds="0"
            timeToLiveSeconds="3600"
            memoryStoreEvictionPolicy="LRU"/>
-    
+
+    <cache name="getLeagueList" eternal="false"
+           maxElementsInMemory="10000"
+           overflowToDisk="false"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="getDefaultLeagueInfo" eternal="false"
+           maxElementsInMemory="10000"
+           overflowToDisk="false"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="getRecentPerformList" eternal="false"
+           maxElementsInMemory="10000"
+           overflowToDisk="false"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="LRU"/>
+
+
 </ehcache>
 	

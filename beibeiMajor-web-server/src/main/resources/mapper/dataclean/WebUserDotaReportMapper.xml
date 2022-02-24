@@ -46,8 +46,8 @@
         select
         user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills,
         average_deaths, average_assists, gold_per_min, xp_per_min
-        from beibei_major.web_user_dota_report
-        <where>
+        from beibei_major.web_user_dota_report where 1=1
+                and league_id = (SELECT id FROM web_league WHERE is_default = 1 LIMIT 1)
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
@@ -87,7 +87,6 @@
             <if test="xpPerMin != null">
                 and xp_per_min = #{xpPerMin}
             </if>
-        </where>
     </select>
 
     <!--新增所有列-->
@@ -241,101 +240,104 @@
         update web_user_dota_report
         <trim prefix="set" suffixOverrides=",">
             <trim prefix="integral = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.integral != null">
                         when user_id = #{i.userId} then #{i.integral}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="win_rate = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.winRate != null">
                         when user_id = #{i.userId} then #{i.winRate}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="mvp_count = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.mvpCount != null">
                         when user_id = #{i.userId} then #{i.mvpCount}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="kda = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.kda != null">
                         when user_id = #{i.userId} then #{i.kda}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="cur_max_count = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.curMaxCount != null">
                         when user_id = #{i.userId} then #{i.curMaxCount}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="iswin = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.isWin != null">
                         when user_id = #{i.userId} then #{i.isWin}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="last_play_time = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.lastPlayTime != null">
                         when user_id = #{i.userId} then #{i.lastPlayTime}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="average_kills = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.averageKills != null">
                         when user_id = #{i.userId} then #{i.averageKills}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="average_deaths = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.averageDeaths != null">
                         when user_id = #{i.userId} then #{i.averageDeaths}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="average_assists = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.averageAssists != null">
                         when user_id = #{i.userId} then #{i.averageAssists}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="gold_per_min = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.goldPerMin != null">
                         when user_id = #{i.userId} then #{i.goldPerMin}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="xp_per_min = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.xpPerMin != null">
                         when user_id = #{i.userId} then #{i.xpPerMin}
                     </if>
                 </foreach>
             </trim>
             <trim prefix="total_matches_num = case" suffix="end,">
-                <foreach collection="list" item="i" index="index">
+                <foreach collection="reportPoList" item="i" index="index">
                     <if test="i.totalMatchesNum != null">
                         when user_id = #{i.userId} then #{i.totalMatchesNum}
                     </if>
                 </foreach>
             </trim>
         </trim>
-        where
-        <foreach collection="list" separator="or" item="i" index="index" >
-            user_id = #{i.userId}
+        where user_id in
+
+        <foreach collection="reportPoList" item="i" open="(" separator="," close=")">
+            #{i.userId}
         </foreach>
+
+        and league_id = (SELECT id FROM web_league WHERE is_default = 1 LIMIT 1)
     </update>
     <select id="selectWebUserDotaReportList" parameterType="com.beibeiMajor.system.domain.WebUserDotaReport" resultMap="WebUserDotaReportMap">
         select user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min ,
@@ -356,15 +358,16 @@
             <if test="averageAssists != null "> and average_assists = #{averageAssists}</if>
             <if test="goldPerMin != null "> and gold_per_min = #{goldPerMin}</if>
             <if test="xpPerMin != null "> and xp_per_min = #{xpPerMin}</if>
+            <if test="leagueId != null "> and league_id = #{leagueId}</if>
         </where>
         order by integral desc
     </select>
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert IGNORE into web_user_dota_report(user_id, integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min)
+        insert IGNORE into web_user_dota_report(user_id, league_id,integral, win_rate, mvp_count, kda, cur_max_count, iswin, last_play_time, average_kills, average_deaths, average_assists, gold_per_min, xp_per_min)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.userId}, #{item.integral}, #{item.winRate}, #{item.mvpCount}, #{item.kda}, #{item.curMaxCount}, #{item.isWin}, #{item.lastPlayTime}, #{item.averageKills}, #{item.averageDeaths}, #{item.averageAssists}, #{item.goldPerMin}, #{item.xpPerMin})
+            (#{item.userId} ,(SELECT id FROM web_league WHERE is_default = 1 LIMIT 1),#{item.integral} ,#{item.winRate}, #{item.mvpCount}, #{item.kda}, #{item.curMaxCount}, #{item.isWin}, #{item.lastPlayTime}, #{item.averageKills}, #{item.averageDeaths}, #{item.averageAssists}, #{item.goldPerMin}, #{item.xpPerMin})
         </foreach>
     </insert>
 
@@ -389,7 +392,8 @@
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
         WHERE
-	        a.total_matches_num > 10
+	        a.total_matches_num > 5
+            and a.league_id = #{leagueId}
         ORDER BY
             a.win_rate ${desc},
             a.integral ${desc}
@@ -403,7 +407,8 @@
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
         WHERE
-	        a.total_matches_num > 10
+	        a.total_matches_num > 5
+            and a.league_id = #{leagueId}
         ORDER BY
             a.kda ${desc},
             a.integral ${desc}
@@ -432,7 +437,8 @@
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
         WHERE
-            a.total_matches_num > 10
+            a.total_matches_num > 5
+        and a.league_id = #{leagueId}
         ORDER BY
             a.average_kills ${desc},
             a.integral ${desc}
@@ -446,7 +452,8 @@
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
         WHERE
-            a.total_matches_num > 10
+            a.total_matches_num > 5
+        and a.league_id = #{leagueId}
         ORDER BY
             a.average_deaths ${desc},
             a.integral ${desc}
@@ -460,7 +467,8 @@
             web_user_dota_report a
             LEFT JOIN web_user b ON a.user_id = b.account_id
         WHERE
-            a.total_matches_num > 10
+            a.total_matches_num > 5
+        and a.league_id = #{leagueId}
         ORDER BY
             a.average_assists ${desc},
             a.integral ${desc}
@@ -473,7 +481,7 @@
         FROM `web_match_detail` AS wb
         LEFT JOIN `web_match_player_info` wp ON wp.`match_id` = wb.`match_id`
         LEFT JOIN `web_user` w ON w.`account_id` = wp.`account_id`
-         WHERE wb.start_time >=#{date}
+         WHERE wb.start_time >=#{startDate}
          and #{endDate}> wb.start_time
          GROUP BY wp.`account_id`
          ORDER BY integral DESC
@@ -496,7 +504,7 @@
         FROM `web_match_player_info` wb
         LEFT JOIN `web_match_detail` wd ON wd.`match_id` = wb.`match_id`
         LEFT JOIN `web_dota_hero` wh ON wh.`hero_id` = wb.`hero_id`
-        WHERE wb.`account_id` = #{accountId}
+        WHERE wb.`account_id` = #{accountId} and wd.league_id = #{leagueId}
         ORDER BY wd.`start_time` DESC
     </select>
     <select id="getWarRateTop" resultType="java.lang.String">
@@ -504,7 +512,7 @@
         CONCAT(b.nick_name, '(',ROUND( b.warRate*100,2),')')
         FROM
         ( SELECT
-        b.nick_name,
+        b.nick_name,COUNT(c.match_id) AS cnt,
         ROUND( ( SUM( a.kills ) + SUM( a.assists ) ) / SUM(IF(10 > player_slot
         , radiant_score,dire_score)), 4 ) AS warRate
 
@@ -512,10 +520,11 @@
         web_match_player_info a
         LEFT JOIN web_user b ON a.account_id = b.account_id
         LEFT JOIN `web_match_detail` c ON c.match_id = a.match_id
-
+        WHERE  c.league_id = #{leagueId}
         GROUP BY
         a.account_id
         ) AS b
+        WHERE b.cnt > 5
         ORDER BY b.warRate ${desc}
         LIMIT #{topLimit}
     </select>
@@ -525,7 +534,8 @@
          CONCAT(wd.zh_name, '(',COUNT(wm.hero_id),')')
         FROM `web_match_player_info` wm
         JOIN `web_dota_hero` wd ON wd.hero_id = wm.hero_id
-        WHERE 1=1
+        JOIN `web_match_detail` c ON c.match_id = wm.match_id
+        WHERE  c.league_id = #{leagueId}
         GROUP BY wm.hero_id
         ORDER BY COUNT(wm.hero_id)  ${desc}
         LIMIT #{topLimit}
@@ -554,10 +564,12 @@
 
         FROM `web_match_player_info` wm
         JOIN `web_dota_hero` wd ON wd.hero_id = wm.hero_id
+        JOIN `web_match_detail` c ON c.`match_id` = wm.`match_id`
         WHERE 1=1
+        and c.league_id = #{leagueId}
         GROUP BY wm.hero_id
         ) r
-        WHERE r.con > 3
+        WHERE r.con > 5
 
         ORDER BY ROUND(win/con*100,2) ${desc},con ${desc}
         LIMIT #{topLimit}
@@ -568,14 +580,74 @@
         FROM (
 
         SELECT nick_name,
-        (SELECT COUNT(*) FROM `web_match_player_info` WHERE account_id = w.`account_id`) AS con,
-        (SELECT COUNT(DISTINCT hero_id) FROM `web_match_player_info` WHERE account_id = w.`account_id`) AS heroId
+        (SELECT COUNT(*) FROM `web_match_player_info` a JOIN `web_match_detail` b ON b.match_id = a.match_id WHERE account_id = w.`account_id` and b.league_id = #{leagueId}) AS con,
+        (SELECT COUNT(DISTINCT hero_id) FROM `web_match_player_info` a JOIN `web_match_detail` b ON b.match_id = a.match_id  WHERE account_id = w.`account_id` and b.league_id = #{leagueId}) AS heroId
         FROM `web_user` w
         ) r
-        WHERE r.con >10
+        WHERE r.con > 5
 
         ORDER BY ROUND(heroId/con*100,2) ${desc},con ${desc}
         LIMIT #{topLimit}
+    </select>
+
+    <select id="getMyWarRate" resultType="com.beibeiMajor.system.domain.RecentPerform">
+
+        SELECT   "100.00" as "max","参战能力" as "text",    ROUND( ( SUM( A.kills ) + SUM( A.assists ) ) / SUM(IF(10 > player_slot
+                , radiant_score,dire_score))*100, 2 ) AS "value" FROM `web_match_player_info`  A
+        JOIN `web_match_detail` B ON A.`match_id` = B.`match_id`
+        WHERE A.`account_id` = #{accountId} AND B.`league_id` = #{leagueId}
+        ORDER BY B.`start_time` DESC LIMIT 5
+
+
+    </select>
+
+    <select id="getMyKad" resultType="com.beibeiMajor.system.domain.RecentPerform">
+        SELECT   "100.00" as "max","补刀能力" as "text", ROUND( (SUM(last_hits)+SUM(denies))/18,2) AS "value"
+        FROM `web_match_player_info` WHERE match_id IN (
+        SELECT match_id FROM (
+        SELECT A.match_id
+        FROM `web_match_player_info`  A
+        JOIN `web_match_detail` B ON A.`match_id` = B.`match_id`
+        WHERE A.`account_id` = #{accountId} AND B.`league_id` = #{leagueId}
+        ORDER BY B.`start_time` DESC LIMIT 5) r)
+        AND account_id = #{accountId}
+    </select>
+
+    <select id="getMyGold" resultType="com.beibeiMajor.system.domain.RecentPerform">
+        SELECT  "100.00" as "max","打钱能力" as "text", ROUND( (SUM(gold)+SUM(gold_spent))/1500,2) AS "value"
+        FROM `web_match_player_info` WHERE match_id IN (
+        SELECT match_id FROM (
+        SELECT A.match_id
+        FROM `web_match_player_info`  A
+        JOIN `web_match_detail` B ON A.`match_id` = B.`match_id`
+        WHERE A.`account_id` = #{accountId}  AND B.`league_id` = #{leagueId}
+        ORDER BY B.`start_time` DESC LIMIT 5) r)
+        AND account_id = #{accountId}
+    </select>
+
+    <select id="getMyDamage" resultType="com.beibeiMajor.system.domain.RecentPerform">
+        SELECT  "100.00" as "max","输出能力" as "text", ROUND( (SUM(hero_damage))/3000,2) AS "value"
+        FROM `web_match_player_info` WHERE match_id IN (
+        SELECT match_id FROM (
+        SELECT A.match_id
+        FROM `web_match_player_info`  A
+        JOIN `web_match_detail` B ON A.`match_id` = B.`match_id`
+        WHERE A.`account_id` = #{accountId} AND B.`league_id` = #{leagueId}
+        ORDER BY B.`start_time` DESC LIMIT 5) r)
+        AND account_id = #{accountId}
+    </select>
+
+    <select id="getMyTower" resultType="com.beibeiMajor.system.domain.RecentPerform">
+
+        SELECT  "100.00" as "max","推塔能力" as "text", ROUND( (SUM(tower_damage))/800,2) AS "value"
+        FROM `web_match_player_info` WHERE match_id IN (
+        SELECT match_id FROM (
+        SELECT A.match_id
+        FROM `web_match_player_info`  A
+        JOIN `web_match_detail` B ON A.`match_id` = B.`match_id`
+        WHERE A.`account_id` = #{accountId} AND B.`league_id` = #{leagueId}
+        ORDER BY B.`start_time` DESC LIMIT 5) r)
+        AND account_id = #{accountId}
     </select>
 
 </mapper>

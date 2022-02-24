@@ -1,7 +1,9 @@
 package com.beibeiMajor.system.mapper;
 
-import java.util.List;
+import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.domain.WebMatchDetail;
+
+import java.util.List;
 
 /**
  * 比赛详情Mapper接口
@@ -58,4 +60,6 @@ public interface WebMatchDetailMapper
      * @return 结果
      */
     public int deleteWebMatchDetailByIds(String[] matchIds);
+
+    WebLeague getDefaultLeagueInfo();
 }

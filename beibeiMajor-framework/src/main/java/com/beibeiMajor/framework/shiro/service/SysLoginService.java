@@ -176,24 +176,13 @@ public class SysLoginService
         // 查询用户信息
         WebUser user = webUserService.selectUserByLoginName(username);
 
-        /**
-         if (user == null && maybeMobilePhoneNumber(username))
-         {
-         user = userService.selectUserByPhoneNumber(username);
-         }
-
-         if (user == null && maybeEmail(username))
-         {
-         user = userService.selectUserByEmail(username);
-         }
-         */
-
         if (user == null)
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.not.exists")));
             throw new UserNotExistsException();
         }
         webPasswordService.validate(user, password);
+
 
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         return user;
