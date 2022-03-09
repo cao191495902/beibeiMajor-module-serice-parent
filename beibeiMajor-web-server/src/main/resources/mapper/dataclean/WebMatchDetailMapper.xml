@@ -208,7 +208,14 @@
             Max( a.start_time ) AS playTime
         FROM
             web_match_detail a
-            LEFT JOIN web_match_player_info b ON a.match_id = b.match_id
+            JOIN web_match_player_info b ON a.match_id = b.match_id
+            AND a.league_id =
+            (SELECT
+              id
+            FROM
+              `web_league`
+            WHERE is_default = 1
+            LIMIT 1)
         GROUP BY
             b.account_id
     </select>

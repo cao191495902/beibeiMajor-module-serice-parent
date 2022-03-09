@@ -157,11 +157,10 @@ public class UserApiController extends BaseController{
         try {
             WebUserDotaReport webUserDotaReport = new WebUserDotaReport();
             if (leagueId == null) {
-                webUserDotaReport.setLeagueId(leagueId);
-            } else {
                 WebUser user = tokenService.getChannelByToken(token);
-                webUserDotaReport.setLeagueId(user.getLeagueId());
+                leagueId = user.getLeagueId();
             }
+            webUserDotaReport.setLeagueId(leagueId);
             startPage();
             List<WebUserDotaReportPo> list = reportInfoService.selectWebUserDotaReportList(webUserDotaReport, pageNum, pageSize);
             PageHelper.clearPage();

@@ -146,83 +146,59 @@
 
     <select id="getUserWinAndLose" resultType="com.beibeiMajor.web.mapper.po.WinAndLosePo">
         SELECT
-        a.nick_name AS nickName,
-        b.account_id AS accountId,
-        b.win AS win,
-        b.lose AS lose,
-        ROUND( ( win / ( win + lose ) * 100 ), 2 ) AS winRate
-        FROM
-        web_user a
-        LEFT JOIN (
+        r.nick_name AS nickName,
+        r.account_id AS accountId,
+        r.win AS win,
+        r.total-r.win AS lose,
+        ROUND( ( r.win / r.total * 100 ), 2 ) AS winRate
+        FROM (
         SELECT
-        a.account_id AS account_id,
-        IFNULL( a.win, 0 ) AS win,
-        IFNULL( b.lose, 0 ) AS lose
-        FROM
-        (
-        SELECT
+        u.nick_name,
         a.account_id,
-        count( a.account_id ) AS win
+        COUNT(a.account_id) AS win,
+        (SELECT
+        COUNT(*)
+        FROM
+        web_match_player_info A
+        JOIN web_match_detail B
+        ON A.match_id = B.match_id
+        WHERE B.league_id =
+        (SELECT
+        id
+        FROM
+        `web_league`
+        WHERE is_default = 1
+        LIMIT 1)
+        AND A.account_id = a.`account_id`) AS total
         FROM
         web_match_player_info a
-        LEFT JOIN web_match_detail b ON a.match_id = b.match_id
-        WHERE
-        ( b.radiant_win = 1 AND <![CDATA[ a.player_slot < 10 ]]> )
-        OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot > 10 ]]> )
-        GROUP BY
-        a.account_id
-        ) a
-        LEFT JOIN (
-        SELECT
-        a.account_id,
-        count( a.account_id ) AS lose
+        JOIN web_match_detail b
+        ON a.match_id = b.match_id
+        JOIN web_user u
+        ON u.`account_id` = a.`account_id`
+        AND b.league_id =
+        (SELECT
+        id
         FROM
-        web_match_player_info a
-        LEFT JOIN web_match_detail b ON a.match_id = b.match_id
-        WHERE
-        ( b.radiant_win = 1 AND <![CDATA[ a.player_slot > 10 ]]> )
-        OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot < 10 ]]> )
-        GROUP BY
-        a.account_id
-        ) b ON a.account_id = b.account_id UNION
-        SELECT
-        b.account_id,
-        IFNULL( a.win, 0 ),
-        IFNULL( b.lose, 0 )
-        FROM
-        (
-        SELECT
-        a.account_id,
-        count( a.account_id ) AS win
-        FROM
-        web_match_player_info a
-        LEFT JOIN web_match_detail b ON a.match_id = b.match_id
-        WHERE
-        ( b.radiant_win = 1 AND <![CDATA[ a.player_slot < 10 ]]> )
-        OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot > 10 ]]> )
-        GROUP BY
-        a.account_id
-        ) a
-        RIGHT JOIN (
-        SELECT
-        a.account_id,
-        count( a.account_id ) AS lose
-        FROM
-        web_match_player_info a
-        LEFT JOIN web_match_detail b ON a.match_id = b.match_id
-        WHERE
-        ( b.radiant_win = 1 AND <![CDATA[ a.player_slot > 10 ]]> )
-        OR ( b.radiant_win = 0 AND <![CDATA[ a.player_slot < 10 ]]> )
-        GROUP BY
-        a.account_id
-        ) b ON a.account_id = b.account_id
-        ) b ON a.account_id = b.account_id
+        `web_league`
+        WHERE is_default = 1
+        LIMIT 1)
+        WHERE (
+        b.radiant_win = 1
+        AND 10 >a.player_slot
+        )
+        OR (
+        b.radiant_win = 0
+        AND a.player_slot > 10
+        )
+        GROUP BY a.account_id
+        ) r
     </select>
 
     <select id="getUserAverageData" resultType="com.beibeiMajor.web.mapper.po.UserAverageDataPo">
         SELECT
             a.account_id AS accountId,
-            b.nick_name AS nickName,
+            u.nick_name AS nickName,
             ROUND( AVG( a.gold_per_min ), 0 ) AS `gpm`,
             ROUND( AVG( a.xp_per_min ), 0 ) AS `xpm`,
             ROUND( AVG( a.kills ), 2 ) AS `kill`,
@@ -231,7 +207,15 @@
             ROUND( ( SUM( a.kills ) + SUM( a.assists ) ) / SUM( a.deaths ), 2 ) AS kda
         FROM
             web_match_player_info a
-            LEFT JOIN web_user b ON a.account_id = b.account_id
+            JOIN web_match_detail b ON a.match_id = b.match_id
+            AND b.league_id =
+            (SELECT
+              id
+            FROM
+              `web_league`
+            WHERE is_default = 1
+            LIMIT 1)
+            JOIN web_user u ON a.account_id = u.account_id
         GROUP BY
 	        a.account_id
     </select>
@@ -580,8 +564,8 @@
         FROM (
 
         SELECT nick_name,
-        (SELECT COUNT(*) FROM `web_match_player_info` a JOIN `web_match_detail` b ON b.match_id = a.match_id WHERE account_id = w.`account_id` and b.league_id = #{leagueId}) AS con,
-        (SELECT COUNT(DISTINCT hero_id) FROM `web_match_player_info` a JOIN `web_match_detail` b ON b.match_id = a.match_id  WHERE account_id = w.`account_id` and b.league_id = #{leagueId}) AS heroId
+        (SELECT COUNT(*) FROM `web_match_player_info` a JOIN `web_match_detail` b ON b.match_id = a.match_id WHERE account_id = w.`account_id` and ((b.radiant_win = 1 AND 10 >a.player_slot) OR ( b.radiant_win = 0 AND a.player_slot > 10)) and b.league_id = #{leagueId}) AS con,
+        (SELECT COUNT(DISTINCT hero_id) FROM `web_match_player_info` a JOIN `web_match_detail` b ON b.match_id = a.match_id  WHERE account_id = w.`account_id` and ((b.radiant_win = 1 AND 10 >a.player_slot) OR ( b.radiant_win = 0 AND a.player_slot > 10)) and b.league_id = #{leagueId}) AS heroId
         FROM `web_user` w
         ) r
         WHERE r.con > 5

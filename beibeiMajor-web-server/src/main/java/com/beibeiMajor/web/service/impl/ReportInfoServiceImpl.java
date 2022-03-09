@@ -191,12 +191,13 @@ public class ReportInfoServiceImpl implements ReportInfoService {
             }));
             int loseSum = loseList.stream().reduce(Integer::sum).orElse(0);
             Integer fraction = 0;
+            //2022年3月8日修改基数为15
             if (winSum > loseSum){
                 int disparity = (winSum - loseSum) / 1000;
-                fraction = 100 - disparity*10;
+                fraction = 100 - disparity*15;
             }else{
                 int disparity = (loseSum - winSum) / 1000;
-                fraction = 100 + disparity*10;
+                fraction = 100 + disparity*15;
             }
             List<String> finalDoubleAccountIds = doubleAccountIds;
             Integer finalFraction2 = fraction;
