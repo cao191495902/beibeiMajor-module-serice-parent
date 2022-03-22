@@ -26,4 +26,6 @@ public class WebDotaHeroPo implements Serializable {
      */
     private String zhName;
 
+    private String icon;
+
 }

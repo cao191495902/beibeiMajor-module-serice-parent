@@ -59,6 +59,14 @@ public class DotaTask {
         log.info("Schedule handlerGameInfoToShow end");
     }
 
+
+    @Scheduled(cron = "0 30 0 * * ?") // 每天0点30触发更新英雄数据
+    public void getheroInfo(){
+        log.info("Schedule handlerGameInfoToShow start");
+        dotaGameInfoService.insertHeroesInfo();
+        log.info("Schedule handlerGameInfoToShow end");
+    }
+
 //    @Scheduled(cron = "0 0 4 * * SUN") // 每周日凌晨4点重置双倍次数
 //    public void updateToDefaultDoubleTimes(){
 //        log.info("Schedule updateToDefaultDoubleTimes start");

@@ -68,12 +68,12 @@
     </delete>
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into web_dota_hero
-        (hero_id, en_name, zh_name)
+        insert IGNORE into web_dota_hero
+        (hero_id, en_name, zh_name,icon)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-            #{item.heroId}, #{item.enName}, #{item.zhName}
+            #{item.heroId}, #{item.enName}, #{item.zhName},#{item.icon}
             )
         </foreach>
     </insert>

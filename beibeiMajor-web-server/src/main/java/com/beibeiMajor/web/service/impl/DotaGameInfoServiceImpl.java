@@ -133,6 +133,13 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
         heroBeans.forEach(heroBean -> {
             WebDotaHeroPo heroPo = new WebDotaHeroPo();
             BeanUtils.copyProperties(heroBean, heroPo);
+            try {
+                String icon_pre = "https://cdn.dota2.com/apps/dota2/images/heroes/%s_lg.png";
+                String icon = String.format(icon_pre, heroBean.getEnName().split("hero_")[1]);
+                heroPo.setIcon(icon);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
             lists.add(heroPo);
         });
         return operationInfoToDBService.HeroesBatchIntoDB(lists) ;
