@@ -166,6 +166,7 @@ public class UserApiController extends BaseController{
             PageHelper.clearPage();
             Map<String, Object> result = new HashMap<>();
             result.put("pages", new PageInfo(list).getPages());
+            result.put("total", new PageInfo(list).getTotal());
             result.put("list", list);
             return AjaxResult.success(200,result);
         } catch (Exception e) {
@@ -258,6 +259,7 @@ public class UserApiController extends BaseController{
             PageHelper.clearPage();
             Map<String, Object> result = new HashMap<>();
             result.put("pages", new PageInfo(list).getPages());
+            result.put("total", new PageInfo(list).getTotal());
             result.put("list", list);
             return AjaxResult.success(200,result);
         } catch (Exception e) {
