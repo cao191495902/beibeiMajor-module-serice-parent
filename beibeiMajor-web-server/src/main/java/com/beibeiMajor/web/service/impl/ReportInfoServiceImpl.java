@@ -405,4 +405,9 @@ public class ReportInfoServiceImpl implements ReportInfoService {
 
         return recentPerformList;
     }
+
+    @Override
+    public void deleteReport() {
+        webUserDotaReportDao.deleteReport();
+    }
 }

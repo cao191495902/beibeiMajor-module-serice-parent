@@ -77,4 +77,24 @@ public class SynInfoController {
         cacheManager.getCache(cacheName).clear();
         return "success";
     }
+
+
+    /**
+     * 手动添加比赛数据以后 重跑当前联赛report数据
+     */
+    @GetMapping("/runReport")
+    public Object runReport() {
+        //清除当前联赛的结算状态
+        dotaGameInfoService.resetSettlementStatus();
+
+        reportInfoService.deleteReport();
+
+        reportInfoService.handlerMatchInfoToReport();
+
+        //清除缓存
+        for (String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).clear();
+        }
+        return "success";
+    }
 }

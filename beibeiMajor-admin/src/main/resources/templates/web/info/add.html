@@ -7,9 +7,12 @@
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-info-add">
             <div class="form-group">    
-                <label class="col-sm-3 control-label">用户ID：</label>
+                <label class="col-sm-3 control-label">用户：</label>
                 <div class="col-sm-8">
-                    <input name="accountId" class="form-control" type="text">
+                    <select class="form-control" name="accountId">
+                        <option th:each="list:${userList}" th:value="${list.accountId}"
+                                th:text="${list.nickName}"></option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">    
@@ -18,70 +21,24 @@
                     <input name="matchId" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">比赛ID：</label>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">是否胜利：</label>
                 <div class="col-sm-8">
-                    <input name="playerSlot" class="form-control" type="text">
+                    <select class="form-control" name="playerSlot">
+                        <option value="50">天辉赢，该用户赢</option>
+                        <option value="5">天辉输，该用户赢</option>
+                        <option value="6">天辉赢，该用户输</option>
+                        <option value="60">天辉输，该用户输</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">英雄ID：</label>
+                <label class="col-sm-3 control-label">英雄：</label>
                 <div class="col-sm-8">
-                    <input name="heroId" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">左上方物品ID：</label>
-                <div class="col-sm-8">
-                    <input name="item0" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">中间上方物品ID：</label>
-                <div class="col-sm-8">
-                    <input name="item1" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">右上方物品ID：</label>
-                <div class="col-sm-8">
-                    <input name="item2" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">左下方物品ID：</label>
-                <div class="col-sm-8">
-                    <input name="item3" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">中间下方物品ID：</label>
-                <div class="col-sm-8">
-                    <input name="item4" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">右下方物品ID：</label>
-                <div class="col-sm-8">
-                    <input name="item5" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">备用库存物品1的ID：</label>
-                <div class="col-sm-8">
-                    <input name="backpack0" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">备用库存物品2的ID：</label>
-                <div class="col-sm-8">
-                    <input name="backpack1" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">备用库存物品3的ID：</label>
-                <div class="col-sm-8">
-                    <input name="backpack2" class="form-control" type="text">
+                    <select class="form-control" name="heroId">
+                        <option th:each="list:${heroList}" th:value="${list.heroId}"
+                                th:text="${list.zhName}"></option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">    

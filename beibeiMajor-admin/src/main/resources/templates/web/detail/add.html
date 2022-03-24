@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('新增比赛详情')" />
+    <th:block th:include="include :: datetimepicker-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -9,73 +10,31 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">联赛ID：</label>
                 <div class="col-sm-8">
-                    <input name="leagueId" class="form-control" type="text">
+                    <input name="leagueId" class="form-control" type="text" value="14045">
                 </div>
             </div>
-            <div class="form-group">    
+            <div class="form-group">
+                <label class="col-sm-3 control-label">比赛ID：</label>
+                <div class="col-sm-8">
+                    <input name="matchId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-3 control-label">获胜方：</label>
                 <div class="col-sm-8">
-                    <input name="radiantWin" class="form-control" type="text">
+                    <select class="form-control" name="radiantWin">
+                        <option value="1">天辉赢</option>
+                        <option value="0">夜宴赢</option>
+                    </select>
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">比赛长度：</label>
-                <div class="col-sm-8">
-                    <input name="duration" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">比赛B/P时间：</label>
-                <div class="col-sm-8">
-                    <input name="preGameDuration" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
+            <div class="form-group">
                 <label class="col-sm-3 control-label">比赛开始时间：</label>
                 <div class="col-sm-8">
-                    <input name="startTime" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">天辉防御塔状态：</label>
-                <div class="col-sm-8">
-                    <input name="towerStatusRadiant" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">夜宴防御塔状态：</label>
-                <div class="col-sm-8">
-                    <input name="towerStatusDire" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">天辉兵营状态：</label>
-                <div class="col-sm-8">
-                    <input name="barracksStatusRadiant" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">夜宴兵营状态：</label>
-                <div class="col-sm-8">
-                    <input name="barracksStatusDire" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">第一滴血发生时间：</label>
-                <div class="col-sm-8">
-                    <input name="firstBloodTime" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">玩家数量：</label>
-                <div class="col-sm-8">
-                    <input name="humanPlayers" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">比赛类型：</label>
-                <div class="col-sm-8">
-                    <input name="gameMode" class="form-control" type="text">
+                    <div class="input-group date">
+                        <input name="startDate" class="form-control" id="datetimepicker-startTime" placeholder="yyyy-MM-dd HH:mm" type="text" required>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
             <div class="form-group">    
@@ -87,30 +46,26 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">夜宴得分：</label>
                 <div class="col-sm-8">
-                    <input name="direScore" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">天辉队长：</label>
-                <div class="col-sm-8">
-                    <input name="radiantCaptain" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">夜宴队长：</label>
-                <div class="col-sm-8">
-                    <input name="direCaptain" class="form-control" type="text">
+                    <input name="direScore" class="form-control " type="text">
                 </div>
             </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        $(function(){
+            $("#datetimepicker-startTime").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                autoclose: true
+            });
+        });
+    </script>
     <script th:inline="javascript">
         var prefix = ctx + "web/detail"
         $("#form-detail-add").validate({
             focusCleanup: true
         });
-
         function submitHandler() {
             if ($.validate.form()) {
                 $.operate.save(prefix + "/add", $('#form-detail-add').serialize());

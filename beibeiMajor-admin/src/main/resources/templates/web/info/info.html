@@ -19,112 +19,8 @@
                                 <input type="text" name="matchId"/>
                             </li>
                             <li>
-                                <label>比赛ID：</label>
-                                <input type="text" name="playerSlot"/>
-                            </li>
-                            <li>
                                 <label>英雄ID：</label>
                                 <input type="text" name="heroId"/>
-                            </li>
-                            <li>
-                                <label>左上方物品ID：</label>
-                                <input type="text" name="item0"/>
-                            </li>
-                            <li>
-                                <label>中间上方物品ID：</label>
-                                <input type="text" name="item1"/>
-                            </li>
-                            <li>
-                                <label>右上方物品ID：</label>
-                                <input type="text" name="item2"/>
-                            </li>
-                            <li>
-                                <label>左下方物品ID：</label>
-                                <input type="text" name="item3"/>
-                            </li>
-                            <li>
-                                <label>中间下方物品ID：</label>
-                                <input type="text" name="item4"/>
-                            </li>
-                            <li>
-                                <label>右下方物品ID：</label>
-                                <input type="text" name="item5"/>
-                            </li>
-                            <li>
-                                <label>备用库存物品1的ID：</label>
-                                <input type="text" name="backpack0"/>
-                            </li>
-                            <li>
-                                <label>备用库存物品2的ID：</label>
-                                <input type="text" name="backpack1"/>
-                            </li>
-                            <li>
-                                <label>备用库存物品3的ID：</label>
-                                <input type="text" name="backpack2"/>
-                            </li>
-                            <li>
-                                <label>该玩家的击杀数：</label>
-                                <input type="text" name="kills"/>
-                            </li>
-                            <li>
-                                <label>该玩家的死亡数：</label>
-                                <input type="text" name="deaths"/>
-                            </li>
-                            <li>
-                                <label>该玩家的助攻数：</label>
-                                <input type="text" name="assists"/>
-                            </li>
-                            <li>
-                                <label>该玩家的正补数：</label>
-                                <input type="text" name="lastHits"/>
-                            </li>
-                            <li>
-                                <label>该玩家的反补数：</label>
-                                <input type="text" name="denies"/>
-                            </li>
-                            <li>
-                                <label>该玩家的GPM：</label>
-                                <input type="text" name="goldPerMin"/>
-                            </li>
-                            <li>
-                                <label>该玩家的XPM：</label>
-                                <input type="text" name="xpPerMin"/>
-                            </li>
-                            <li>
-                                <label>该玩家的等级：</label>
-                                <input type="text" name="level"/>
-                            </li>
-                            <li>
-                                <label>该玩家的英雄伤害：</label>
-                                <input type="text" name="heroDamage"/>
-                            </li>
-                            <li>
-                                <label>该玩家的防御塔伤害：</label>
-                                <input type="text" name="towerDamage"/>
-                            </li>
-                            <li>
-                                <label>该玩家的治疗量：</label>
-                                <input type="text" name="heroHealing"/>
-                            </li>
-                            <li>
-                                <label>该玩家的总金钱：</label>
-                                <input type="text" name="gold"/>
-                            </li>
-                            <li>
-                                <label>该玩家花费的金钱：</label>
-                                <input type="text" name="goldSpent"/>
-                            </li>
-                            <li>
-                                <label>该玩家的英雄伤害占比：</label>
-                                <input type="text" name="scaledHeroDamage"/>
-                            </li>
-                            <li>
-                                <label>该玩家的防御塔伤害占比：</label>
-                                <input type="text" name="scaledTowerDamage"/>
-                            </li>
-                            <li>
-                                <label>该玩家的英雄治疗占比：</label>
-                                <input type="text" name="scaledHeroHealing"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -173,7 +69,7 @@
                 },
                 {
                     field: 'id',
-                    title: '该玩家的英雄治疗占比',
+                    title: 'null',
                     visible: false
                 },
                 {
@@ -186,48 +82,61 @@
                 },
                 {
                     field: 'playerSlot',
-                    title: '比赛ID'
+                    title: '输赢',
+                    formatter: function (value, row, index) {
+                        if (value == 50) {
+                            return "赢";
+                        } else if (value == 5) {
+                            return "赢";
+                        } else if (value == 6) {
+                            return "输";
+                        } else if (value == 60) {
+                            return "输";
+                        } else {
+                            return value
+                        }
+                    }
                 },
                 {
                     field: 'heroId',
                     title: '英雄ID'
                 },
-                {
-                    field: 'item0',
-                    title: '左上方物品ID'
-                },
-                {
-                    field: 'item1',
-                    title: '中间上方物品ID'
-                },
-                {
-                    field: 'item2',
-                    title: '右上方物品ID'
-                },
-                {
-                    field: 'item3',
-                    title: '左下方物品ID'
-                },
-                {
-                    field: 'item4',
-                    title: '中间下方物品ID'
-                },
-                {
-                    field: 'item5',
-                    title: '右下方物品ID'
-                },
-                {
-                    field: 'backpack0',
-                    title: '备用库存物品1的ID'
-                },
-                {
-                    field: 'backpack1',
-                    title: '备用库存物品2的ID'
-                },
-                {
-                    field: 'backpack2',
-                    title: '备用库存物品3的ID'
-                },
+                // {
+                //     field: 'item0',
+                //     title: '左上方物品ID'
+                // },
+                // {
+                //     field: 'item1',
+                //     title: '中间上方物品ID'
+                // },
+                // {
+                //     field: 'item2',
+                //     title: '右上方物品ID'
+                // },
+                // {
+                //     field: 'item3',
+                //     title: '左下方物品ID'
+                // },
+                // {
+                //     field: 'item4',
+                //     title: '中间下方物品ID'
+                // },
+                // {
+                //     field: 'item5',
+                //     title: '右下方物品ID'
+                // },
+                // {
+                //     field: 'backpack0',
+                //     title: '备用库存物品1的ID'
+                // },
+                // {
+                //     field: 'backpack1',
+                //     title: '备用库存物品2的ID'
+                // },
+                // {
+                //     field: 'backpack2',
+                //     title: '备用库存物品3的ID'
+                // },
                 {
                     field: 'kills',
                     title: '该玩家的击杀数'
@@ -291,6 +200,14 @@
                 {
                     field: 'scaledHeroHealing',
                     title: '该玩家的英雄治疗占比'
+                },
+                {
+                    field: 'beforeIntegral',
+                    title: '该玩家这场比赛之前的积分'
+                },
+                {
+                    field: 'afterIntegral',
+                    title: '该玩家这场比赛之后的积分'
                 },
                 {
                     title: '操作',

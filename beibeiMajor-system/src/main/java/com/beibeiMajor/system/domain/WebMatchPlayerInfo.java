@@ -9,13 +9,13 @@ import com.beibeiMajor.common.core.domain.BaseEntity;
  * 比赛玩家详情对象 web_match_player_info
  * 
  * @author ruoyi
- * @date 2020-09-14
+ * @date 2022-03-22
  */
 public class WebMatchPlayerInfo extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** null */
     private Long id;
 
     /** 用户ID */
@@ -26,8 +26,8 @@ public class WebMatchPlayerInfo extends BaseEntity
     @Excel(name = "比赛ID")
     private Long matchId;
 
-    /** $column.columnComment */
-    @Excel(name = "比赛ID")
+    /** null */
+    @Excel(name = "null")
     private Long playerSlot;
 
     /** 英雄ID */
@@ -133,6 +133,14 @@ public class WebMatchPlayerInfo extends BaseEntity
     /** 该玩家的英雄治疗占比 */
     @Excel(name = "该玩家的英雄治疗占比")
     private Long scaledHeroHealing;
+
+    /** 该玩家这场比赛之前的积分 */
+    @Excel(name = "该玩家这场比赛之前的积分")
+    private Long beforeIntegral;
+
+    /** 该玩家这场比赛之后的积分 */
+    @Excel(name = "该玩家这场比赛之后的积分")
+    private Long afterIntegral;
 
     public void setId(Long id) 
     {
@@ -404,6 +412,24 @@ public class WebMatchPlayerInfo extends BaseEntity
     {
         return scaledHeroHealing;
     }
+    public void setBeforeIntegral(Long beforeIntegral) 
+    {
+        this.beforeIntegral = beforeIntegral;
+    }
+
+    public Long getBeforeIntegral() 
+    {
+        return beforeIntegral;
+    }
+    public void setAfterIntegral(Long afterIntegral) 
+    {
+        this.afterIntegral = afterIntegral;
+    }
+
+    public Long getAfterIntegral() 
+    {
+        return afterIntegral;
+    }
 
     @Override
     public String toString() {
@@ -438,6 +464,8 @@ public class WebMatchPlayerInfo extends BaseEntity
             .append("scaledHeroDamage", getScaledHeroDamage())
             .append("scaledTowerDamage", getScaledTowerDamage())
             .append("scaledHeroHealing", getScaledHeroHealing())
+            .append("beforeIntegral", getBeforeIntegral())
+            .append("afterIntegral", getAfterIntegral())
             .toString();
     }
 }

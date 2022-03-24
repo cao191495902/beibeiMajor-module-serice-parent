@@ -28,4 +28,6 @@ public interface ReportInfoService {
     List<TopBean> statisticsLossInfoList(Integer leagueId);
 
     List<RecentPerform> getRecentPerformList(Long accountId, Integer leagueId);
+
+    void deleteReport();
 }

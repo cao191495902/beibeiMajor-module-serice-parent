@@ -35,10 +35,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="scaledHeroDamage"    column="scaled_hero_damage"    />
         <result property="scaledTowerDamage"    column="scaled_tower_damage"    />
         <result property="scaledHeroHealing"    column="scaled_hero_healing"    />
+        <result property="beforeIntegral"    column="before_integral"    />
+        <result property="afterIntegral"    column="after_integral"    />
     </resultMap>
 
     <sql id="selectWebMatchPlayerInfoVo">
-        select id, account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing from web_match_player_info
+        select id, account_id, match_id, player_slot, hero_id, item0, item1, item2, item3, item4, item5, backpack0, backpack1, backpack2, kills, deaths, assists, last_hits, denies, gold_per_min, xp_per_min, level, hero_damage, tower_damage, hero_healing, gold, gold_spent, scaled_hero_damage, scaled_tower_damage, scaled_hero_healing, before_integral, after_integral from web_match_player_info
     </sql>
 
     <select id="selectWebMatchPlayerInfoList" parameterType="WebMatchPlayerInfo" resultMap="WebMatchPlayerInfoResult">
@@ -73,6 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scaledHeroDamage != null "> and scaled_hero_damage = #{scaledHeroDamage}</if>
             <if test="scaledTowerDamage != null "> and scaled_tower_damage = #{scaledTowerDamage}</if>
             <if test="scaledHeroHealing != null "> and scaled_hero_healing = #{scaledHeroHealing}</if>
+            <if test="beforeIntegral != null "> and before_integral = #{beforeIntegral}</if>
+            <if test="afterIntegral != null "> and after_integral = #{afterIntegral}</if>
         </where>
     </select>
     
@@ -113,6 +117,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scaledHeroDamage != null">scaled_hero_damage,</if>
             <if test="scaledTowerDamage != null">scaled_tower_damage,</if>
             <if test="scaledHeroHealing != null">scaled_hero_healing,</if>
+            <if test="beforeIntegral != null">before_integral,</if>
+            <if test="afterIntegral != null">after_integral,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="accountId != null">#{accountId},</if>
@@ -144,6 +150,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scaledHeroDamage != null">#{scaledHeroDamage},</if>
             <if test="scaledTowerDamage != null">#{scaledTowerDamage},</if>
             <if test="scaledHeroHealing != null">#{scaledHeroHealing},</if>
+            <if test="beforeIntegral != null">#{beforeIntegral},</if>
+            <if test="afterIntegral != null">#{afterIntegral},</if>
          </trim>
     </insert>
 
@@ -179,6 +187,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scaledHeroDamage != null">scaled_hero_damage = #{scaledHeroDamage},</if>
             <if test="scaledTowerDamage != null">scaled_tower_damage = #{scaledTowerDamage},</if>
             <if test="scaledHeroHealing != null">scaled_hero_healing = #{scaledHeroHealing},</if>
+            <if test="beforeIntegral != null">before_integral = #{beforeIntegral},</if>
+            <if test="afterIntegral != null">after_integral = #{afterIntegral},</if>
         </trim>
         where id = #{id}
     </update>

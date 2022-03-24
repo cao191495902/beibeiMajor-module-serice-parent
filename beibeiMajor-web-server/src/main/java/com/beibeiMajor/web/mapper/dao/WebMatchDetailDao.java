@@ -108,4 +108,6 @@ public interface WebMatchDetailDao {
     Boolean batchUpdateDoubleAccount(List<DoubleAccountPo> list);
 
     WebLeague getDefaultLeagueInfo();
+
+    void updateSettlement();
 }

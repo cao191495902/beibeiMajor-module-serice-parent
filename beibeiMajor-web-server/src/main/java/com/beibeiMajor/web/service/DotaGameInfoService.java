@@ -11,4 +11,6 @@ public interface DotaGameInfoService {
     Boolean insertHeroesInfo();
 
     void updateUserInfo();
+
+    void resetSettlementStatus();
 }

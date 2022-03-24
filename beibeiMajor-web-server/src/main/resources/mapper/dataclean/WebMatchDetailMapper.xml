@@ -241,4 +241,11 @@
         SELECT id ,access_key  as "key" FROM web_league WHERE is_default = 1 LIMIT 1
     </select>
 
+    <update id="updateSettlement">
+
+        update web_match_detail set settlement_status = 0,double_account = null
+        where league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
+
+    </update>
+
 </mapper>

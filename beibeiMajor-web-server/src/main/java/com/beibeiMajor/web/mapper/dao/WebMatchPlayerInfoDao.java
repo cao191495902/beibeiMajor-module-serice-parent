@@ -104,4 +104,5 @@ public interface WebMatchPlayerInfoDao {
 
     List<PlayerWinOrLosePo> getPlayerWinOrLoseList();
 
+    void resetIntegral();
 }

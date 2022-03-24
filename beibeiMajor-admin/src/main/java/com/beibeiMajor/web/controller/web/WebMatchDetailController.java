@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -79,11 +80,14 @@ public class WebMatchDetailController extends BaseController
      * 新增保存比赛详情
      */
     @RequiresPermissions("web:detail:add")
-    @Log(title = "比赛详情", businessType = BusinessType.INSERT)
+    @Log(title = "比赛详情" , businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WebMatchDetail webMatchDetail)
-    {
+    public AjaxResult addSave(WebMatchDetail webMatchDetail,
+                              @RequestParam(value = "startDate" , required = false) Date startDate) {
+        if (startDate != null)
+            webMatchDetail.setStartTime(startDate.getTime()/1000);
+        webMatchDetail.setHumanPlayers(10L);
         return toAjax(webMatchDetailService.insertWebMatchDetail(webMatchDetail));
     }
 

@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">比赛ID：</label>
+                <label class="col-sm-3 control-label">null：</label>
                 <div class="col-sm-8">
                     <input name="playerSlot" th:field="*{playerSlot}" class="form-control" type="text">
                 </div>
@@ -179,6 +179,18 @@
                 <label class="col-sm-3 control-label">该玩家的英雄治疗占比：</label>
                 <div class="col-sm-8">
                     <input name="scaledHeroHealing" th:field="*{scaledHeroHealing}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家这场比赛之前的积分：</label>
+                <div class="col-sm-8">
+                    <input name="beforeIntegral" th:field="*{beforeIntegral}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">该玩家这场比赛之后的积分：</label>
+                <div class="col-sm-8">
+                    <input name="afterIntegral" th:field="*{afterIntegral}" class="form-control" type="text">
                 </div>
             </div>
         </form>

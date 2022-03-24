@@ -15,64 +15,16 @@
                                 <input type="text" name="leagueId"/>
                             </li>
                             <li>
-                                <label>获胜方：</label>
-                                <input type="text" name="radiantWin"/>
+                                <label>匹配ID：</label>
+                                <input type="text" name="matchId"/>
                             </li>
                             <li>
-                                <label>比赛长度：</label>
-                                <input type="text" name="duration"/>
-                            </li>
-                            <li>
-                                <label>比赛B/P时间：</label>
-                                <input type="text" name="preGameDuration"/>
-                            </li>
-                            <li>
-                                <label>比赛开始时间：</label>
-                                <input type="text" name="startTime"/>
-                            </li>
-                            <li>
-                                <label>天辉防御塔状态：</label>
-                                <input type="text" name="towerStatusRadiant"/>
-                            </li>
-                            <li>
-                                <label>夜宴防御塔状态：</label>
-                                <input type="text" name="towerStatusDire"/>
-                            </li>
-                            <li>
-                                <label>天辉兵营状态：</label>
-                                <input type="text" name="barracksStatusRadiant"/>
-                            </li>
-                            <li>
-                                <label>夜宴兵营状态：</label>
-                                <input type="text" name="barracksStatusDire"/>
-                            </li>
-                            <li>
-                                <label>第一滴血发生时间：</label>
-                                <input type="text" name="firstBloodTime"/>
-                            </li>
-                            <li>
-                                <label>玩家数量：</label>
-                                <input type="text" name="humanPlayers"/>
-                            </li>
-                            <li>
-                                <label>比赛类型：</label>
-                                <input type="text" name="gameMode"/>
-                            </li>
-                            <li>
-                                <label>天辉得分：</label>
-                                <input type="text" name="radiantScore"/>
-                            </li>
-                            <li>
-                                <label>夜宴得分：</label>
-                                <input type="text" name="direScore"/>
-                            </li>
-                            <li>
-                                <label>天辉队长：</label>
-                                <input type="text" name="radiantCaptain"/>
-                            </li>
-                            <li>
-                                <label>夜宴队长：</label>
-                                <input type="text" name="direCaptain"/>
+                                <label>结算状态：</label>
+                                <select name="settlementStatus">
+                                    <option value="">所有</option>
+                                    <option value="1">已结算</option>
+                                    <option value="0">未结算</option>
+                                </select>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -122,7 +74,6 @@
                 {
                     field: 'matchId',
                     title: '比赛ID',
-                    visible: false
                 },
                 {
                     field: 'leagueId',
@@ -187,6 +138,14 @@
                 {
                     field: 'direCaptain',
                     title: '夜宴队长'
+                },
+                {
+                    field: 'settlementStatus',
+                    title: '结算状态'
+                },
+                {
+                    field: 'doubleAccount',
+                    title: '本场比赛双倍用户'
                 },
                 {
                     title: '操作',

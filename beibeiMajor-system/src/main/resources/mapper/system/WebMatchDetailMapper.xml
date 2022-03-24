@@ -22,10 +22,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="direScore"    column="dire_score"    />
         <result property="radiantCaptain"    column="radiant_captain"    />
         <result property="direCaptain"    column="dire_captain"    />
+        <result property="settlementStatus"    column="settlement_status"    />
+        <result property="doubleAccount"    column="double_account"    />
     </resultMap>
 
     <sql id="selectWebMatchDetailVo">
-        select match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain from web_match_detail
+        select match_id, league_id, radiant_win, duration, pre_game_duration, start_time, tower_status_radiant, tower_status_dire, barracks_status_radiant, barracks_status_dire, first_blood_time, human_players, game_mode, radiant_score, dire_score, radiant_captain, dire_captain, settlement_status, double_account from web_match_detail
     </sql>
 
     <select id="selectWebMatchDetailList" parameterType="WebMatchDetail" resultMap="WebMatchDetailResult">
@@ -47,6 +49,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="direScore != null "> and dire_score = #{direScore}</if>
             <if test="radiantCaptain != null "> and radiant_captain = #{radiantCaptain}</if>
             <if test="direCaptain != null "> and dire_captain = #{direCaptain}</if>
+            <if test="settlementStatus != null "> and settlement_status = #{settlementStatus}</if>
+            <if test="doubleAccount != null  and doubleAccount != ''"> and double_account = #{doubleAccount}</if>
         </where>
     </select>
     
@@ -75,6 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="direScore != null">dire_score,</if>
             <if test="radiantCaptain != null">radiant_captain,</if>
             <if test="direCaptain != null">dire_captain,</if>
+            <if test="settlementStatus != null">settlement_status,</if>
+            <if test="doubleAccount != null">double_account,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="matchId != null">#{matchId},</if>
@@ -94,6 +100,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="direScore != null">#{direScore},</if>
             <if test="radiantCaptain != null">#{radiantCaptain},</if>
             <if test="direCaptain != null">#{direCaptain},</if>
+            <if test="settlementStatus != null">#{settlementStatus},</if>
+            <if test="doubleAccount != null">#{doubleAccount},</if>
          </trim>
     </insert>
 
@@ -116,6 +124,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="direScore != null">dire_score = #{direScore},</if>
             <if test="radiantCaptain != null">radiant_captain = #{radiantCaptain},</if>
             <if test="direCaptain != null">dire_captain = #{direCaptain},</if>
+            <if test="settlementStatus != null">settlement_status = #{settlementStatus},</if>
+            <if test="doubleAccount != null">double_account = #{doubleAccount},</if>
         </trim>
         where match_id = #{matchId}
     </update>

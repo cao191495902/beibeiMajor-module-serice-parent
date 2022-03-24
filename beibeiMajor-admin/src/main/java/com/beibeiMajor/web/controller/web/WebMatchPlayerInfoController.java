@@ -6,13 +6,18 @@ import com.beibeiMajor.common.core.domain.AjaxResult;
 import com.beibeiMajor.common.core.page.TableDataInfo;
 import com.beibeiMajor.common.enums.BusinessType;
 import com.beibeiMajor.common.utils.poi.ExcelUtil;
+import com.beibeiMajor.system.domain.WebDotaHero;
 import com.beibeiMajor.system.domain.WebMatchPlayerInfo;
+import com.beibeiMajor.system.domain.WebUser;
+import com.beibeiMajor.system.service.IWebDotaHeroService;
 import com.beibeiMajor.system.service.IWebMatchPlayerInfoService;
+import com.beibeiMajor.system.service.IWebUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -30,6 +35,10 @@ public class WebMatchPlayerInfoController extends BaseController
 
     @Autowired
     private IWebMatchPlayerInfoService webMatchPlayerInfoService;
+    @Autowired
+    private IWebDotaHeroService webDotaHeroService;
+    @Autowired
+    private IWebUserService webUserService;
 
     @RequiresPermissions("web:info:view")
     @GetMapping()
@@ -69,9 +78,14 @@ public class WebMatchPlayerInfoController extends BaseController
      * 新增比赛玩家详情
      */
     @GetMapping("/add")
-    public String add()
-    {
-        return prefix + "/add";
+    public Object add(ModelMap mmap) {
+        //返回用户列表
+        List<WebUser> userList = webUserService.selectWebUserList(new WebUser());
+        mmap.addAttribute("userList", userList);
+        //返回英雄列表
+        List<WebDotaHero> heroList = webDotaHeroService.selectWebDotaHeroList(new WebDotaHero());
+        mmap.addAttribute("heroList", heroList);
+        return new ModelAndView("web/info/add");
     }
 
     /**

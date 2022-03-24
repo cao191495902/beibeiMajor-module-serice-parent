@@ -555,4 +555,11 @@
         LEFT JOIN web_match_detail c ON a.match_id = c.match_id
     </select>
 
+    <update id="resetIntegral">
+        update web_match_player_info set before_integral = null,after_integral = null
+        where match_id in (
+        select match_id from web_match_detail where league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
+        )
+    </update>
+
 </mapper>

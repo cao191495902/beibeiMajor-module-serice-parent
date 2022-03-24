@@ -118,4 +118,6 @@ public interface WebUserDotaReportDao {
     RecentPerform getMyDamage(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
 
     RecentPerform getMyTower(@Param("accountId") Long accountId, @Param("leagueId") Integer leagueId);
+
+    void deleteReport();
 }

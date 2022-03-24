@@ -634,4 +634,9 @@
         AND account_id = #{accountId}
     </select>
 
+    <delete id="deleteReport">
+        delete from web_user_dota_report
+        where league_id = (SELECT id FROM `web_league` WHERE is_default = 1 LIMIT 1)
+    </delete>
+
 </mapper>

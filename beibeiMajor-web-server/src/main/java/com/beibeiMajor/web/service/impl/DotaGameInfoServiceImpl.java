@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.beibeiMajor.system.domain.WebLeague;
 import com.beibeiMajor.system.service.IWebMatchDetailService;
 import com.beibeiMajor.web.mapper.dao.WebMatchDetailDao;
+import com.beibeiMajor.web.mapper.dao.WebMatchPlayerInfoDao;
 import com.beibeiMajor.web.mapper.po.*;
 import com.beibeiMajor.web.service.DotaGameInfoService;
 import com.beibeiMajor.web.service.MatchDetailInfoService;
@@ -55,6 +56,8 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
     private OperationInfoToDBService operationInfoToDBService;
     @Resource
     IWebMatchDetailService webMatchDetailService;
+    @Resource
+    WebMatchPlayerInfoDao webMatchPlayerInfoDao;
 
     @Override
     public List<Long> getGameIdOfLeagueMatch() {
@@ -126,6 +129,12 @@ public class DotaGameInfoServiceImpl implements DotaGameInfoService {
     @Override
     public void updateUserInfo() {
 
+    }
+
+    @Override
+    public void resetSettlementStatus() {
+        webMatchDetailDao.updateSettlement();
+        webMatchPlayerInfoDao.resetIntegral();
     }
 
     private Boolean HeroesDetailInfoToDB(List<HeroBean> heroBeans) {
